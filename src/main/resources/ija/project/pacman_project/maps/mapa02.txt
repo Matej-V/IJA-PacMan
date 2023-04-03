@@ -1,0 +1,18 @@
+17 17
+.S......X........
+.XX.XXX.X.XXX.XX.
+.................
+.XX.X.XXXXX.X.XX.
+....X...X...X....
+XXX.XXX.X.XXX.XXX
+xxx.x.......X.XXX
+XXX.X.X...X.X.XXX
+XXX.X.X.G.X.X.XXX
+XXX.G.XXXXX...XXX
+xxx.x.......X.XXX
+XXX.XXX.X.XXX.XXX
+....X...X...X....
+.XX.X.XXXXX.X.XX.
+..........G......
+.XX.XXX.X.XXX.XX.
+........X.......T
