@@ -15,11 +15,12 @@ public class PathField implements Field {
     private final int col; // column of the field
     private Maze maze; // maze to which the field belongs
     private final List<MazeObject> mazeObjects; // list of objects on the field - extension for future
+    public boolean point;
 
 
     /**
      * Constructor.
-     * 
+     *
      * @param row row of the field
      * @param col column of the field
      */
@@ -28,6 +29,7 @@ public class PathField implements Field {
         this.col = col;
         this.mazeObjects = new ArrayList<MazeObject>();
         this.maze = null;
+        this.point = true;
     }
 
     public void setMaze(Maze maze) {
@@ -46,6 +48,9 @@ public class PathField implements Field {
 
     public boolean put(MazeObject object) {
         if(object instanceof PacmanObject){
+            if(this.point){
+                this.point = false;
+            }
             for(MazeObject mz : this.mazeObjects){
                 if(mz instanceof GhostObject){
                     ((PacmanObject) object).decreaseLives();
@@ -93,7 +98,7 @@ public class PathField implements Field {
      *
      * Compares objects. Objects are equal if both represent PathField and
      * are at the same position
-     * 
+     *
      * @param obj object to be compared with
      * @return True if objects are equal, false otherwise
      */

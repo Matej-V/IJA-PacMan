@@ -1,6 +1,8 @@
 package ija.project.pacman_project;
 
 import ija.project.common.Field;
+import ija.project.common.MazeObject;
+import ija.project.game.GhostObject;
 import ija.project.game.PathField;
 import ija.project.game.TargetField;
 import ija.project.game.WallField;
@@ -14,6 +16,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class PacManView {
     private PacManController controller;
@@ -36,6 +42,7 @@ public class PacManView {
      * @return Group that represents Maze
      */
     public Group drawMaze() {
+        this.mazeGroup = new Group();
         for (int row = 0; row < this.model.maze.numRows(); row++) {
             for (int column = 0; column < this.model.maze.numCols(); column++) {
                 Field currentField = this.model.maze.getField(row, column);
@@ -81,15 +88,32 @@ public class PacManView {
                     }
                     this.mazeGroup.getChildren().add(field);
                 }else if(currentField instanceof TargetField) {
-                    Circle target = new Circle(field.getWidth()/2 - 5, Color.web("#B02E0C"));
+                    Circle target = new Circle(field.getWidth()*0.3, Color.web("#B02E0C"));
                     target.setCenterX(field.getX() + field.getWidth()/2);
                     target.setCenterY(field.getY() + field.getHeight()/2);
                     this.mazeGroup.getChildren().addAll(target);
-                }else if(currentField instanceof PathField) {
-                    Circle point = new Circle(3, Color.web("#CED6EE"));
-                    point.setCenterX(field.getX() + field.getWidth()/2);
-                    point.setCenterY(field.getY() + field.getHeight()/2);
-                    this.mazeGroup.getChildren().addAll(point);
+                }else if( currentField instanceof PathField ) {
+                    if( currentField.isEmpty() && ((PathField) currentField).point){
+                        Circle point = new Circle(3, Color.web("#CED6EE"));
+                        point.setCenterX(field.getX() + field.getWidth()/2);
+                        point.setCenterY(field.getY() + field.getHeight()/2);
+                        this.mazeGroup.getChildren().addAll(point);
+                    }else if( currentField.contains(this.model.maze.getPacMan()) ){
+                        Circle pacMan = new Circle(field.getWidth()*0.35, Color.web("#FFF901"));
+                        pacMan.setCenterX(field.getX() + field.getWidth()/2);
+                        pacMan.setCenterY(field.getY() + field.getHeight()/2);
+                        this.mazeGroup.getChildren().addAll(pacMan);
+                    }
+                }
+                for (MazeObject object: this.model.maze.ghosts()) {
+                    if(currentField.contains(object)){
+                        Circle ghost = new Circle(field.getWidth()*0.25, ((GhostObject) object).color );
+                        ghost.setCenterX(field.getX() + field.getWidth()/2);
+                        ghost.setCenterY(field.getY() + field.getHeight()/2);
+                        ghost.setStrokeWidth(field.getWidth()*0.1);
+                        ghost.setStroke(Color.web("#B02E0C"));
+                        this.mazeGroup.getChildren().addAll(ghost);
+                    }
                 }
             }
         }

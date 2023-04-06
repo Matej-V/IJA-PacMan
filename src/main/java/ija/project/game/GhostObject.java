@@ -2,17 +2,20 @@ package ija.project.game;
 
 import ija.project.common.Field;
 import ija.project.common.MazeObject;
+import javafx.scene.paint.Color;
 
 public class GhostObject implements MazeObject {
     private PathField field;
+    public Color color;
 
     /**
      * Constructor for GhostObject.
      *
      * @param field field on which the object is located
      */
-    public GhostObject(PathField field) {
+    public GhostObject(PathField field, Color color) {
         this.field = field;
+        this.color = color;
     }
 
     /**

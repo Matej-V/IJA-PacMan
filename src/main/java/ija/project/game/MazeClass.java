@@ -19,6 +19,7 @@ public class MazeClass implements Maze {
     private final int numOfCols;
     protected List<List<Field>> fields;
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
+    private MazeObject PacMan;
     private Group mazeGroup;
 
     /**
@@ -125,6 +126,14 @@ public class MazeClass implements Maze {
             }
             System.out.println();
         }
+    }
+
+    public void setPacMan(MazeObject pacMan){
+        this.PacMan = pacMan;
+    }
+
+    public MazeObject getPacMan(){
+        return this.PacMan;
     }
 
 }

@@ -41,6 +41,10 @@ public interface Maze {
      */
     List<MazeObject> ghosts();
 
+    void setPacMan(MazeObject pacMan);
+
+    MazeObject getPacMan();
+
     /**
      * Prints a string representation of the maze to stdOut
      * 

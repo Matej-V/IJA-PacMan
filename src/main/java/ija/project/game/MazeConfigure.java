@@ -1,9 +1,11 @@
 package ija.project.game;
 
 import ija.project.common.*;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Class for configuring the maze.
@@ -15,6 +17,7 @@ public class MazeConfigure {
     private boolean errorIndicator;
     private ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeClass maze;
+    private List<Color> colorList;
 
     /**
      * Constructor for MazeConfigure.
@@ -23,6 +26,11 @@ public class MazeConfigure {
         this.rowToBeProcessed = 1;
         this.errorIndicator = false;
         this.maze = null;
+        this.colorList = new ArrayList<Color>();
+        colorList.add(Color.PINK);
+        colorList.add(Color.CYAN);
+        colorList.add(Color.ORANGE);
+        colorList.add(Color.WHITE);
     }
 
     /**
@@ -69,11 +77,13 @@ public class MazeConfigure {
                     PacmanObject pacmanObject1 = new PacmanObject(startField);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1,startField);
                     startField.put(pacmanObject1);
+                    this.maze.setPacMan(pacmanObject1);
                 }
                 case 'G', 'g' -> {
                     PathField field = new PathField(this.rowToBeProcessed, c + 1);
                     field.setMaze(this.maze);
-                    GhostObject ghostObject = new GhostObject(field);
+                    Random rand = new Random();
+                    GhostObject ghostObject = new GhostObject(field, colorList.get(rand.nextInt(colorList.size())));
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
                     field.put(ghostObject);
                     this.ghosts.add(ghostObject);

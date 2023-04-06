@@ -2,8 +2,6 @@ package ija.project.game;
 
 import ija.project.common.*;
 
-import java.nio.file.Path;
-
 /**
  * Class representing the pacman object.
  */
