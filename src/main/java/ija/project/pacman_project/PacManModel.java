@@ -1,12 +1,11 @@
 package ija.project.pacman_project;
 
 import ija.project.common.Maze;
-import ija.project.game.MazeConfigure;
-import ija.project.game.PacmanObject;
+import ija.project.common.MazeObject;
+import ija.project.game.*;
 import ija.project.common.Field;
 
 
-import ija.project.game.PathField;
 import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
@@ -67,13 +66,19 @@ public class PacManModel {
     }
 
     public void movePacman(Field.Direction dir){
-        PathField nextField = ((PathField)this.pacman.getField().nextField(dir));
+        Field nextField = this.pacman.getField().nextField(dir);
+        if (nextField instanceof WallField) return;
 
-        if (nextField.point){
+        MazeObject obj = nextField.get();
+        if (((PathField)nextField).point){
             this.score++;
-            nextField.point = false;
+            ((PathField)nextField).point = false;
             nextField.setMaze(this.maze);
         }
+
+//        if (obj instanceof GhostObject){
+//            this.pacman.decreaseLives();
+//        }
 
         this.pacman.move(dir);
         this.maze.setPacMan(this.pacman);

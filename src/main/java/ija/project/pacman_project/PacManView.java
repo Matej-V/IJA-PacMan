@@ -8,6 +8,7 @@ import ija.project.game.TargetField;
 import ija.project.game.WallField;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -18,6 +19,9 @@ import javafx.scene.shape.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,11 +34,21 @@ public class PacManView {
 
     private Circle pacMan;
 
+    private Image heartImage;
+    private Image deathImage;
+
     public PacManView(PacManModel model) {
         this.model = model;
         cellWidth = 500 / this.model.maze.numCols();
         cellHeight = 500 / this.model.maze.numRows();
         this.mazeGroup = new Group();
+
+        try {
+            this.heartImage = new Image(PacManApp.class.getResource("img/heart.png").openStream());
+            this.deathImage = new Image(PacManApp.class.getResource("img/death.png").openStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -43,8 +57,9 @@ public class PacManView {
      *
      * @return Group that represents Maze
      */
-    public Group drawMaze() {
+    public Group drawMaze() throws IOException {
         this.mazeGroup.getChildren().clear();
+
         for (int row = 0; row < this.model.maze.numRows(); row++) {
             for (int column = 0; column < this.model.maze.numCols(); column++) {
                 Field currentField = this.model.maze.getField(row, column);
@@ -97,7 +112,7 @@ public class PacManView {
                         Circle point = new Circle(3, Color.web("#CED6EE"));
                         if (currentField.isEmpty()){
                             if (((PathField) currentField).point){
-                                System.out.println("Score: " + this.model.getScore());
+//                                System.out.println("Score: " + this.model.getScore());
                                 point.setCenterX(field.getX() + field.getWidth()/2);
                                 point.setCenterY(field.getY() + field.getHeight()/2);
                                 this.mazeGroup.getChildren().addAll(point);
@@ -123,10 +138,31 @@ public class PacManView {
                 }
             }
         }
+        ImageView imageView1 = new ImageView(this.heartImage);
+        ImageView imageView2 = new ImageView(this.heartImage);
+        imageView2.setX(40);
+        ImageView imageView3 = new ImageView(this.heartImage);
+        imageView3.setX(80);
+
+        Group healthBar;
+
+        if (this.model.pacman.getLives() == 3){
+            healthBar = new Group(imageView1, imageView2, imageView3);
+        } else if(this.model.pacman.getLives() == 2){
+            healthBar = new Group(imageView1, imageView2);
+        } else if(this.model.pacman.getLives() == 1){
+            healthBar = new Group(imageView1);
+        } else {
+            ImageView death = new ImageView(this.deathImage);
+            healthBar = new Group(death);
+        }
+
+        this.mazeGroup.getChildren().add(healthBar);
+
         return this.mazeGroup;
     }
 
-    public VBox generateGame() {
+    public VBox generateGame() throws IOException {
         // Create Menu
         Menu menu = new Menu("Menu");
         MenuItem mapChange = new MenuItem("Change Map");
@@ -138,9 +174,19 @@ public class PacManView {
             System.out.println("Changing map");
         });
 
+        // Create healthbar
+//        Image image = new Image(PacManApp.class.getResource("img/heart.png").openStream());
+//        ImageView imageView1 = new ImageView(image);
+//        ImageView imageView2 = new ImageView(image);
+//        imageView2.setX(40);
+//        ImageView imageView3 = new ImageView(image);
+//        imageView3.setX(80);
+
+//        Group healthBar = new Group(imageView1, imageView2, imageView3);
+
+
         VBox gameBox = new VBox(menuBar, drawMaze());
         gameBox.setStyle("-fx-background-color: #00022A");
-
         return gameBox;
     }
 }

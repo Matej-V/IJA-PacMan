@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -26,7 +27,11 @@ public class PacManController implements Initializable {
     public PacManController(PacManModel model, PacManView view){
         this.model = model;
         this.view = view;
-        updateGame();
+//        try {
+//            updateGame();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         this.startTimer();
     }
 
@@ -36,7 +41,11 @@ public class PacManController implements Initializable {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        updateGame();
+                        try {
+                            updateGame();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
             }
@@ -47,7 +56,7 @@ public class PacManController implements Initializable {
         this.timer.schedule(timerTask, 0, FPSms);
     }
 
-    private void updateGame(){
+    private void updateGame() throws IOException {
         this.view.drawMaze();
     }
 
