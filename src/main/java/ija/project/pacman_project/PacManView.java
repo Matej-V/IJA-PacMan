@@ -144,19 +144,8 @@ public class PacManView {
                 Rectangle field = new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
                 if (currentField instanceof PathField){
                     if(currentField.contains(this.model.pacman)){
-                        Field prevField = this.model.getPacmanPrevField();
-//                        if (prevField.nextField(Field.Direction.U) == currentField){
-//                            this.mazeGroup.getChildren().remove(pacMan);
-//                        }
 
-                        if(prevField != this.startPos){
-//                            Circle point = new Circle(3, Color.web("#CED6EE"));
-//                            point.setCenterX(field.getX() + field.getWidth()/2);
-//                            point.setCenterY(field.getY() + field.getHeight()/2);
-//                            this.mazeGroup.getChildren().addAll(point);
-                              System.out.println(this.pacMan);
-                              this.mazeGroup.getChildren().remove(this.pacMan);
-                        }
+                        this.mazeGroup.getChildren().remove(this.pacMan);
 
                         this.pacMan = new Circle(field.getWidth()*0.35, Color.web("#FFF901"));
                         this.pacMan.setCenterX(field.getX() + field.getWidth()/2);

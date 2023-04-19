@@ -4,6 +4,7 @@ import ija.project.common.Field;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -52,26 +53,13 @@ public class PacManController implements Initializable {
     }
 
 
-    public void handleKeyPress(KeyCode code) {
-        switch (code) {
-            case W:
-//                System.out.println("Key W");
-                model.movePacman(Field.Direction.U);
-                break;
-            case A:
-//                System.out.println("Key A");
-                model.movePacman(Field.Direction.L);
-                break;
-            case S:
-//                System.out.println("Key S");
-                model.movePacman(Field.Direction.D);
-                break;
-            case D:
-//                System.out.println("Key D");
-                model.movePacman(Field.Direction.R);
-                break;
-            default:
-                break;
+    public void handleKeyPress(KeyEvent e) {
+
+        switch (e.getCode()) {
+            case UP, W -> model.movePacman(Field.Direction.U);
+            case LEFT, A -> model.movePacman(Field.Direction.L);
+            case DOWN, S -> model.movePacman(Field.Direction.D);
+            case RIGHT, D -> model.movePacman(Field.Direction.R);
         }
 
     }

@@ -38,7 +38,7 @@ public class PacManApp extends Application {
         stage.show();
 
         scene.setOnKeyPressed(keyEvent -> {
-            controller.handleKeyPress(keyEvent.getCode());
+            controller.handleKeyPress(keyEvent);
         });
     }
     public static void main(String[] args) {
