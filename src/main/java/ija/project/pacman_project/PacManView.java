@@ -157,7 +157,11 @@ public class PacManView {
             healthBar = new Group(death);
         }
 
-        this.mazeGroup.getChildren().add(healthBar);
+        Label score = new Label("Score: " + this.model.getScore());
+        score.setTranslateX(400);
+        score.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
+
+        this.mazeGroup.getChildren().addAll(healthBar, score);
 
         return this.mazeGroup;
     }
@@ -173,16 +177,6 @@ public class PacManView {
         mapChange.setOnAction(e -> {
             System.out.println("Changing map");
         });
-
-        // Create healthbar
-//        Image image = new Image(PacManApp.class.getResource("img/heart.png").openStream());
-//        ImageView imageView1 = new ImageView(image);
-//        ImageView imageView2 = new ImageView(image);
-//        imageView2.setX(40);
-//        ImageView imageView3 = new ImageView(image);
-//        imageView3.setX(80);
-
-//        Group healthBar = new Group(imageView1, imageView2, imageView3);
 
 
         VBox gameBox = new VBox(menuBar, drawMaze());
