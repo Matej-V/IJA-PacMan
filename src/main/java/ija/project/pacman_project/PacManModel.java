@@ -19,7 +19,9 @@ public class PacManModel {
     String currentMap;
     Maze maze;
 
-    private PacmanObject pacman;
+    public PacmanObject pacman;
+    private Field prevField;
+    private Field currField;
 
     public PacManModel(){
         generateGame();
@@ -58,14 +60,23 @@ public class PacManModel {
             cfg.stopReading();
             this.maze = cfg.createMaze();
             this.pacman = (PacmanObject) this.maze.getPacMan();
+            this.prevField = this.pacman.getField();
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }
     }
 
     public void movePacman(Field.Direction dir){
+        this.prevField = this.pacman.getField();
+
         this.pacman.move(dir);
         this.maze.setPacMan(this.pacman);
+
+        this.currField = this.pacman.getField();
+    }
+
+    public Field getPacmanPrevField(){
+        return this.prevField;
     }
 
     public Maze getMazeRepresentation(){

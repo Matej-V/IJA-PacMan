@@ -47,27 +47,27 @@ public class PacManController implements Initializable {
     }
 
     private void updateGame(){
-        System.out.println("Updating...");
-        this.view.updateGame(model);
+//        System.out.println("Updating...");
+        this.view.updateGame();
     }
 
 
     public void handleKeyPress(KeyCode code) {
         switch (code) {
             case W:
-                System.out.println("Key W");
+//                System.out.println("Key W");
                 model.movePacman(Field.Direction.U);
                 break;
             case A:
-                System.out.println("Key A");
+//                System.out.println("Key A");
                 model.movePacman(Field.Direction.L);
                 break;
             case S:
-                System.out.println("Key S");
+//                System.out.println("Key S");
                 model.movePacman(Field.Direction.D);
                 break;
             case D:
-                System.out.println("Key D");
+//                System.out.println("Key D");
                 model.movePacman(Field.Direction.R);
                 break;
             default:
