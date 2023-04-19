@@ -64,11 +64,8 @@ public class PacManModel {
     }
 
     public void movePacman(Field.Direction dir){
-        System.out.println("\tPacman in maze before: " + this.maze.getPacMan().getField());
         this.pacman.move(dir);
         this.maze.setPacMan(this.pacman);
-        System.out.println("\tPacman in maze before: " + this.maze.getPacMan().getField());
-        System.out.println("Model: moving pacman " + dir);
     }
 
     public Maze getMazeRepresentation(){

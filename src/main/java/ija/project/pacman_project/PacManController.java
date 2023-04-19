@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PacManController implements Initializable {
-    final private double FPS = 5.0;
     private Timer timer;
     private PacManModel model;
     private PacManView view;
@@ -42,17 +41,38 @@ public class PacManController implements Initializable {
             }
         };
 
+        double FPS = 24.0;
         long FPSms = (long)(1000.0 / FPS);
         this.timer.schedule(timerTask, 0, FPSms);
     }
 
-    public void movePacman(Field.Direction dir){
-        model.movePacman(dir);
-    }
-
     private void updateGame(){
-        System.out.println("Updating");
-        view.generateGame();
+        System.out.println("Updating...");
+        this.view.updateGame(model);
     }
 
+
+    public void handleKeyPress(KeyCode code) {
+        switch (code) {
+            case W:
+                System.out.println("Key W");
+                model.movePacman(Field.Direction.U);
+                break;
+            case A:
+                System.out.println("Key A");
+                model.movePacman(Field.Direction.L);
+                break;
+            case S:
+                System.out.println("Key S");
+                model.movePacman(Field.Direction.D);
+                break;
+            case D:
+                System.out.println("Key D");
+                model.movePacman(Field.Direction.R);
+                break;
+            default:
+                break;
+        }
+
+    }
 }

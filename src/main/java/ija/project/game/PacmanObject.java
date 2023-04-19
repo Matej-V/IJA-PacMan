@@ -54,14 +54,14 @@ public class PacmanObject implements MazeObject {
         if (!canMove(dir)) {
             return false;
         } else {
-            PathField nextField = (PathField) field.nextField(dir);
-            field.remove(this);
+            PathField nextField = (PathField) this.field.nextField(dir);
+            this.field.remove(this);
             try {
                 nextField.put(this);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            field = nextField;
+            this.field = nextField;
         }
         return true;
     }

@@ -12,10 +12,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,5 +131,22 @@ public class PacManView {
         gameBox.setStyle("-fx-background-color: #00022A");
 
         return gameBox;
+    }
+
+    public void updateGame(PacManModel model){
+        for (int row = 0; row < this.model.maze.numRows(); row++){
+            for (int col = 0; col < this.model.maze.numCols(); col++){
+                Field currentField = this.model.maze.getField(row, col);
+                Rectangle field = new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+                if (currentField instanceof PathField){
+                    if(currentField.contains(this.model.maze.getPacMan())){
+                        Circle pacMan = new Circle(field.getWidth()*0.35, Color.web("#FFF901"));
+                        pacMan.setCenterX(field.getX() + field.getWidth()/2);
+                        pacMan.setCenterY(field.getY() + field.getHeight()/2);
+                        this.mazeGroup.getChildren().add(pacMan);
+                    }
+                }
+            }
+        }
     }
 }

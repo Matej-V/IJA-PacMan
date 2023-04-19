@@ -27,29 +27,18 @@ public class PacManApp extends Application {
         controller.initialize(null, null);
 
 
-        Scene scene = new Scene(view.generateGame(), 500, 550);
+        VBox gameBox = view.generateGame();
+        Scene scene = new Scene(gameBox, 500, 550);
 
         //scene.setUserData(controller);
 
-        stage.setTitle("PacMan App");
+        stage.setTitle("PacMan");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
 
         scene.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.W) {
-                System.out.println("Key W");
-                controller.movePacman(Field.Direction.U);
-            } else if (keyEvent.getCode() == KeyCode.A) {
-                System.out.println("Key A");
-                controller.movePacman(Field.Direction.L);
-            } else if (keyEvent.getCode() == KeyCode.S) {
-                System.out.println("Key S");
-                controller.movePacman(Field.Direction.D);
-            } else if (keyEvent.getCode() == KeyCode.D) {
-                System.out.println("Key D");
-                controller.movePacman(Field.Direction.R);
-            }
+            controller.handleKeyPress(keyEvent.getCode());
         });
     }
     public static void main(String[] args) {
