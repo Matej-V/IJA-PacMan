@@ -6,6 +6,7 @@ import ija.project.game.PacmanObject;
 import ija.project.common.Field;
 
 
+import ija.project.game.PathField;
 import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
@@ -18,9 +19,9 @@ import java.util.*;
 public class PacManModel {
     String currentMap;
     Maze maze;
+    private int score = 0;
 
     public PacmanObject pacman;
-    private Field prevField;
     private Field currField;
 
     public PacManModel(){
@@ -60,23 +61,26 @@ public class PacManModel {
             cfg.stopReading();
             this.maze = cfg.createMaze();
             this.pacman = (PacmanObject) this.maze.getPacMan();
-            this.prevField = this.pacman.getField();
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }
     }
 
     public void movePacman(Field.Direction dir){
-        this.prevField = this.pacman.getField();
+        PathField nextField = ((PathField)this.pacman.getField().nextField(dir));
+
+        if (nextField.point){
+            this.score++;
+            nextField.point = false;
+            nextField.setMaze(this.maze);
+        }
 
         this.pacman.move(dir);
         this.maze.setPacMan(this.pacman);
-
-        this.currField = this.pacman.getField();
     }
 
-    public Field getPacmanPrevField(){
-        return this.prevField;
+    public int getScore(){
+        return this.score;
     }
 
     public Maze getMazeRepresentation(){

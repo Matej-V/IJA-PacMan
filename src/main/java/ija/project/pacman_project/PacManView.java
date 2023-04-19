@@ -7,12 +7,16 @@ import ija.project.game.PathField;
 import ija.project.game.TargetField;
 import ija.project.game.WallField;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +29,13 @@ public class PacManView {
     private Group mazeGroup;
 
     private Circle pacMan;
-    private Field startPos;
 
-    public PacManView(PacManModel model){
+    public PacManView(PacManModel model) {
         this.model = model;
         cellWidth = 500 / this.model.maze.numCols();
         cellHeight = 500 / this.model.maze.numRows();
         this.mazeGroup = new Group();
+
     }
 
     /**
@@ -40,7 +44,7 @@ public class PacManView {
      * @return Group that represents Maze
      */
     public Group drawMaze() {
-        this.mazeGroup = new Group();
+        this.mazeGroup.getChildren().clear();
         for (int row = 0; row < this.model.maze.numRows(); row++) {
             for (int column = 0; column < this.model.maze.numCols(); column++) {
                 Field currentField = this.model.maze.getField(row, column);
@@ -49,7 +53,6 @@ public class PacManView {
                     for (Field.Direction dir : ija.project.common.Field.Direction.values()) {
                         if (!(currentField.nextField(dir) instanceof WallField)) {
                             Line line = new Line();
-
                             // set the start and end points of the line
                             switch (dir) {
                                 case U:
@@ -85,31 +88,35 @@ public class PacManView {
 
                     }
                     this.mazeGroup.getChildren().add(field);
-                }else if(currentField instanceof TargetField) {
-                    Circle target = new Circle(field.getWidth()*0.3, Color.web("#B02E0C"));
-                    target.setCenterX(field.getX() + field.getWidth()/2);
-                    target.setCenterY(field.getY() + field.getHeight()/2);
+                } else if (currentField instanceof TargetField) {
+                    Circle target = new Circle(field.getWidth() * 0.3, Color.web("#B02E0C"));
+                    target.setCenterX(field.getX() + field.getWidth() / 2);
+                    target.setCenterY(field.getY() + field.getHeight() / 2);
                     this.mazeGroup.getChildren().addAll(target);
-                }else if( currentField instanceof PathField ) {
-                    if( currentField.isEmpty() && ((PathField) currentField).point){
+                } else if (currentField instanceof PathField) {
                         Circle point = new Circle(3, Color.web("#CED6EE"));
-                        point.setCenterX(field.getX() + field.getWidth()/2);
-                        point.setCenterY(field.getY() + field.getHeight()/2);
-                        this.mazeGroup.getChildren().addAll(point);
-                    }else if( currentField.contains(this.model.pacman) ){
-                        this.startPos = currentField;
-                        this.pacMan = new Circle(field.getWidth()*0.35, Color.web("#FFF901"));
-                        this.pacMan.setCenterX(field.getX() + field.getWidth()/2);
-                        this.pacMan.setCenterY(field.getY() + field.getHeight()/2);
+                        if (currentField.isEmpty()){
+                            if (((PathField) currentField).point){
+                                System.out.println("Score: " + this.model.getScore());
+                                point.setCenterX(field.getX() + field.getWidth()/2);
+                                point.setCenterY(field.getY() + field.getHeight()/2);
+                                this.mazeGroup.getChildren().addAll(point);
+                            }
+                        }
+                    if (currentField.contains(this.model.pacman)) {
+                        this.mazeGroup.getChildren().remove(this.pacMan);
+                        this.pacMan = new Circle(field.getWidth() * 0.35, Color.web("#FFF901"));
+                        this.pacMan.setCenterX(field.getX() + field.getWidth() / 2);
+                        this.pacMan.setCenterY(field.getY() + field.getHeight() / 2);
                         this.mazeGroup.getChildren().addAll(pacMan);
                     }
                 }
-                for (MazeObject object: this.model.maze.ghosts()) {
-                    if(currentField.contains(object)){
-                        Circle ghost = new Circle(field.getWidth()*0.25, ((GhostObject) object).color );
-                        ghost.setCenterX(field.getX() + field.getWidth()/2);
-                        ghost.setCenterY(field.getY() + field.getHeight()/2);
-                        ghost.setStrokeWidth(field.getWidth()*0.1);
+                for (MazeObject object : this.model.maze.ghosts()) {
+                    if (currentField.contains(object)) {
+                        Circle ghost = new Circle(field.getWidth() * 0.25, ((GhostObject) object).color);
+                        ghost.setCenterX(field.getX() + field.getWidth() / 2);
+                        ghost.setCenterY(field.getY() + field.getHeight() / 2);
+                        ghost.setStrokeWidth(field.getWidth() * 0.1);
                         ghost.setStroke(Color.web("#B02E0C"));
                         this.mazeGroup.getChildren().addAll(ghost);
                     }
@@ -119,7 +126,7 @@ public class PacManView {
         return this.mazeGroup;
     }
 
-    public VBox generateGame(){
+    public VBox generateGame() {
         // Create Menu
         Menu menu = new Menu("Menu");
         MenuItem mapChange = new MenuItem("Change Map");
@@ -127,7 +134,7 @@ public class PacManView {
         //Create MenuBar
         MenuBar menuBar = new MenuBar(menu);
         menu.getItems().addAll(mapChange);
-        mapChange.setOnAction(e ->{
+        mapChange.setOnAction(e -> {
             System.out.println("Changing map");
         });
 
@@ -135,25 +142,5 @@ public class PacManView {
         gameBox.setStyle("-fx-background-color: #00022A");
 
         return gameBox;
-    }
-
-    public void updateGame(){
-        for (int row = 0; row < this.model.maze.numRows(); row++){
-            for (int col = 0; col < this.model.maze.numCols(); col++){
-                Field currentField = this.model.maze.getField(row, col);
-                Rectangle field = new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
-                if (currentField instanceof PathField){
-                    if(currentField.contains(this.model.pacman)){
-
-                        this.mazeGroup.getChildren().remove(this.pacMan);
-
-                        this.pacMan = new Circle(field.getWidth()*0.35, Color.web("#FFF901"));
-                        this.pacMan.setCenterX(field.getX() + field.getWidth()/2);
-                        this.pacMan.setCenterY(field.getY() + field.getHeight()/2);
-                        this.mazeGroup.getChildren().add(pacMan);
-                    }
-                }
-            }
-        }
     }
 }

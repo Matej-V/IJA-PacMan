@@ -42,25 +42,21 @@ public class PacManController implements Initializable {
             }
         };
 
-        double FPS = 24.0;
+        double FPS = 30.0;
         long FPSms = (long)(1000.0 / FPS);
         this.timer.schedule(timerTask, 0, FPSms);
     }
 
     private void updateGame(){
-//        System.out.println("Updating...");
-        this.view.updateGame();
+        this.view.drawMaze();
     }
 
-
     public void handleKeyPress(KeyEvent e) {
-
         switch (e.getCode()) {
             case UP, W -> model.movePacman(Field.Direction.U);
             case LEFT, A -> model.movePacman(Field.Direction.L);
             case DOWN, S -> model.movePacman(Field.Direction.D);
             case RIGHT, D -> model.movePacman(Field.Direction.R);
         }
-
     }
 }
