@@ -22,18 +22,16 @@ import java.util.List;
 import java.util.Random;
 
 public class PacManView {
-    private PacManController controller;
     private PacManModel model;
     private double cellWidth;
     private double cellHeight;
     private Group mazeGroup;
 
-    public PacManView(PacManModel model, PacManController controller){
-        this.controller = controller;
+    public PacManView(PacManModel model){
         this.model = model;
         cellWidth = 500 / this.model.maze.numCols();
         cellHeight = 500 / this.model.maze.numRows();
-        this. mazeGroup = new Group();
+        this.mazeGroup = new Group();
     }
 
     /**

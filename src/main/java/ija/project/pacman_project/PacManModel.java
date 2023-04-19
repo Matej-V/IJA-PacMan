@@ -2,6 +2,10 @@ package ija.project.pacman_project;
 
 import ija.project.common.Maze;
 import ija.project.game.MazeConfigure;
+import ija.project.game.PacmanObject;
+import ija.project.common.Field;
+
+
 import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
@@ -14,6 +18,8 @@ import java.util.*;
 public class PacManModel {
     String currentMap;
     Maze maze;
+
+    private PacmanObject pacman;
 
     public PacManModel(){
         generateGame();
@@ -51,9 +57,18 @@ public class PacManModel {
             }
             cfg.stopReading();
             this.maze = cfg.createMaze();
+            this.pacman = (PacmanObject) this.maze.getPacMan();
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }
+    }
+
+    public void movePacman(Field.Direction dir){
+        System.out.println("\tPacman in maze before: " + this.maze.getPacMan().getField());
+        this.pacman.move(dir);
+        this.maze.setPacMan(this.pacman);
+        System.out.println("\tPacman in maze before: " + this.maze.getPacMan().getField());
+        System.out.println("Model: moving pacman " + dir);
     }
 
     public Maze getMazeRepresentation(){
