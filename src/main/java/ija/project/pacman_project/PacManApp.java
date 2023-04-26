@@ -2,6 +2,7 @@ package ija.project.pacman_project;
 
 import ija.project.common.Field;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Menu;
@@ -35,8 +36,13 @@ public class PacManApp extends Application {
         stage.setTitle("PacMan");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.setOnCloseRequest(e -> {
+            Platform.exit();
+            //System.exit(0);
+        });
         stage.show();
-
+        
+        stage.setOnCloseRequest(controller::handleClose);
         scene.setOnKeyPressed(controller::handleKeyPress);
     }
     public static void main(String[] args) {

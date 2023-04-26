@@ -1,6 +1,7 @@
 package ija.project.pacman_project;
 
 import ija.project.common.Field;
+import ija.project.game.GhostObject;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -8,17 +9,21 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class PacManController implements Initializable {
     private Timer timer;
     private PacManModel model;
     private PacManView view;
+    private double FPS = 30.0;
+    double ghostsSpeed = 2;
+    double pacManSpeed = 3.5;
+    private List<Timer> timers = new ArrayList<Timer>();
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -27,45 +32,61 @@ public class PacManController implements Initializable {
     public PacManController(PacManModel model, PacManView view){
         this.model = model;
         this.view = view;
-//        try {
-//            updateGame();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        this.startTimer();
+        this.setMoveTimer();
     }
 
-    private void startTimer(){
-        this.timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
+    /**
+     * Handle key press event
+     * Changes pacman direction based on pressed key
+     * @param e
+     */
+    public void handleKeyPress(KeyEvent e) {
+        switch (e.getCode()) {
+            case UP, W -> model.pacman.setDirection(Field.Direction.U);
+            case LEFT, A -> model.pacman.setDirection(Field.Direction.L);
+            case DOWN, S -> model.pacman.setDirection(Field.Direction.D);
+            case RIGHT, D -> model.pacman.setDirection(Field.Direction.R);
+        }
+    }
+
+    /*
+     * Set timer for moving ghosts and pacman
+     * Ghosts movement is handled differently than pacman's in separate task
+     */
+    public void setMoveTimer() {
+        Timer timer = new Timer();
+        timers.add(timer);
+        TimerTask ghostsTask = new TimerTask() {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        try {
-                            updateGame();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        model.moveGhosts();
                     }
                 });
             }
         };
-
-        double FPS = 30.0;
-        long FPSms = (long)(1000.0 / FPS);
-        this.timer.schedule(timerTask, 0, FPSms);
+        TimerTask pacManTask = new TimerTask() {
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        model.movePacman();
+                    }
+                });
+            }
+        };
+        /* Speed in field per second */
+        timer.schedule(ghostsTask, 0, (long)(1000.0 / ghostsSpeed));
+        timer.schedule(pacManTask, 0, (long)(1000.0 / pacManSpeed));
     }
 
-    private void updateGame() throws IOException {
-        this.view.drawMaze();
-    }
-
-    public void handleKeyPress(KeyEvent e) {
-        switch (e.getCode()) {
-            case UP, W -> model.movePacman(Field.Direction.U);
-            case LEFT, A -> model.movePacman(Field.Direction.L);
-            case DOWN, S -> model.movePacman(Field.Direction.D);
-            case RIGHT, D -> model.movePacman(Field.Direction.R);
+    /**
+     * Handle window close event
+     * @param windowEvent
+     */
+    public void handleClose(WindowEvent windowEvent){
+        for (Timer timer : timers) {
+            timer.cancel();
         }
+        Platform.exit();
     }
 }

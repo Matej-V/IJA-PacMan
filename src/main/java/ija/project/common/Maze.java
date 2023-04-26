@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface Maze {
 
-    public Group getGroup();
+    Group getGroup();
 
     /* TODO */
-    public boolean setGhosts(List<MazeObject> ghosts);
+    void setGhosts(List<MazeObject> ghosts);
     
     /**
      * Returns a field at a given position.
@@ -50,5 +50,7 @@ public interface Maze {
      * 
      */
     void printMaze();
+
+    void moveObjectsToStart();
 
 }

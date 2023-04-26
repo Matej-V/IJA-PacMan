@@ -4,31 +4,30 @@ import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.game.*;
 import ija.project.common.Field;
-
-
-import javafx.scene.layout.VBox;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PacManModel {
     String currentMap;
     Maze maze;
     private int score = 0;
-
     public PacmanObject pacman;
     private Field currField;
 
-    public PacManModel(){
+    public PacManModel() {
         generateGame();
+        this.pacman = (PacmanObject) this.maze.getPacMan();
     }
-    public void generateGame(){
+
+    public void generateGame() {
         chooseRandomMap();
     }
+
     public void chooseRandomMap() {
         File folder = new File("./src/main/resources/ija/project/pacman_project/maps");
         File[] listOfFiles = folder.listFiles();
@@ -47,7 +46,8 @@ public class PacManModel {
         this.currentMap = map;
         this.loadFile(PacManApp.class.getResource("maps/" + currentMap));
     }
-    public void loadFile(URL file){
+
+    public void loadFile(URL file) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.openStream()))) {
             String line;
             MazeConfigure cfg = new MazeConfigure();
@@ -65,30 +65,50 @@ public class PacManModel {
         }
     }
 
-    public void movePacman(Field.Direction dir){
-        Field nextField = this.pacman.getField().nextField(dir);
-        if (nextField instanceof WallField) return;
-
-        MazeObject obj = nextField.get();
-        if (((PathField)nextField).point){
-            this.score++;
-            ((PathField)nextField).point = false;
-            nextField.setMaze(this.maze);
-        }
-
-//        if (obj instanceof GhostObject){
-//            this.pacman.decreaseLives();
-//        }
-
-        this.pacman.move(dir);
-        this.maze.setPacMan(this.pacman);
-    }
-
-    public int getScore(){
+    public int getScore() {
         return this.score;
     }
 
-    public Maze getMazeRepresentation(){
-        return this.maze;
+    public void moveGhosts() {
+        ListIterator<MazeObject> it = maze.ghosts().listIterator();
+        while (it.hasNext()){
+            GhostObject ghost = (GhostObject) it.next();
+            chaseAlgorithm(ghost);
+            ghost.move(ghost.getDirection());
+        }
+    }
+
+    public void movePacman(){
+        this.pacman.move(pacman.getDirection());
+    }
+
+    public void chaseAlgorithm(MazeObject ghost) {
+        Field.Direction dir = ghost.getDirection();
+        //create list of available directions
+        List<Field.Direction> availableDirections = new CopyOnWriteArrayList<>();
+        for (Field.Direction d : Field.Direction.values()) {
+            if (ghost.canMove(d)) {
+                availableDirections.add(d);
+            }
+        }
+        // if you can't continue in the same direction, choose random direction, try not to go back, if the only option is to go back, go back
+        if (!availableDirections.contains(dir)) {
+            availableDirections.remove(dir.opposite(dir));
+            if (availableDirections.size() == 0) {
+                dir = dir.opposite(dir);
+            } else {
+                Random rand = new Random();
+                dir = availableDirections.get(rand.nextInt(availableDirections.size()));
+            }
+        }
+        else {
+            // if you can continue in the same direction, choose random direction with 30% chance, but try not to go back
+            availableDirections.remove(dir.opposite(dir));
+            Random rand = new Random();
+            if (rand.nextInt(10) < 3) {
+                dir = availableDirections.get(rand.nextInt(availableDirections.size()));
+            }
+        }
+        ghost.setDirection(dir);
     }
 }

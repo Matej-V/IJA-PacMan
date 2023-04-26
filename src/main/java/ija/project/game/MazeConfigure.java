@@ -15,9 +15,9 @@ public class MazeConfigure {
     private int cols;
     private int rowToBeProcessed;
     private boolean errorIndicator;
-    private ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
+    private final ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeClass maze;
-    private List<Color> colorList;
+    private final List<Color> colorList;
 
     /**
      * Constructor for MazeConfigure.

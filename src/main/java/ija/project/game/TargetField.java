@@ -1,5 +1,6 @@
 package ija.project.game;
 
+import ija.project.common.AbstractObservableField;
 import ija.project.common.Field;
 import ija.project.common.Maze;
 import ija.project.common.MazeObject;
@@ -7,7 +8,7 @@ import ija.project.common.MazeObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TargetField implements Field {
+public class TargetField extends AbstractObservableField implements Field {
     private final int row; // row of the field
     private final int col; // column of the field
     private Maze maze; // maze to which the field belongs
@@ -38,7 +39,7 @@ public class TargetField implements Field {
         };
     }
 
-    public boolean put(MazeObject object) throws Exception {
+    public boolean put(MazeObject object){
         if(object instanceof PacmanObject){
             for(MazeObject mz : this.mazeObjects){
                 if(mz instanceof GhostObject){
@@ -99,5 +100,20 @@ public class TargetField implements Field {
     @Override
     public boolean contains(MazeObject object) {
         return this.mazeObjects.contains(object);
+    }
+
+    @Override
+    public int getRow() {
+        return this.row;
+    }
+
+    @Override
+    public int getCol() {
+        return this.col;
+    }
+
+    @Override
+    public boolean hasPoint() {
+        return false;
     }
 }
