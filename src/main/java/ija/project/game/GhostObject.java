@@ -1,12 +1,20 @@
 package ija.project.game;
 
+import ija.project.common.AbstractObservableObject;
 import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import javafx.scene.paint.Color;
 
-public class GhostObject implements MazeObject {
+import java.util.Random;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class GhostObject extends AbstractObservableObject implements MazeObject {
     private PathField field;
+    private final PathField startField;
     public Color color;
+    private Field.Direction direction;
+    ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
      * Constructor for GhostObject.
@@ -15,7 +23,9 @@ public class GhostObject implements MazeObject {
      */
     public GhostObject(PathField field, Color color) {
         this.field = field;
+        this.startField = field;
         this.color = color;
+        this.direction = Field.Direction.values()[new Random().nextInt(Field.Direction.values().length)];
     }
 
     /**
@@ -39,17 +49,20 @@ public class GhostObject implements MazeObject {
      */
     @Override
     public boolean move(Field.Direction dir) {
-        if (!canMove(dir)) {
-            return false;
-        } else {
-            PathField nextField = (PathField) field.nextField(dir);
-            field.remove(this);
-            try {
-                nextField.put(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        try {
+            lock.writeLock().lock();
+            if (!canMove(dir)) {
+                lock.writeLock().unlock();
+                return false;
+            } else {
+                PathField nextField = (PathField) field.nextField(dir);
+                this.field.remove(this);
+                if (nextField.put(this)) {
+                    this.field = nextField;
+                }
             }
-            field = nextField;
+        }finally {
+            lock.writeLock().unlock();
         }
         return true;
     }
@@ -77,5 +90,31 @@ public class GhostObject implements MazeObject {
     /* Return 0 or error? TODO */
     public int getLives() {
         return 0;
+    }
+
+    @Override
+    public Field.Direction getDirection() {
+        return this.direction;
+    }
+
+    @Override
+    public void setDirection(Field.Direction dir) {
+        notifyObservers();
+        this.direction = dir;
+    }
+
+    /**
+     * Removes object from a current <code>field</code> and moves it to a starting field <code>startField</code>
+     */
+    @Override
+    public void moveToStart() {
+        try {
+            lock.writeLock().lock();
+            this.field.remove(this);
+            this.startField.put(this);
+            this.field = this.startField;
+        }finally {
+            lock.writeLock().unlock();
+        }
     }
 }

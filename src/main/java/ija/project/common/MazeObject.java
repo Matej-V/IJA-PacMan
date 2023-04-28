@@ -3,7 +3,7 @@ package ija.project.common;
 /**
  * Interface representing the maze object.
  */
-public interface MazeObject {
+public interface MazeObject extends Observable{
     /**
      * Verifies whether it is possible to move the object in the specified
      * direction.
@@ -43,6 +43,12 @@ public interface MazeObject {
      * 
      * @return Number of lives of the object.
      */
-    int getLives();  
+    int getLives();
+
+    Field.Direction getDirection();
+
+    void setDirection(Field.Direction dir);
+
+    void moveToStart();
 
 }

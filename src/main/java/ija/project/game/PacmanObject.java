@@ -2,12 +2,18 @@ package ija.project.game;
 
 import ija.project.common.*;
 
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * Class representing the pacman object.
  */
-public class PacmanObject implements MazeObject {
+public class PacmanObject extends AbstractObservableObject implements MazeObject {
     private PathField field;
+    private final PathField startField;
     private Integer lives;
+    private Field.Direction direction;
+    ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
      * Constructor for PacmanObject.
@@ -16,7 +22,9 @@ public class PacmanObject implements MazeObject {
      */
     public PacmanObject(PathField field) {
         this.field = field;
+        this.startField = field;
         this.lives = 3;
+        this.direction = Field.Direction.U;
     }
 
     /**
@@ -33,15 +41,13 @@ public class PacmanObject implements MazeObject {
     }
 
     /**
-     * Returns the number of lives of the object.
-     * 
-     * @return Number of lives of the object.
+     * Check if object is PacMan
+     * @return True if object is PacMan, otherwise false
      */
     @Override
-    public boolean isPacman(){
+    public boolean isPacman() {
         return true;
     }
-
 
     /**
      * Moves the object in the specified direction if possible.
@@ -51,17 +57,19 @@ public class PacmanObject implements MazeObject {
      */
     @Override
     public boolean move(Field.Direction dir) {
-        if (!canMove(dir)) {
-            return false;
-        } else {
-            PathField nextField = (PathField) field.nextField(dir);
-            field.remove(this);
-            try {
-                nextField.put(this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        try {
+            lock.writeLock().lock();
+            if (!canMove(dir)) {
+                return false;
+            } else {
+                PathField nextField = (PathField) this.field.nextField(dir);
+                this.field.remove(this);
+                if (nextField.put(this)) {
+                    this.field = nextField;
+                }
             }
-            field = nextField;
+        }finally {
+            lock.writeLock().unlock();
         }
         return true;
     }
@@ -84,13 +92,41 @@ public class PacmanObject implements MazeObject {
         return this.lives;
     }
 
+    @Override
+    public Field.Direction getDirection() {
+        return this.direction;
+    }
+
+    @Override
+    public void setDirection(Field.Direction dir) {
+        this.direction = dir;
+        /* Notify view when direction is changed to change view of PacMan */
+        notifyObservers();
+    }
+
     /**
      * Decreases the number of lives of the pacman.
      * 
      */
-    public void decreaseLives(){
+    public void decreaseLives() {
         this.lives--;
     }
 
+    /**
+     * Moves the pacman to the start position.
+     * 
+     */
+    public void moveToStart() {
+        try {
+            lock.writeLock().lock();
+            this.field.remove(this);
+            this.startField.put(this);
+            this.field = this.startField;
+            this.decreaseLives();
+        }finally {
+            lock.writeLock().unlock();
+        }
+
+    }
 
 }

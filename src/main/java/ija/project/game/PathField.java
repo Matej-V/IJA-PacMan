@@ -1,8 +1,6 @@
 package ija.project.game;
 
 import ija.project.common.*;
-//import ija.ija2022.homework2.tool.common.AbstractObservableField;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +8,12 @@ import java.util.List;
 /**
  * Class representing the path field.
  */
-public class PathField implements Field {
+public class PathField extends AbstractObservableField implements Field {
     private final int row; // row of the field
     private final int col; // column of the field
     private Maze maze; // maze to which the field belongs
     private final List<MazeObject> mazeObjects; // list of objects on the field - extension for future
     public boolean point;
-
 
     /**
      * Constructor.
@@ -47,32 +44,34 @@ public class PathField implements Field {
     }
 
     public boolean put(MazeObject object) {
-        if(object instanceof PacmanObject){
-            if(this.point){
+        if (object instanceof PacmanObject) {
+            if (this.point) {
                 this.point = false;
             }
-            for(MazeObject mz : this.mazeObjects){
-                if(mz instanceof GhostObject){
+            for (MazeObject mazeObject : this.mazeObjects) {
+                if (mazeObject instanceof GhostObject) {
                     ((PacmanObject) object).decreaseLives();
+                    this.maze.moveObjectsToStart();
+                    return false;
                 }
             }
-        }
-
-        if(object instanceof GhostObject){
-            for(MazeObject mz : this.mazeObjects){
-                if(mz instanceof PacmanObject){
-                    ((PacmanObject) this.mazeObjects.get(0)).decreaseLives();
+        } else if (object instanceof GhostObject) {
+            for (MazeObject o : this.mazeObjects) {
+                if (o instanceof PacmanObject) {
+                    this.maze.moveObjectsToStart();
+                    return false;
                 }
             }
         }
 
         this.mazeObjects.add(object);
-        //notifyObservers();
+        notifyObservers();
         return true;
     }
+
     public boolean remove(MazeObject object) {
         this.mazeObjects.remove(object);
-        //notifyObservers();
+        notifyObservers();
         return true;
     }
 
@@ -113,6 +112,21 @@ public class PathField implements Field {
     @Override
     public boolean contains(MazeObject object) {
         return this.mazeObjects.contains(object);
+    }
+
+    @Override
+    public int getRow() {
+        return this.row;
+    }
+
+    @Override
+    public int getCol() {
+        return this.col;
+    }
+
+    @Override
+    public boolean hasPoint() {
+        return this.point;
     }
 
 }

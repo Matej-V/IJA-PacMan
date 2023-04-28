@@ -1,14 +1,11 @@
 package ija.project.game;
 
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
 
 import java.util.ArrayList;
 
 import ija.project.common.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +17,7 @@ public class MazeClass implements Maze {
     protected List<List<Field>> fields;
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeObject PacMan;
-    private Group mazeGroup;
+    private final Group mazeGroup;
 
     /**
      * Constructor.
@@ -52,9 +49,8 @@ public class MazeClass implements Maze {
     }
 
     /* TODO */
-    public boolean setGhosts(List<MazeObject> ghosts) {
+    public void setGhosts(List<MazeObject> ghosts) {
         this.ghosts = ghosts;
-        return true;
     }
 
     /**
@@ -99,8 +95,7 @@ public class MazeClass implements Maze {
      */
     @Override
     public List<MazeObject> ghosts() {
-        List<MazeObject> copy = new ArrayList<>(this.ghosts);
-        return copy;
+        return new ArrayList<>(this.ghosts);
     }
 
     /**
@@ -114,7 +109,7 @@ public class MazeClass implements Maze {
                     System.out.print('X');
                 }
                 if (this.fields.get(row).get(column) instanceof PathField) {
-                    if( ((PathField) this.fields.get(row).get(column)).get() != null ){
+                    if( this.fields.get(row).get(column).get() != null ){
                         System.out.print('S');
                     }else{
                         System.out.print('.');
@@ -125,6 +120,15 @@ public class MazeClass implements Maze {
                 }
             }
             System.out.println();
+        }
+    }
+
+    @Override
+    public void moveObjectsToStart() {
+        PacMan.moveToStart();
+        for (MazeObject mazeObject : ghosts) {
+            GhostObject ghost = (GhostObject) mazeObject;
+            ghost.moveToStart();
         }
     }
 

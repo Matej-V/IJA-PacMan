@@ -6,7 +6,7 @@ import ija.project.common.*;
 /**
  * Class representing the wall field.
  */
-public class WallField implements Field {
+public class WallField extends AbstractObservableField implements Field {
     private final int row; // row of the field
     private final int col; // column of the field
     private Maze maze; // maze to which the field belongs
@@ -79,6 +79,21 @@ public class WallField implements Field {
 
     @Override
     public boolean contains(MazeObject object) {
+        return false;
+    }
+
+    @Override
+    public int getRow() {
+        return this.row;
+    }
+
+    @Override
+    public int getCol() {
+        return this.col;
+    }
+
+    @Override
+    public boolean hasPoint() {
         return false;
     }
 }

@@ -1,6 +1,6 @@
 package ija.project.common;
 
-public interface Field {
+public interface Field extends Observable{
 
     /*
      * Direction of the field.
@@ -10,6 +10,21 @@ public interface Field {
         L, // left
         R, // right
         U // up
+;
+
+        public Direction opposite(Direction dir) {
+            if (dir == D) {
+                return U;
+            } else if (dir == U) {
+                return D;
+            } else if (dir == L) {
+                return R;
+            } else if (dir == R) {
+                return L;
+            }else{
+                return null;
+            }
+        }
     }
 
     /**
@@ -66,4 +81,24 @@ public interface Field {
     boolean canMove();
 
     boolean contains(MazeObject object);
+
+    /**
+     * Returns the row of the field.
+     * 
+     * @return row of the field
+     */
+    int getRow();
+
+    /**
+     * Returns the column of the field.
+     * 
+     * @return column of the field
+     */
+    int getCol();
+
+    /**
+     * Check if the field has point.
+     * @return True if the field has point, false otherwise
+     */
+    boolean hasPoint();
 }
