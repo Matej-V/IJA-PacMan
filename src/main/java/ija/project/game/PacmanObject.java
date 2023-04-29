@@ -94,12 +94,19 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         return this.lives;
     }
 
+    /**
+     * Returns score in current game
+     * @return Score of the pacman in the game
+     */
     public int getScore() {
         return this.score;
     }
 
+    /**
+     * Updates score of the pacman in the game
+     *
+     */
     public void updateScore(){
-        System.out.println("Updating score: " + this.getScore());
         this.score++;
         /* Notification for UI view update */
         notifyObservers();
@@ -122,7 +129,6 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * 
      */
     public void decreaseLives() {
-        System.out.println("Decreasing lives: " + this.getLives());
         this.lives--;
         /* Notification for UI view update */
         notifyObservers();

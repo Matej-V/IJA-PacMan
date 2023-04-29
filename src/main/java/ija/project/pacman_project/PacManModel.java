@@ -16,7 +16,6 @@ public class PacManModel {
     String currentMap;
     Maze maze;
     public PacmanObject pacman;
-    private Field currField;
 
     public PacManModel() {
         generateGame();
@@ -105,10 +104,5 @@ public class PacManModel {
             }
         }
         ghost.setDirection(dir);
-    }
-
-    public int getHealth(){
-        System.out.println(this.pacman.getLives());
-        return this.pacman.getLives();
     }
 }
