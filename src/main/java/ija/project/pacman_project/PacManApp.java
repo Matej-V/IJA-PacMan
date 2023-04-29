@@ -23,13 +23,13 @@ public class PacManApp extends Application {
         // Generate view
         PacManView view = new PacManView(model);
         // Generate controller
-        PacManController controller = new PacManController(model, view);
+        PacManController controller = new PacManController(model);
         // Initialize Controller
         controller.initialize(null, null);
 
 
         VBox gameBox = view.generateGame();
-        Scene scene = new Scene(gameBox, 500, 550);
+        Scene scene = new Scene(gameBox, 500, 580);
 
         //scene.setUserData(controller);
 

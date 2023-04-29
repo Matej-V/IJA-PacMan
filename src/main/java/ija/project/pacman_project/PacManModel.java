@@ -15,7 +15,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PacManModel {
     String currentMap;
     Maze maze;
-    private int score = 0;
     public PacmanObject pacman;
     private Field currField;
 
@@ -65,10 +64,6 @@ public class PacManModel {
         }
     }
 
-    public int getScore() {
-        return this.score;
-    }
-
     public void moveGhosts() {
         ListIterator<MazeObject> it = maze.ghosts().listIterator();
         while (it.hasNext()){
@@ -78,7 +73,7 @@ public class PacManModel {
         }
     }
 
-    public void movePacman(){
+    public void movePacman() {
         this.pacman.move(pacman.getDirection());
     }
 
@@ -110,5 +105,10 @@ public class PacManModel {
             }
         }
         ghost.setDirection(dir);
+    }
+
+    public int getHealth(){
+        System.out.println(this.pacman.getLives());
+        return this.pacman.getLives();
     }
 }

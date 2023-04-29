@@ -46,11 +46,11 @@ public class PathField extends AbstractObservableField implements Field {
     public boolean put(MazeObject object) {
         if (object instanceof PacmanObject) {
             if (this.point) {
+                ((PacmanObject) object).updateScore();
                 this.point = false;
             }
             for (MazeObject mazeObject : this.mazeObjects) {
                 if (mazeObject instanceof GhostObject) {
-                    ((PacmanObject) object).decreaseLives();
                     this.maze.moveObjectsToStart();
                     return false;
                 }
@@ -128,5 +128,4 @@ public class PathField extends AbstractObservableField implements Field {
     public boolean hasPoint() {
         return this.point;
     }
-
 }

@@ -92,6 +92,11 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         return 0;
     }
 
+    /* Same question as above for getLives() method */
+    public int getScore() {
+        return 0;
+    }
+
     @Override
     public Field.Direction getDirection() {
         return this.direction;

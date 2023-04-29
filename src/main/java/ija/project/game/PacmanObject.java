@@ -12,6 +12,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     private PathField field;
     private final PathField startField;
     private Integer lives;
+    private Integer score;
     private Field.Direction direction;
     ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -24,6 +25,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         this.field = field;
         this.startField = field;
         this.lives = 3;
+        this.score = 0;
         this.direction = Field.Direction.U;
     }
 
@@ -92,6 +94,17 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         return this.lives;
     }
 
+    public int getScore() {
+        return this.score;
+    }
+
+    public void updateScore(){
+        System.out.println("Updating score: " + this.getScore());
+        this.score++;
+        /* Notification for UI view update */
+        notifyObservers();
+    }
+
     @Override
     public Field.Direction getDirection() {
         return this.direction;
@@ -109,7 +122,10 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * 
      */
     public void decreaseLives() {
+        System.out.println("Decreasing lives: " + this.getLives());
         this.lives--;
+        /* Notification for UI view update */
+        notifyObservers();
     }
 
     /**
@@ -126,7 +142,5 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         }finally {
             lock.writeLock().unlock();
         }
-
     }
-
 }

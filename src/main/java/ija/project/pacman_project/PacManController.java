@@ -18,8 +18,6 @@ import java.util.*;
 public class PacManController implements Initializable {
     private Timer timer;
     private PacManModel model;
-    private PacManView view;
-    private double FPS = 30.0;
     double ghostsSpeed = 2;
     double pacManSpeed = 3.5;
     private List<Timer> timers = new ArrayList<Timer>();
@@ -29,9 +27,8 @@ public class PacManController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
-    public PacManController(PacManModel model, PacManView view){
+    public PacManController(PacManModel model){
         this.model = model;
-        this.view = view;
         this.setMoveTimer();
     }
 

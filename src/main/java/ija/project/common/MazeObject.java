@@ -45,6 +45,8 @@ public interface MazeObject extends Observable{
      */
     int getLives();
 
+    int getScore();
+
     Field.Direction getDirection();
 
     void setDirection(Field.Direction dir);
