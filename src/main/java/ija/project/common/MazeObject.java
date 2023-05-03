@@ -1,5 +1,7 @@
 package ija.project.common;
 
+import ija.project.game.GameException;
+
 /**
  * Interface representing the maze object.
  */
@@ -19,7 +21,7 @@ public interface MazeObject extends Observable{
      * @param dir Direction in which the object should be moved.
      * @return True if the move was successful, false otherwise.
      */
-    boolean move(Field.Direction dir);
+    boolean move(Field.Direction dir) throws GameException;
 
     /**
      * Returns true if the object is a pacman.
@@ -51,6 +53,6 @@ public interface MazeObject extends Observable{
 
     void setDirection(Field.Direction dir);
 
-    void moveToStart();
+    void moveToStart() throws GameException;
 
 }

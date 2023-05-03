@@ -6,10 +6,7 @@ import ija.project.pacman_project.PacManApp;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+
 
 import java.io.IOException;
 
@@ -41,8 +38,8 @@ public class UIBarView extends Group implements ComponentView, Observable.Observ
         Label score = new Label("Score: " + this.model.getScore());
         score.setTranslateX(400);
         hearts.setTranslateX(800);
-        score.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
-        hearts.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
+        score.setStyle("-fx-text-fill: #00022A; -fx-font-size: 16px; ");
+        hearts.setStyle("-fx-text-fill: #00022A; -fx-font-size: 16px; ");
         getChildren().addAll(hearts, score);
 
     }

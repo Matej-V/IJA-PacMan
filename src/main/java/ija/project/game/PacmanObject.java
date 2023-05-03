@@ -58,7 +58,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * @return True if the move was successful, false otherwise.
      */
     @Override
-    public boolean move(Field.Direction dir) {
+    public boolean move(Field.Direction dir) throws GameException{
         try {
             lock.writeLock().lock();
             if (!canMove(dir)) {
@@ -68,6 +68,9 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 this.field.remove(this);
                 if (nextField.put(this)) {
                     this.field = nextField;
+                }
+                if(this.field.hasKey()){
+                    this.field.getKey().collectKey();
                 }
             }
         }finally {
@@ -116,7 +119,6 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     public Field.Direction getDirection() {
         return this.direction;
     }
-
     @Override
     public void setDirection(Field.Direction dir) {
         this.direction = dir;
@@ -128,17 +130,20 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * Decreases the number of lives of the pacman.
      * 
      */
-    public void decreaseLives() {
+    public void decreaseLives() throws GameException {
         this.lives--;
         /* Notification for UI view update */
         notifyObservers();
+        if(lives == 0){
+            throw new GameException(GameException.TypeOfException.LostGame);
+        }
     }
 
     /**
      * Moves the pacman to the start position.
      * 
      */
-    public void moveToStart() {
+    public void moveToStart() throws GameException {
         try {
             lock.writeLock().lock();
             this.field.remove(this);

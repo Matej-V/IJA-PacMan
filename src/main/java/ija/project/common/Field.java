@@ -1,5 +1,7 @@
 package ija.project.common;
 
+import java.util.List;
+
 public interface Field extends Observable{
 
     /*
@@ -71,7 +73,7 @@ public interface Field extends Observable{
      * 
      * @return object on the field
      */
-    MazeObject get();
+    List<MazeObject> get();
 
     /**
      * Checks whether the field is path field.
@@ -101,4 +103,6 @@ public interface Field extends Observable{
      * @return True if the field has point, false otherwise
      */
     boolean hasPoint();
+
+    boolean hasKey();
 }

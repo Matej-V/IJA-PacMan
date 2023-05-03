@@ -1,52 +1,57 @@
 package ija.project.pacman_project;
 
-import ija.project.common.Field;
+import ija.project.common.Observable;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-// import implementation
+public class PacManApp extends Application implements Observable.Observer {
+    private Stage stage;
+    private PacManView view;
+    private PacManController controller;
 
-import java.io.IOException;
-
-public class PacManApp extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
+        double width = Screen.getPrimary().getVisualBounds().getWidth();
+        double height = Screen.getPrimary().getVisualBounds().getHeight();
         // Generate model
         PacManModel model = new PacManModel();
         // Generate view
-        PacManView view = new PacManView(model);
+        this.view =  new PacManView(model, width, height);
+        view.addObserver(this);
         // Generate controller
-        PacManController controller = new PacManController(model);
-        // Initialize Controller
-        controller.initialize(null, null);
-
-
-        VBox gameBox = view.generateGame();
-        Scene scene = new Scene(gameBox, 500, 580);
-
-        //scene.setUserData(controller);
-
+        controller = new PacManController(model, view);
+        // Set controller for view
+        view.setController(controller);
+        // Generate main screen
+        view.generateMainScreen();
+        Scene scene = new Scene(view.gameScreen, width, height);
         stage.setTitle("PacMan");
         stage.setScene(scene);
-        stage.setResizable(false);
-        stage.setOnCloseRequest(e -> {
-            Platform.exit();
-            //System.exit(0);
-        });
+        stage.setMaximized(true);
+        stage.setResizable(true);
+        stage.setOnCloseRequest(e -> Platform.exit());
+        this.stage = stage;
         stage.show();
-        
+
         stage.setOnCloseRequest(controller::handleClose);
         scene.setOnKeyPressed(controller::handleKeyPress);
     }
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void update(Observable var1) {
+        privateUpdate();
+    }
+
+    public void privateUpdate(){
+        Scene newScene = new Scene(view.gameScreen, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        newScene.setOnKeyPressed(controller::handleKeyPress);
+        stage.setScene(newScene);
     }
 }
         

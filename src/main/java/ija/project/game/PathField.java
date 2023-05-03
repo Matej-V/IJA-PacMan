@@ -11,8 +11,8 @@ import java.util.List;
 public class PathField extends AbstractObservableField implements Field {
     private final int row; // row of the field
     private final int col; // column of the field
-    private Maze maze; // maze to which the field belongs
-    private final List<MazeObject> mazeObjects; // list of objects on the field - extension for future
+    protected Maze maze; // maze to which the field belongs
+    protected final List<MazeObject> mazeObjects; // list of objects on the field - extension for future
     public boolean point;
 
     /**
@@ -43,27 +43,13 @@ public class PathField extends AbstractObservableField implements Field {
         };
     }
 
-    public boolean put(MazeObject object) {
+    public boolean put(MazeObject object) throws GameException{
         if (object instanceof PacmanObject) {
             if (this.point) {
                 ((PacmanObject) object).updateScore();
                 this.point = false;
             }
-            for (MazeObject mazeObject : this.mazeObjects) {
-                if (mazeObject instanceof GhostObject) {
-                    this.maze.moveObjectsToStart();
-                    return false;
-                }
-            }
-        } else if (object instanceof GhostObject) {
-            for (MazeObject o : this.mazeObjects) {
-                if (o instanceof PacmanObject) {
-                    this.maze.moveObjectsToStart();
-                    return false;
-                }
-            }
         }
-
         this.mazeObjects.add(object);
         notifyObservers();
         return true;
@@ -81,11 +67,8 @@ public class PathField extends AbstractObservableField implements Field {
     }
 
     @Override
-    public MazeObject get() {
-        if (this.mazeObjects.isEmpty()) {
-            return null;
-        }
-        return this.mazeObjects.get(0);
+    public List<MazeObject> get() {
+        return this.mazeObjects;
     }
 
     @Override
@@ -127,5 +110,25 @@ public class PathField extends AbstractObservableField implements Field {
     @Override
     public boolean hasPoint() {
         return this.point;
+    }
+
+    public boolean hasKey() {
+        boolean result = false;
+        for (MazeObject o : mazeObjects) {
+            if (o instanceof KeyObject) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public KeyObject getKey() {
+        for (MazeObject o : mazeObjects) {
+            if (o instanceof KeyObject) {
+                return (KeyObject) o;
+            }
+        }
+        return null;
     }
 }

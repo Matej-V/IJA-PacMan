@@ -13,22 +13,25 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PacManModel {
-    String currentMap;
-    Maze maze;
+    private String currentMap;
+    public Maze maze;
     public PacmanObject pacman;
+    public int totalScore;
 
     public PacManModel() {
-        generateGame();
-        this.pacman = (PacmanObject) this.maze.getPacMan();
+        newGame();
     }
 
     public void generateGame() {
         chooseRandomMap();
+        pacman = (PacmanObject) this.maze.getPacMan();
     }
 
     public void chooseRandomMap() {
         File folder = new File("./src/main/resources/ija/project/pacman_project/maps");
-        File[] listOfFiles = folder.listFiles();
+        File[] listOfFiles;
+        listOfFiles = folder.listFiles();
+        assert listOfFiles != null;
         List<File> files = Arrays.asList(listOfFiles);
         Random rand = new Random();
         // Get random file from list if same as current map, get another one
@@ -63,19 +66,64 @@ public class PacManModel {
         }
     }
 
-    public void moveGhosts() {
-        ListIterator<MazeObject> it = maze.ghosts().listIterator();
-        while (it.hasNext()){
-            GhostObject ghost = (GhostObject) it.next();
+    /**
+     * Moves Ghosts in currently set directions
+     * @throws GameException
+     */
+    public void moveGhosts() throws GameException {
+        for (MazeObject mazeObject : maze.ghosts()) {
+            GhostObject ghost = (GhostObject) mazeObject;
             chaseAlgorithm(ghost);
             ghost.move(ghost.getDirection());
         }
+        checkColision();
     }
 
-    public void movePacman() {
+    /**
+     * Moves Pacman in currently set direction
+     * @throws GameException
+     */
+    public void movePacman() throws GameException {
         this.pacman.move(pacman.getDirection());
+        checkColision();
+        checkWin();
     }
 
+
+    /**
+     * Checks if Pacman and Ghosts are on the same field. If so, checks if Ghost is eatable. If yes, Ghost is moved to start. If not, Pacman and Ghosts are moved to start.
+     * @throws GameException
+     */
+    private void checkColision() throws GameException{
+        for (MazeObject mazeObject : maze.ghosts()) {
+            GhostObject ghost = (GhostObject) mazeObject;
+            if (ghost.getField().equals(pacman.getField())) {
+                if(ghost.isEatable()){
+                    ghost.moveToStart();
+                }else{
+                    maze.moveObjectsToStart();
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if Pacman is on TargetField and all keys are colledted. If so, throws CompletedGame exception.
+     * @throws GameException
+     */
+    private void checkWin() throws GameException{
+        if(pacman.getField() instanceof TargetField){
+            if(maze.canComplete()){
+                throw new GameException(GameException.TypeOfException.CompletedGame);
+            }
+        }
+    }
+    
+
+    /**
+     * Chooses direction to move in for a ghost
+     * @param ghost Ghost which direction will be set
+     */
     public void chaseAlgorithm(MazeObject ghost) {
         Field.Direction dir = ghost.getDirection();
         //create list of available directions
@@ -105,4 +153,24 @@ public class PacManModel {
         }
         ghost.setDirection(dir);
     }
+
+    /**
+     * Generates next maze for player. Used when previous game completed successfully. Total score is as sum of previous games.
+     */
+    public void nextGame(){
+        generateGame();
+    }
+
+    /**
+     * Generates new game for player. Total score is set to 0.
+     */
+    public void newGame(){
+        totalScore = 0;
+        generateGame();
+    }
+
+    public void updateTotalScore(){
+        totalScore += pacman.getScore();
+    }
+
 }

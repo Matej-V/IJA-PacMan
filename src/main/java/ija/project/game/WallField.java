@@ -1,6 +1,8 @@
 package ija.project.game;
 
 import ija.project.common.*;
+
+import java.util.List;
 //import ija.ija2022.homework2.tool.common.AbstractObservableField;
 
 /**
@@ -52,7 +54,7 @@ public class WallField extends AbstractObservableField implements Field {
     }
 
     @Override
-    public MazeObject get() {
+    public List<MazeObject> get() {
         return null;
     }
 
@@ -96,4 +98,6 @@ public class WallField extends AbstractObservableField implements Field {
     public boolean hasPoint() {
         return false;
     }
+
+    public boolean hasKey(){return false;}
 }
