@@ -2,6 +2,10 @@ package ija.project.game;
 
 import ija.project.common.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -14,6 +18,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     private Integer lives;
     private Integer score;
     private Field.Direction direction;
+    private List<Field.Direction> path;
     ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
@@ -27,6 +32,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         this.lives = 3;
         this.score = 0;
         this.direction = Field.Direction.U;
+        this.path = new ArrayList<>();
     }
 
     /**
@@ -87,11 +93,20 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Returns the number of lives of the pacman.
-     * 
+     *
      * @return Number of lives of the pacman.
      */
     public int getLives() {
         return this.lives;
+    }
+
+    /**
+     * Method to set amount of pacman lives (from save file)
+     * @param lives Saved lives
+     */
+    public void setLives(int lives){
+        this.lives = lives;
+        notifyObservers();
     }
 
     /**
@@ -100,6 +115,15 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     public int getScore() {
         return this.score;
+    }
+
+    /**
+     * Method to set score in current pacman game (from save file)
+     * @param score Saved score
+     */
+    public void setScore(int score){
+        this.score = score;
+        notifyObservers();
     }
 
     /**
@@ -147,6 +171,28 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
             this.decreaseLives();
         }finally {
             lock.writeLock().unlock();
+        }
+    }
+
+    public void updatePath(Field.Direction dir){
+        this.path.add(dir);
+    }
+
+    public void setPath(String line){
+        for (char c : line.toCharArray()) {
+            switch (c) {
+                case 'R' -> this.path.add(Field.Direction.R);
+                case 'L' -> this.path.add(Field.Direction.L);
+                case 'D' -> this.path.add(Field.Direction.D);
+                case 'U' -> this.path.add(Field.Direction.U);
+            }
+        }
+    }
+
+    public void moveFromSave() {
+        ListIterator<Field.Direction> it = this.path.listIterator();
+        while (it.hasNext()){
+            this.move(it.next());
         }
     }
 }

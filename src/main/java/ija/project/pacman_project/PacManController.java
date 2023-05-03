@@ -57,6 +57,7 @@ public class PacManController implements Initializable {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
+                        System.out.println("Moving ghosts...");
                         model.moveGhosts();
                     }
                 });
@@ -65,6 +66,7 @@ public class PacManController implements Initializable {
         TimerTask pacManTask = new TimerTask() {
             public void run() {
                 Platform.runLater(new Runnable() {
+
                     public void run() {
                         model.movePacman();
                     }

@@ -17,7 +17,8 @@ public class MazeConfigure {
     private boolean errorIndicator;
     private final ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeClass maze;
-    private final List<Color> colorList;
+
+    private char ghostID = 'A';
 
     /**
      * Constructor for MazeConfigure.
@@ -26,11 +27,6 @@ public class MazeConfigure {
         this.rowToBeProcessed = 1;
         this.errorIndicator = false;
         this.maze = null;
-        this.colorList = new ArrayList<Color>();
-        colorList.add(Color.PINK);
-        colorList.add(Color.CYAN);
-        colorList.add(Color.ORANGE);
-        colorList.add(Color.WHITE);
     }
 
     /**
@@ -82,8 +78,16 @@ public class MazeConfigure {
                 case 'G', 'g' -> {
                     PathField field = new PathField(this.rowToBeProcessed, c + 1);
                     field.setMaze(this.maze);
-                    Random rand = new Random();
-                    GhostObject ghostObject = new GhostObject(field, colorList.get(rand.nextInt(colorList.size())));
+                    GhostObject ghostObject = new GhostObject(ghostID, field);
+                    ghostID++;
+                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
+                    field.put(ghostObject);
+                    this.ghosts.add(ghostObject);
+                }
+                case 'A', 'B', 'C', 'D', 'E' -> {
+                    PathField field = new PathField(this.rowToBeProcessed, c + 1);
+                    field.setMaze(this.maze);
+                    GhostObject ghostObject = new GhostObject(character, field);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
                     field.put(ghostObject);
                     this.ghosts.add(ghostObject);
@@ -136,5 +140,4 @@ public class MazeConfigure {
         }
         return null;
     }
-
 }

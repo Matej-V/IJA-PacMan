@@ -17,6 +17,7 @@ public class UIBarView extends Group implements ComponentView, Observable.Observ
     private final MazeObject model;
     private Image heartImage;
     private Image deathImage;
+    private Group smallBar = new Group();
 
     public UIBarView(MazeObject model) {
         this.model = model;
@@ -34,17 +35,29 @@ public class UIBarView extends Group implements ComponentView, Observable.Observ
 
     public void paint() {
         getChildren().clear();
-//        ImageView heart = new ImageView(this.heartImage);
-//        ImageView heart2 = new ImageView(this.heartImage);
-//        ImageView heart3 = new ImageView(this.heartImage);
-        Label hearts = new Label("Health: " + this.model.getLives());
-        Label score = new Label("Score: " + this.model.getScore());
+        ImageView h = new ImageView(this.heartImage);
+        ImageView h1 = new ImageView(this.heartImage);
+        h1.setX(40);
+        ImageView h2 = new ImageView(this.heartImage);
+        h2.setX(80);
+        switch (this.model.getLives()) {
+            case 1 -> {
+                this.smallBar.getChildren().clear();
+                this.smallBar.getChildren().addAll(h);
+            }
+            case 2 -> {
+                this.smallBar.getChildren().clear();
+                this.smallBar.getChildren().addAll(h, h1);
+            }
+            case 3 -> {
+                this.smallBar.getChildren().clear();
+                this.smallBar.getChildren().addAll(h, h1, h2);
+            }
+        }
+        Label score = new Label("SCORE: " + this.model.getScore());
         score.setTranslateX(400);
-        hearts.setTranslateX(800);
-        score.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
-        hearts.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
-        getChildren().addAll(hearts, score);
-
+        score.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 19px; -fx-font-weight: bold;");
+        getChildren().addAll(smallBar, score);
     }
 
     public void update(Observable var1){

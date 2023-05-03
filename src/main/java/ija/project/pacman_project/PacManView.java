@@ -62,6 +62,7 @@ public class PacManView {
     public Group drawUI() throws IOException {
         /* TODO - implement observer logic with these UI elements*/
 //        Rectangle healthBar = new Rectangle(500, 40);
+        System.out.println(this.model.pacman);
         UIBarView UIBar = new UIBarView(this.model.pacman);
         this.UIGroup.getChildren().add(UIBar);
         return this.UIGroup;
@@ -69,14 +70,30 @@ public class PacManView {
 
     public VBox generateGame() throws IOException {
         // Create Menu
-        Menu menu = new Menu("Menu");
+        Menu menu = new Menu("Game");
         MenuItem mapChange = new MenuItem("Change Map");
+        MenuItem saveGame = new MenuItem("Save Game");
+        MenuItem loadGame = new MenuItem("Load Game");
 
         //Create MenuBar
         MenuBar menuBar = new MenuBar(menu);
-        menu.getItems().addAll(mapChange);
+        menu.getItems().addAll(mapChange, saveGame, loadGame);
         mapChange.setOnAction(e -> {
             System.out.println("Changing map");
+        });
+
+        saveGame.setOnAction(e -> {
+            // TODO: save data from model to .save file
+            System.out.println("Saving the game");
+        });
+
+        loadGame.setOnAction(e -> {
+            // TODO: load data from .save file to the model
+            //       + move all the objects to their saved positions
+            //         according to their paths
+            this.model.loadGame();
+            this.model.pacman.moveFromSave();
+            System.out.println("Loading the game");
         });
 
         VBox gameBox = new VBox(menuBar, drawUI(), drawMaze());

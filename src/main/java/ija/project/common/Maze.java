@@ -53,4 +53,5 @@ public interface Maze {
 
     void moveObjectsToStart();
 
+    void registerGhostPath(char id, String line);
 }
