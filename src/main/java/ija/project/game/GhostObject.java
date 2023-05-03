@@ -5,6 +5,9 @@ import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -12,9 +15,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class GhostObject extends AbstractObservableObject implements MazeObject {
     private PathField field;
     private final PathField startField;
+    private char ID;
     public Color color;
+    public List<Color> colors = new ArrayList<Color>(){{
+       add(Color.GREENYELLOW);
+       add(Color.HONEYDEW);
+       add(Color.HOTPINK);
+       add(Color.LIGHTBLUE);
+       add(Color.LEMONCHIFFON);
+    }};
     private Field.Direction direction;
     private boolean isEatable = false;
+    private List<Field.Direction> path;
     ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
@@ -22,10 +34,23 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      *
      * @param field field on which the object is located
      */
-    public GhostObject(PathField field, Color color) {
+    public GhostObject(char ID, PathField field) {
+        this.ID = ID;
         this.field = field;
         this.startField = field;
-        this.color = color;
+        if (this.ID == 'A') {
+            this.color = colors.get(0);
+        } else if (this.ID == 'B') {
+            this.color = colors.get(1);
+        } else if (this.ID == 'C') {
+            this.color = colors.get(2);
+        } else if (this.ID == 'D') {
+            this.color = colors.get(3);
+        } else if (this.ID == 'E') {
+            this.color = colors.get(4);
+        }
+
+        this.path = new ArrayList<>();
         this.direction = Field.Direction.values()[new Random().nextInt(Field.Direction.values().length)];
     }
 
@@ -130,5 +155,27 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }finally {
             lock.writeLock().unlock();
         }
+    }
+
+    public void moveFromSave() {
+        ListIterator<Field.Direction> it = this.path.listIterator();
+        while (it.hasNext()){
+            this.move(it.next());
+        }
+    }
+
+    public void setPath(String line){
+        for (char c : line.toCharArray()) {
+            switch (c) {
+                case 'R' -> this.path.add(Field.Direction.R);
+                case 'L' -> this.path.add(Field.Direction.L);
+                case 'D' -> this.path.add(Field.Direction.D);
+                case 'U' -> this.path.add(Field.Direction.U);
+            }
+        }
+    }
+
+    public char getId() {
+        return this.ID;
     }
 }

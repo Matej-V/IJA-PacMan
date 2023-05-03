@@ -54,4 +54,7 @@ public interface Maze {
     void colllectKey();
 
     boolean canComplete();
+
+    void registerGhostPath(char id, String line);
+
 }

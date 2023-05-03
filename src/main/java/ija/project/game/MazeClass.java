@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import ija.project.common.*;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Class representing the maze.
@@ -104,9 +105,9 @@ public class MazeClass implements Maze {
                     System.out.print('X');
                 }
                 if (this.fields.get(row).get(column) instanceof PathField) {
-                    if( this.fields.get(row).get(column).get() != null ){
+                    if( this.fields.get(row).get(column).get() != null ) {
                         System.out.print('S');
-                    }else{
+                    }else {
                         System.out.print('.');
                     }
                 }
@@ -135,6 +136,7 @@ public class MazeClass implements Maze {
         return this.PacMan;
     }
 
+
     public void colllectKey(){
         this.keysToCollect--;
     }
@@ -143,5 +145,18 @@ public class MazeClass implements Maze {
         return keysToCollect == 0;
     }
 
+    private GhostObject findGhost(char id) {
+        for (MazeObject mo : ghosts) {
+            if (((GhostObject)mo).getId() == id) return (GhostObject) mo;
+        }
+
+        return null;
+    }
+
+    public void registerGhostPath(char id, String line) {
+        GhostObject ghost = this.findGhost(id);
+        System.out.println(ghost);
+        ghost.setPath(line);
+    }
 }
 
