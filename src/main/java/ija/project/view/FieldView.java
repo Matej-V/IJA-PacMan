@@ -86,7 +86,7 @@ public class FieldView extends Pane implements Observable.Observer {
      * a new Pane to the view. The Pane is either a PacmanObjectView or a
      * GhostObjectView.
      */
-    public void privateUpdate() {
+    private void privateUpdate() {
         generateBorder();
         generateFood();
         generateKey();

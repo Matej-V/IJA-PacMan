@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 
 import java.io.IOException;
 
-public class UIBarView extends Group implements ComponentView, Observable.Observer {
+public class UIBarView extends Group implements Observable.Observer {
     private final MazeObject model;
     private Image heartImage;
     private Image deathImage;
