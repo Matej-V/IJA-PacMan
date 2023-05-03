@@ -18,7 +18,7 @@ public class MazeClass implements Maze {
     protected List<List<Field>> fields;
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeObject PacMan;
-    private final Group mazeGroup;
+    public int keysToCollect;
 
     /**
      * Constructor.
@@ -42,11 +42,6 @@ public class MazeClass implements Maze {
                 }
             }
         }
-        this.mazeGroup = new Group();
-    }
-
-    public Group getGroup(){
-        return this.mazeGroup;
     }
 
     /* TODO */
@@ -125,7 +120,7 @@ public class MazeClass implements Maze {
     }
 
     @Override
-    public void moveObjectsToStart() {
+    public void moveObjectsToStart() throws GameException {
         PacMan.moveToStart();
         for (MazeObject mazeObject : ghosts) {
             GhostObject ghost = (GhostObject) mazeObject;
@@ -139,6 +134,15 @@ public class MazeClass implements Maze {
 
     public MazeObject getPacMan(){
         return this.PacMan;
+    }
+
+
+    public void colllectKey(){
+        this.keysToCollect--;
+    }
+
+    public boolean canComplete(){
+        return keysToCollect == 0;
     }
 
     private GhostObject findGhost(char id) {

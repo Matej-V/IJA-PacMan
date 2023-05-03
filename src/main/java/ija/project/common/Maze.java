@@ -1,12 +1,10 @@
 package ija.project.common;
 
-import javafx.scene.Group;
+import ija.project.game.GameException;
 
 import java.util.List;
 
 public interface Maze {
-
-    Group getGroup();
 
     /* TODO */
     void setGhosts(List<MazeObject> ghosts);
@@ -51,7 +49,12 @@ public interface Maze {
      */
     void printMaze();
 
-    void moveObjectsToStart();
+    void moveObjectsToStart() throws GameException;
+
+    void colllectKey();
+
+    boolean canComplete();
 
     void registerGhostPath(char id, String line);
+
 }

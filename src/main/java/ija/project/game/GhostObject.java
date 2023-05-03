@@ -25,6 +25,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
        add(Color.LEMONCHIFFON);
     }};
     private Field.Direction direction;
+    private boolean isEatable = false;
     private List<Field.Direction> path;
     ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -73,7 +74,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      * @return True if the move was successful, false otherwise.
      */
     @Override
-    public boolean move(Field.Direction dir) {
+    public boolean move(Field.Direction dir) throws GameException {
         try {
             lock.writeLock().lock();
             if (!canMove(dir)) {
@@ -133,11 +134,19 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         this.direction = dir;
     }
 
+    public void setEatable(boolean eatable){
+        isEatable = eatable;
+    }
+
+    public boolean isEatable(){
+        return isEatable;
+    }
+
     /**
      * Removes object from a current <code>field</code> and moves it to a starting field <code>startField</code>
      */
     @Override
-    public void moveToStart() {
+    public void moveToStart() throws GameException {
         try {
             lock.writeLock().lock();
             this.field.remove(this);

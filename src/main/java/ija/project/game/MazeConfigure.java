@@ -72,7 +72,11 @@ public class MazeConfigure {
                     startField.setMaze(this.maze);
                     PacmanObject pacmanObject1 = new PacmanObject(startField);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1,startField);
-                    startField.put(pacmanObject1);
+                    try {
+                        startField.put(pacmanObject1);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.maze.setPacMan(pacmanObject1);
                 }
                 case 'G', 'g' -> {
@@ -89,7 +93,11 @@ public class MazeConfigure {
                     field.setMaze(this.maze);
                     GhostObject ghostObject = new GhostObject(character, field);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
-                    field.put(ghostObject);
+                    try {
+                        field.put(ghostObject);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.ghosts.add(ghostObject);
                 }
                 case 'T', 't' -> {
@@ -97,10 +105,16 @@ public class MazeConfigure {
                     target.setMaze(this.maze);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, target);
                 }
-                // TODO key field
                 case 'K', 'k' -> {
                     PathField keyField = new PathField(this.rowToBeProcessed, c + 1);
                     keyField.setMaze(this.maze);
+                    KeyObject key = new KeyObject(keyField, this.maze);
+                    try {
+                        keyField.put(key);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
+                    this.maze.keysToCollect++;
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, keyField);
                 }
                 default -> {

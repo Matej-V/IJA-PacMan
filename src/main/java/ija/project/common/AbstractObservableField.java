@@ -1,10 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-package ija.project
-        .common;
+package ija.project.common;
 
 import java.util.HashSet;
 import java.util.Set;

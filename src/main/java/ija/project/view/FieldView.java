@@ -3,12 +3,12 @@ package ija.project.view;
 import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
-import ija.project.game.PathField;
-import ija.project.game.TargetField;
+import ija.project.game.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class FieldView extends Pane implements Observable.Observer {
     private final Field model;
     private Circle Food;
     private Rectangle Border;
+    private Rectangle Key;
     private final List<Pane> objects = new ArrayList<>();
     double x;
     double y;
@@ -44,12 +45,12 @@ public class FieldView extends Pane implements Observable.Observer {
      */
     public void generateBorder() {
         if (model.canMove()) {
-            if (model instanceof PathField){
-                Border = new Rectangle(x, y, size, size);
-                Border.setFill(Color.web("#00022A"));
-            } else if (model instanceof TargetField) {
+            if (model instanceof TargetField) {
                 Border = new Rectangle(x, y, size, size);
                 Border.setFill(Color.web("#ff8484"));
+            }else{
+                Border = new Rectangle(x, y, size, size);
+                Border.setFill(Color.web("#00022A"));
             }
         } else{
             Border = new Rectangle(x, y, size, size);
@@ -65,7 +66,18 @@ public class FieldView extends Pane implements Observable.Observer {
         if (Food == null) {
             Food = new Circle(x + size / 2, y + size / 2, size * 0.1, Color.WHITE);
         }
-        Food.setVisible(model.hasPoint());
+        Food.setVisible(model.hasPoint() &&  !(this.model  instanceof TargetField));
+    }
+
+    /**
+     * Generates and set visibility of key on a field
+     */
+    public void generateKey() {
+        if (model.hasKey()) {
+            Key = new Rectangle(x + size * 0.3, y + size * 0.3, size * 0.4, size * 0.4);
+            Key.setFill(Color.YELLOW);
+            Food.setVisible(false);
+        }
     }
 
     /**
@@ -77,15 +89,20 @@ public class FieldView extends Pane implements Observable.Observer {
     public void privateUpdate() {
         generateBorder();
         generateFood();
+        generateKey();
         if (model.canMove()) {
-            if (!model.isEmpty()) {
-                MazeObject o = model.get();
-                Pane v = o.isPacman() ? new PacmanObjectView(this, model.get())
-                        : new GhostObjectView(this, model.get());
-                objects.add(v);
-            } else {
-                objects.clear();
+            objects.clear();
+            List<MazeObject> objectsOnField = model.get();
+            for (MazeObject o:  objectsOnField) {
+                if (o instanceof PacmanObject){
+                    objects.add(new PacmanObjectView(this, o));
+                } else if (o instanceof GhostObject) {
+                    objects.add(new GhostObjectView(this, o));
+                }else if (o instanceof KeyObject){
+                    objects.add(new Pane(Key));
+                }
             }
+
         }
         getChildren().setAll(Border, Food);
         getChildren().addAll(objects);
