@@ -157,7 +157,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }
     }
 
-    public void moveFromSave() {
+    public void moveFromSave() throws GameException {
         ListIterator<Field.Direction> it = this.path.listIterator();
         while (it.hasNext()){
             this.move(it.next());

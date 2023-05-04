@@ -2,6 +2,8 @@ package ija.project.view;
 
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -16,6 +18,7 @@ public class PacmanObjectView extends Pane implements Observable.Observer {
         this.mouth = new Arc(parent.x + parent.size / 2, parent.y + parent.size / 2, parent.size * 0.35, parent.size * 0.35, 30, 300);
         mouth.setType(ArcType.ROUND);
         mouth.setFill(Color.web("f0d000"));
+
         getChildren().add(mouth);
         paint();
         model.addObserver(this);

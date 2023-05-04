@@ -6,11 +6,7 @@ import ija.project.game.*;
 import ija.project.common.Field;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,8 +16,6 @@ public class PacManModel {
     public PacmanObject pacman;
     public List<String> ghostsPaths;
     String fileID;
-    
-    public int totalScore;
 
     public PacManModel() {
         newGame();
@@ -133,7 +127,7 @@ public class PacManModel {
             chaseAlgorithm(ghost);
             ghost.move(ghost.getDirection());
         }
-        checkColision();
+        checkCollision();
     }
 
     /**
@@ -142,7 +136,7 @@ public class PacManModel {
      */
     public void movePacman() throws GameException {
         this.pacman.move(pacman.getDirection());
-        checkColision();
+        checkCollision();
         checkWin();
     }
 
@@ -151,11 +145,12 @@ public class PacManModel {
      * Checks if Pacman and Ghosts are on the same field. If so, checks if Ghost is eatable. If yes, Ghost is moved to start. If not, Pacman and Ghosts are moved to start.
      * @throws GameException
      */
-    private void checkColision() throws GameException{
+    private void checkCollision() throws GameException{
         for (MazeObject mazeObject : maze.ghosts()) {
             GhostObject ghost = (GhostObject) mazeObject;
             if (ghost.getField().equals(pacman.getField())) {
                 if(ghost.isEatable()){
+                    pacman.setScore(pacman.getScore()+100);
                     ghost.moveToStart();
                 }else{
                     maze.moveObjectsToStart();
@@ -222,12 +217,7 @@ public class PacManModel {
      * Generates new game for player. Total score is set to 0.
      */
     public void newGame(){
-        totalScore = 0;
         generateGame();
-    }
-
-    public void updateTotalScore(){
-        totalScore += pacman.getScore();
     }
 
 }
