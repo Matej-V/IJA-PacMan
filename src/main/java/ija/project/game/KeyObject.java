@@ -5,21 +5,27 @@ import ija.project.common.Field;
 import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 
-import java.nio.file.Path;
-
 public class KeyObject extends AbstractObservableObject implements MazeObject {
+    /**
+     * Current field on which the object is placed.
+     */
     private Field field;
+    /**
+     * Maze to which the object belongs.
+     */
     private Maze maze;
 
-    public KeyObject(PathField field, Maze maze){
+    public boolean collected;
+
+    public KeyObject(PathField field){
         this.field = field;
-        this.maze = maze;
+        this.collected = false;
     }
     public void collectKey(){
-        this.field.remove(this);
-        this.field = null;
-        this.maze.colllectKey();
+        this.collected = true;
+        notifyObservers();
     }
+
     @Override
     public boolean canMove(Field.Direction dir) {
         return false;
@@ -27,6 +33,11 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
 
     @Override
     public boolean move(Field.Direction dir) {
+        return false;
+    }
+
+    @Override
+    public boolean move(Field field) throws GameException {
         return false;
     }
 
@@ -64,4 +75,5 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
     public void moveToStart() {
         throw new UnsupportedOperationException();
     }
+
 }

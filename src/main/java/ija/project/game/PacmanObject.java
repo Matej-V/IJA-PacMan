@@ -13,13 +13,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Class representing the pacman object.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
-    private PathField field;
+    private Field field;
     private final PathField startField;
     private Integer lives;
     private Integer score;
     private Field.Direction direction;
-    private List<Field.Direction> path;
+    private final List<Field.Direction> path;
     ReadWriteLock lock = new ReentrantReadWriteLock();
+    public boolean pointCollected;
 
     /**
      * Constructor for PacmanObject.
@@ -75,13 +76,52 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 if (nextField.put(this)) {
                     this.field = nextField;
                 }
-                if(this.field.hasKey()){
-                    this.field.getKey().collectKey();
+                if(field.hasKey()){
+                    field.getMaze().removeKey(field.getKey());
                 }
+            }
+            System.out.println("Pacman: " + getField().getRow() + getField().getCol());
+        }finally {
+            lock.writeLock().unlock();
+        }
+        notifyLogObservers(this);
+        return true;
+    }
+
+    @Override
+    public boolean move(Field field) throws GameException {
+        try {
+            lock.writeLock().lock();
+            if(field.canMove()){
+                //set direction accroding to the field position and current position
+                if(this.field.getRow() == field.getRow()){
+                    if(this.field.getCol() < field.getCol()){
+                        setDirection(Field.Direction.R);
+                    }else{
+                        setDirection(Field.Direction.L);
+                    }
+                }else{
+                    if(this.field.getRow() < field.getRow()){
+                        setDirection(Field.Direction.D);
+                    }else{
+                        setDirection(Field.Direction.U);
+                    }
+                }
+
+                this.field.remove(this);
+                if (((PathField)field).put(this)) {
+                    this.field = field;
+                }
+                if(this.field.hasKey()){
+                    this.field.getMaze().removeKey(this.field.getKey());
+                }
+            }else {
+                return false;
             }
         }finally {
             lock.writeLock().unlock();
         }
+        notifyLogObservers(this);
         return true;
     }
 
@@ -156,11 +196,12 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     public void decreaseLives() throws GameException {
         this.lives--;
+        System.out.println("Lives: "+ lives);
         /* Notification for UI view update */
-        notifyObservers();
         if(lives == 0){
             throw new GameException(GameException.TypeOfException.LostGame);
         }
+        notifyObservers();
     }
 
     /**
@@ -170,10 +211,11 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     public void moveToStart() throws GameException {
         try {
             lock.writeLock().lock();
-            this.field.remove(this);
-            this.startField.put(this);
+            move(startField);
             this.field = this.startField;
-            this.decreaseLives();
+            decreaseLives();
+            notifyObservers();
+            notifyLogObservers(this);
         }finally {
             lock.writeLock().unlock();
         }
@@ -195,9 +237,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     public void moveFromSave() throws GameException {
-        ListIterator<Field.Direction> it = this.path.listIterator();
-        while (it.hasNext()){
-            this.move(it.next());
+        for (Field.Direction value : this.path) {
+            this.move(value);
         }
     }
 }

@@ -16,7 +16,7 @@ public class GhostObjectView extends Pane implements Observable.Observer {
     public GhostObjectView(FieldView parent, MazeObject model){
         this.parent = parent;
         this.model = (GhostObject)  model;
-        this. ghost = new Circle(parent.x + parent.size/2, parent.y + parent.size/2,parent.size * 0.35, this.model.color);
+        this. ghost = new Circle(parent.x + parent.size/2, parent.y + parent.size/2,parent.size * 0.35, this.model.getColor());
         getChildren().add(ghost);
         paint();
         model.addObserver(this);

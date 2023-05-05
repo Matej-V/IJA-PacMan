@@ -5,6 +5,7 @@ import java.util.Set;
 
 public abstract class AbstractObservableObject implements  MazeObject{
     private final Set<Observable.Observer> observers = new HashSet<>();
+    private final Set<Observable.Observer> logObservers = new HashSet<>();
 
     public AbstractObservableObject() {
     }
@@ -20,4 +21,12 @@ public abstract class AbstractObservableObject implements  MazeObject{
     public void notifyObservers() {
         this.observers.forEach((o) -> o.update(this));
     }
+
+    public void addLogObserver(Observable.Observer o) {
+        this.logObservers.add(o);
+    }
+
+    public void removeLogObserver(Observable.Observer o) {this.logObservers.remove(o);}
+
+    public void notifyLogObservers(MazeObject observable){this.logObservers.forEach((o) -> o.update(this));}
 }

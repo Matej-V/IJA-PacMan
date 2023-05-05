@@ -85,6 +85,11 @@ public class WallField extends AbstractObservableField implements Field {
     }
 
     @Override
+    public Maze getMaze() {
+        return maze;
+    }
+
+    @Override
     public int getRow() {
         return this.row;
     }
@@ -100,4 +105,9 @@ public class WallField extends AbstractObservableField implements Field {
     }
 
     public boolean hasKey(){return false;}
+
+    @Override
+    public KeyObject getKey() {
+        return null;
+    }
 }

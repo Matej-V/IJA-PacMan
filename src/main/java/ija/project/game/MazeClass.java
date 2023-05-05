@@ -2,6 +2,7 @@ package ija.project.game;
 
 import javafx.scene.Group;
 
+import java.io.*;
 import java.util.ArrayList;
 
 import ija.project.common.*;
@@ -17,8 +18,10 @@ public class MazeClass implements Maze {
     private final int numOfCols;
     protected List<List<Field>> fields;
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
+    private List<MazeObject> keys = new ArrayList<MazeObject>();
     private MazeObject PacMan;
     public int keysToCollect;
+    public Field target;
 
     /**
      * Constructor.
@@ -90,34 +93,10 @@ public class MazeClass implements Maze {
      * @return List of ghosts
      */
     @Override
-    public List<MazeObject> ghosts() {
+    public List<MazeObject> getGhosts() {
         return new ArrayList<>(this.ghosts);
     }
 
-    /**
-     * Prints a string representation of the maze to stdOut
-     * 
-     */
-    public void printMaze() {
-        for (int row = 0; row < this.numOfRows; row++) {
-            for (int column = 0; column < this.numOfCols; column++) {
-                if (this.fields.get(row).get(column) instanceof WallField) {
-                    System.out.print('X');
-                }
-                if (this.fields.get(row).get(column) instanceof PathField) {
-                    if( this.fields.get(row).get(column).get() != null ) {
-                        System.out.print('S');
-                    }else {
-                        System.out.print('.');
-                    }
-                }
-                if (this.fields.get(row).get(column) == null) {
-                    System.out.print('-');
-                }
-            }
-            System.out.println();
-        }
-    }
 
     @Override
     public void moveObjectsToStart() throws GameException {
@@ -137,9 +116,7 @@ public class MazeClass implements Maze {
     }
 
 
-    public void colllectKey(){
-        this.keysToCollect--;
-    }
+
 
     public boolean canComplete(){
         return keysToCollect == 0;
@@ -157,6 +134,19 @@ public class MazeClass implements Maze {
         GhostObject ghost = this.findGhost(id);
         System.out.println(ghost);
         ghost.setPath(line);
+    }
+
+    public boolean addKey(MazeObject key){
+        if(key != null) {
+            this.keys.add(key);
+            return true;
+        }
+        return false;
+    }
+
+    public void removeKey(MazeObject key){
+        ((KeyObject)key).collectKey();
+        this.keys.remove(key);
     }
 }
 

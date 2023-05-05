@@ -1,5 +1,7 @@
 package ija.project.common;
 
+import ija.project.game.KeyObject;
+
 import java.util.List;
 
 public interface Field extends Observable{
@@ -13,7 +15,12 @@ public interface Field extends Observable{
         R, // right
         U // up
 ;
-
+        /**
+         * Returns the opposite direction.
+         * 
+         * @param dir direction
+         * @return opposite direction
+         */
         public Direction opposite(Direction dir) {
             if (dir == D) {
                 return U;
@@ -45,7 +52,7 @@ public interface Field extends Observable{
     Field nextField(Direction dirs);
 
     /**
-     * Returns row of the field.
+     * Puts the object on the field.
      * 
      * @param object object to be put on the field
      * @return row of the field
@@ -69,9 +76,9 @@ public interface Field extends Observable{
     boolean isEmpty();
 
     /**
-     * Returns the object on the field.
+     * Returns the list of objects on the field.
      * 
-     * @return object on the field
+     * @return list of objects on the field
      */
     List<MazeObject> get();
 
@@ -82,7 +89,20 @@ public interface Field extends Observable{
      */
     boolean canMove();
 
+    /**
+     * Checks whether the field contains the object.
+     * 
+     * @param object object to be checked
+     * @return True if the field contains the object, false otherwise
+     */
     boolean contains(MazeObject object);
+
+    /**
+     * Returns the maze to which the field belongs.
+     * 
+     * @return maze to which the field belongs
+     */
+    Maze getMaze();
 
     /**
      * Returns the row of the field.
@@ -104,5 +124,15 @@ public interface Field extends Observable{
      */
     boolean hasPoint();
 
+    /**
+     * Check if the field has key.
+     * @return True if the field has key, false otherwise
+     */
     boolean hasKey();
+
+    /**
+     * Get the key from the field.
+     * @return KeyObject
+     */
+    public KeyObject getKey();
 }

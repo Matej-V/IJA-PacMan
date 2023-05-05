@@ -12,7 +12,14 @@ public interface Observable {
 
     void notifyObservers();
 
-    public interface Observer {
+    interface Observer {
         void update(Observable var1);
     }
+
+    void addLogObserver(Observer var1);
+
+    void removeLogObserver(Observer var1);
+
+    void notifyLogObservers(MazeObject o);
+
 }

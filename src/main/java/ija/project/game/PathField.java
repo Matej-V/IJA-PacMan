@@ -45,8 +45,10 @@ public class PathField extends AbstractObservableField implements Field {
 
     public boolean put(MazeObject object) throws GameException{
         if (object instanceof PacmanObject) {
+            ((PacmanObject) object).pointCollected = false;
             if (this.point) {
                 ((PacmanObject) object).updateScore();
+                ((PacmanObject) object).pointCollected = true;
                 this.point = false;
             }
         }
@@ -95,6 +97,11 @@ public class PathField extends AbstractObservableField implements Field {
     @Override
     public boolean contains(MazeObject object) {
         return this.mazeObjects.contains(object);
+    }
+
+    @Override
+    public Maze getMaze() {
+        return maze;
     }
 
     @Override

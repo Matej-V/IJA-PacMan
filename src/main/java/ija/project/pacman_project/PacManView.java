@@ -1,5 +1,7 @@
 package ija.project.pacman_project;
 
+import ija.project.common.Maze;
+import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
@@ -26,21 +28,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PacManView implements Observable {
-    private final PacManModel model;
+    private Maze model;
     private PacManController controller;
-    public Pane gameScreen;
+
+    public Pane currentScene;
     private final Set<Observable.Observer> observers = new HashSet<>();
     private double widthOfScreen;
     private double heightOfScreen;
+    public StackPane gameBox; // UI + maze
 
-    public PacManView(PacManModel model, double width, double height) {
-        this.model = model;
+    public PacManView( double width, double height) {
         this.widthOfScreen = width;
         this.heightOfScreen = height;
     }
 
     public void setController(PacManController controller) {
         this.controller = controller;
+        this.model = controller.maze;
     }
 
     /**
@@ -53,9 +57,9 @@ public class PacManView implements Observable {
          * Now all the fields are generated here as FieldView objects and added into
          * mazeTile
          */
-        for (int row = 0; row < model.maze.numRows(); row++) {
-            for (int column = 0; column < model.maze.numCols(); column++) {
-                FieldView fieldView = new FieldView(model.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / model.maze.numCols(), row, column);
+        for (int row = 0; row < controller.maze.numRows(); row++) {
+            for (int column = 0; column < controller.maze.numCols(); column++) {
+                FieldView fieldView = new FieldView(controller.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -64,18 +68,19 @@ public class PacManView implements Observable {
 
 
     public Group drawUI() {
-        UIBarView UIBar = new UIBarView(this.model.pacman);
+        UIBarView UIBar = new UIBarView(this.controller.maze.getPacMan());
         return new Group(UIBar);
     }
 
     public void generateMainScreen() {
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
-        this.gameScreen = pane;
+        this.currentScene = pane;
     }
 
 
     public void generateGame() {
+        System.out.println(currentScene);
         // Create Menu
         Menu menu = new Menu("Menu");
         MenuItem restartGame = new MenuItem("Restart game");
@@ -88,36 +93,41 @@ public class PacManView implements Observable {
             controller.newGame();
         });
 
-        VBox gameBox = new VBox();
+        VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
         mazeHolder.alignmentProperty().set(Pos.CENTER);
         HBox statsHolder = new HBox(drawUI());
         statsHolder.alignmentProperty().set(Pos.CENTER);
         statsHolder.setStyle("-fx-background-color: #FFFFFF;");
-        gameBox.getChildren().addAll(menuBar, statsHolder, mazeHolder);
+        uiMazeBox.getChildren().addAll(statsHolder, mazeHolder);
+        //Stack Pane to let us add pause screen over game screen
+        StackPane temp = new StackPane(uiMazeBox);
+        temp.setAlignment(Pos.CENTER);
+        this.gameBox = temp;
         // Set background image
-        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), gameBox);
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
-        this.gameScreen = pane;
+        this.currentScene = pane;
+        System.out.println(currentScene);
         notifyObservers();
     }
 
     public void generateEndScreen() {
         System.out.println("Generating end screen");
         //Score
-        Text score = new Text("Total score: " + model.pacman.getScore());
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"), drawButton("PLAY AGAIN"), score);
         pane.setAlignment(Pos.CENTER);
-        this.gameScreen = pane;
+        this.currentScene = pane;
         notifyObservers();
     }
 
     public void generateSuccessScreen(){
         System.out.println("Generating success screen");
         //Score
-        Text score = new Text("Total score: " + model.pacman.getScore());
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("PLAY AGAIN"), score);
@@ -126,11 +136,11 @@ public class PacManView implements Observable {
         text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
         text.setTranslateY(-150);
         pane.getChildren().add(text);
+        // Load button
         pane.setAlignment(Pos.CENTER);
-        this.gameScreen = pane;
+        this.currentScene = pane;
         notifyObservers();
     }
-
 
 
     private ImageView drawBackgroundImage(String url){
@@ -179,4 +189,12 @@ public class PacManView implements Observable {
     public void notifyObservers() {
         this.observers.forEach((o) -> o.update(this));
     }
+
+    // Unused
+    @Override
+    public void addLogObserver(Observer var1) {}
+    @Override
+    public void removeLogObserver(Observer var1) {}
+    @Override
+    public void notifyLogObservers(MazeObject o) {}
 }
