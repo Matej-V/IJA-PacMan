@@ -155,7 +155,7 @@ public class PacManModel {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
                 while (true) {
                     try {
-                        if (!((line = reader.readLine()) != null)) break;
+                        if ((line = reader.readLine()) == null) break;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -171,10 +171,10 @@ public class PacManModel {
                         LocalDateTime timestamp = LocalDateTime.parse(line.substring(2), formatter);
                         if (lastTimestamp != null) {
                             Duration duration = Duration.between(lastTimestamp, timestamp);
-                            Timer timer = new Timer();
                             String nextLine;
                             try {
-                                nextLine = reader.readLine();
+                                if((nextLine = reader.readLine()) == null) break;
+
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -188,7 +188,7 @@ public class PacManModel {
                             Platform.runLater(new Runnable() {
                               @Override
                               public void run() {
-                                  playOneMove(nextLine, timer);
+                                  playOneMove(nextLine);
                               }
                           });
                         }
@@ -205,7 +205,7 @@ public class PacManModel {
 
     }
 
-    private void playOneMove(String nextLine, Timer timer){
+    private void playOneMove(String nextLine){
         if (nextLine.startsWith("P")) {
             System.out.println("Moving Pacman");
             List<String> splitedLine = List.of(nextLine.split(" "));
@@ -238,7 +238,6 @@ public class PacManModel {
                 throw new RuntimeException(e);
             }
         }
-        timer.cancel();
     }
 
 

@@ -79,6 +79,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }finally {
             lock.writeLock().unlock();
         }
+        notifyLogObservers(this);
         return true;
     }
 

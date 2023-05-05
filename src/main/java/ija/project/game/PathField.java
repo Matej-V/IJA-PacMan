@@ -54,8 +54,6 @@ public class PathField extends AbstractObservableField implements Field {
         }
         this.mazeObjects.add(object);
         notifyObservers();
-        System.out.println("Notified PUT");
-        notifyLogObservers(object);
         return true;
     }
 

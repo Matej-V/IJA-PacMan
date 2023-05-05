@@ -80,9 +80,11 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                     this.field.getKey().collectKey();
                 }
             }
+            System.out.println("Pacman: " + getField().getRow() + getField().getCol());
         }finally {
             lock.writeLock().unlock();
         }
+        notifyLogObservers(this);
         return true;
     }
 
@@ -114,7 +116,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 if(this.field.hasKey()){
                     this.field.getKey().collectKey();
                 }
-            }else{
+            }else {
                 return false;
             }
         }finally {

@@ -23,12 +23,16 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
         synchronized (lock) {
             printMaze(maze);
         }
-        
-        for(int row = 0; row < maze.numRows(); row++){
-            for(int column = 0; column < maze.numCols(); column++){
-                maze.getField(row, column).addLogObserver(this);
-            }
+        maze.getPacMan().addLogObserver(this);
+        for (MazeObject o : maze.ghosts()){
+            o.addLogObserver(this);
         }
+        
+//        for(int row = 0; row < maze.numRows(); row++){
+//            for(int column = 0; column < maze.numCols(); column++){
+//                maze.getField(row, column).addLogObserver(this);
+//            }
+//        }
     }
 
     @Override
