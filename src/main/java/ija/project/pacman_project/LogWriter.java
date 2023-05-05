@@ -8,14 +8,13 @@ import ija.project.game.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.security.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LogWriter extends PrintWriter implements Observable.Observer {
+    /**
+     * Lock for synchronization. Only one thread can write to the file at a time.
+     */
     private static final Object lock = new Object();
 
     public LogWriter(File file, Maze maze) throws FileNotFoundException {
@@ -24,53 +23,59 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
             printMaze(maze);
         }
         maze.getPacMan().addLogObserver(this);
-        for (MazeObject o : maze.ghosts()){
+        for (MazeObject o : maze.getGhosts()) {
             o.addLogObserver(this);
         }
-        
-//        for(int row = 0; row < maze.numRows(); row++){
-//            for(int column = 0; column < maze.numCols(); column++){
-//                maze.getField(row, column).addLogObserver(this);
-//            }
-//        }
     }
 
     @Override
     public void update(Observable var1) {
+        privateUpdate(var1);
+    }
+
+    /**
+     * Writes the update to the file. This method is synchronized.
+     * 
+     * @param var1 Observable object that was updated
+     */
+    private void privateUpdate(Observable var1) {
         synchronized (lock) {
-            privateUpdate(var1);
+            MazeObject modelO = (MazeObject) var1;
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+            String timestamp = formatter.format(now);
+            print("# " + timestamp + "\n");
+            if (modelO instanceof PacmanObject) {
+                print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " " + modelO.getScore()
+                        + " " + modelO.getLives() + (((PacmanObject) modelO).pointCollected ? " p" : "") + "\n");
+            } else if (modelO instanceof GhostObject) {
+                print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/"
+                        + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
+            } else if (modelO instanceof KeyObject) {
+                print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " k" + "\n");
+            }
+            flush();
         }
     }
 
-    private void privateUpdate(Observable var1){
-        MazeObject modelO = (MazeObject)var1;
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-        String timestamp = formatter.format(now);
-        print("# " + timestamp + "\n");
-        if(modelO instanceof PacmanObject){
-            print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol()  + " " + modelO.getScore() + " " + modelO.getLives() + (((PacmanObject)modelO).pointCollected ? " p": "") + "\n" );
-        }else if(modelO instanceof GhostObject){
-            print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
-        }else if (modelO instanceof KeyObject) {
-            print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " k" + "\n");
-        }
-        flush();
-    }
-
-    private void printMaze(Maze maze){
-        println((maze.numRows() - 2) + " "+ (maze.numCols() - 2) + " " + maze.ghosts().size());
+    /**
+     * Prints the maze representation to the file.
+     * 
+     * @param maze Maze to be printed.
+     */
+    private void printMaze(Maze maze) {
+        println((maze.numRows() - 2) + " " + (maze.numCols() - 2) + " " + maze.getGhosts().size());
         for (int row = 1; row < maze.numRows() - 1; row++) {
-            for (int column = 1; column < maze.numCols() - 1 ; column++) {
-                if ( maze.getField(row, column) instanceof WallField) {
+            for (int column = 1; column < maze.numCols() - 1; column++) {
+                if (maze.getField(row, column) instanceof WallField) {
                     print('X');
-                }else if (maze.getField(row, column) instanceof TargetField) {
+                } else if (maze.getField(row, column) instanceof TargetField) {
                     print('T');
-                }else if (maze.getField(row, column) instanceof PathField) {
+                } else if (maze.getField(row, column) instanceof PathField) {
                     if (maze.getField(row, column).get().size() == 0) {
                         print('.');
-                    }else{
-                        for (MazeObject o: maze.getField(row, column).get()) {
+                    } else {
+                        for (MazeObject o : maze.getField(row, column).get()) {
                             if (o instanceof PacmanObject) {
                                 print('S');
                             } else if (o instanceof GhostObject) {

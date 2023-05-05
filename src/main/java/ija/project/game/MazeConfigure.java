@@ -98,13 +98,13 @@ public class MazeConfigure {
                 case 'K', 'k' -> {
                     PathField keyField = new PathField(this.rowToBeProcessed, c + 1);
                     keyField.setMaze(this.maze);
-                    KeyObject key = new KeyObject(keyField, this.maze);
+                    KeyObject key = new KeyObject(keyField);
                     try {
                         keyField.put(key);
                     } catch (GameException e) {
                         throw new RuntimeException(e);
                     }
-                    this.maze.keysToCollect++;
+                    this.maze.addKey(key);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, keyField);
                 }
                 default -> {

@@ -12,7 +12,7 @@ public interface Observable {
 
     void notifyObservers();
 
-    public interface Observer {
+    interface Observer {
         void update(Observable var1);
     }
 

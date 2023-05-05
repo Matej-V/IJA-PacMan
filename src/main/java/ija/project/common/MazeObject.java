@@ -1,6 +1,7 @@
 package ija.project.common;
 
 import ija.project.game.GameException;
+import javafx.application.Platform;
 
 /**
  * Interface representing the maze object.
@@ -20,21 +21,27 @@ public interface MazeObject extends Observable{
      * 
      * @param dir Direction in which the object should be moved.
      * @return True if the move was successful, false otherwise.
+     *
+     * @throws GameException if game is lost or won
      */
     boolean move(Field.Direction dir) throws GameException;
 
+    /**
+     * Moves the object to the specified field if possible.
+     * 
+     * @param field Field in which the object should be moved.
+     * @return True if the move was successful, false otherwise.
+     *
+     * @throws GameException if game is lost or won
+     */
     boolean move(Field field) throws GameException;
 
     /**
-     * Returns true if the object is a pacman.
-     * 
-     * @return True if the object is a pacman, false otherwise.
+     * Move the object to the start field.
      */
-    default boolean isPacman(){
-        return false;
-    }
-    
+    void moveToStart() throws GameException;
 
+    
     /**
      * Returns the field on which the object is located.
      * 
@@ -49,11 +56,34 @@ public interface MazeObject extends Observable{
      */
     int getLives();
 
+    /**
+     * Returns the score of the object.
+     * 
+     * @return Score of the object.
+     */
     int getScore();
 
+    /**
+     * Returns the direction of the object. {@link MazeObject#move(Field.Direction)} should be called with this return value of this method.
+     * 
+     * @return Direction of the object.
+     */
     Field.Direction getDirection();
 
+    /**
+     * Sets the direction of the object in which it should move. Direction should be set before calling {@link MazeObject#move(Field.Direction)}.
+     * 
+     * @param dir Direction in which object should move
+     */
     void setDirection(Field.Direction dir);
 
-    void moveToStart() throws GameException;
+    /**
+     * Returns true if the object is a pacman.
+     * 
+     * @return True if the object is a pacman, false otherwise.
+     */
+    default boolean isPacman(){
+        return false;
+    }
+    
 }

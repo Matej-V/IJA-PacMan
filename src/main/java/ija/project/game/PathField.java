@@ -100,6 +100,11 @@ public class PathField extends AbstractObservableField implements Field {
     }
 
     @Override
+    public Maze getMaze() {
+        return maze;
+    }
+
+    @Override
     public int getRow() {
         return this.row;
     }

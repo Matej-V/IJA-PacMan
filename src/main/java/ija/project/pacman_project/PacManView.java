@@ -1,5 +1,6 @@
 package ija.project.pacman_project;
 
+import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.view.FieldView;
@@ -25,25 +26,25 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 public class PacManView implements Observable {
-    private final PacManModel model;
+    private Maze model;
     private PacManController controller;
-    public Pane currentScene; // currentScreen
+
+    public Pane currentScene;
     private final Set<Observable.Observer> observers = new HashSet<>();
     private double widthOfScreen;
     private double heightOfScreen;
     public StackPane gameBox; // UI + maze
 
-    public PacManView(PacManModel model, double width, double height) {
-        this.model = model;
+    public PacManView( double width, double height) {
         this.widthOfScreen = width;
         this.heightOfScreen = height;
     }
 
     public void setController(PacManController controller) {
         this.controller = controller;
+        this.model = controller.maze;
     }
 
     /**
@@ -56,9 +57,9 @@ public class PacManView implements Observable {
          * Now all the fields are generated here as FieldView objects and added into
          * mazeTile
          */
-        for (int row = 0; row < model.maze.numRows(); row++) {
-            for (int column = 0; column < model.maze.numCols(); column++) {
-                FieldView fieldView = new FieldView(model.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / model.maze.numCols(), row, column);
+        for (int row = 0; row < controller.maze.numRows(); row++) {
+            for (int column = 0; column < controller.maze.numCols(); column++) {
+                FieldView fieldView = new FieldView(controller.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -67,7 +68,7 @@ public class PacManView implements Observable {
 
 
     public Group drawUI() {
-        UIBarView UIBar = new UIBarView(this.model.maze.getPacMan());
+        UIBarView UIBar = new UIBarView(this.controller.maze.getPacMan());
         return new Group(UIBar);
     }
 
@@ -114,7 +115,7 @@ public class PacManView implements Observable {
     public void generateEndScreen() {
         System.out.println("Generating end screen");
         //Score
-        Text score = new Text("Total score: " + model.maze.getPacMan().getScore());
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"), drawButton("PLAY AGAIN"), score);
@@ -126,7 +127,7 @@ public class PacManView implements Observable {
     public void generateSuccessScreen(){
         System.out.println("Generating success screen");
         //Score
-        Text score = new Text("Total score: " + model.maze.getPacMan().getScore());
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("PLAY AGAIN"), score);
@@ -140,7 +141,6 @@ public class PacManView implements Observable {
         this.currentScene = pane;
         notifyObservers();
     }
-
 
 
     private ImageView drawBackgroundImage(String url){

@@ -69,16 +69,6 @@ public class FieldView extends Pane implements Observable.Observer {
         Food.setVisible(model.hasPoint() &&  !(this.model  instanceof TargetField));
     }
 
-    /**
-     * Generates and set visibility of key on a field
-     */
-    public void generateKey() {
-        if (model.hasKey()) {
-            Key = new Rectangle(x + size * 0.3, y + size * 0.3, size * 0.4, size * 0.4);
-            Key.setFill(Color.YELLOW);
-            Food.setVisible(false);
-        }
-    }
 
     /**
      * Updates the view of a field
@@ -89,7 +79,6 @@ public class FieldView extends Pane implements Observable.Observer {
     private void privateUpdate() {
         generateBorder();
         generateFood();
-        generateKey();
         if (model.canMove()) {
             objects.clear();
             List<MazeObject> objectsOnField = model.get();
@@ -99,7 +88,8 @@ public class FieldView extends Pane implements Observable.Observer {
                 } else if (o instanceof GhostObject) {
                     objects.add(new GhostObjectView(this, o));
                 }else if (o instanceof KeyObject){
-                    objects.add(new Pane(Key));
+                    this.Food.setVisible(false);
+                    objects.add(new KeyObjectView(this, o));
                 }
             }
 

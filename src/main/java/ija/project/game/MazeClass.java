@@ -18,6 +18,7 @@ public class MazeClass implements Maze {
     private final int numOfCols;
     protected List<List<Field>> fields;
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
+    private List<MazeObject> keys = new ArrayList<MazeObject>();
     private MazeObject PacMan;
     public int keysToCollect;
     public Field target;
@@ -92,45 +93,10 @@ public class MazeClass implements Maze {
      * @return List of ghosts
      */
     @Override
-    public List<MazeObject> ghosts() {
+    public List<MazeObject> getGhosts() {
         return new ArrayList<>(this.ghosts);
     }
 
-    /**
-     * Prints a string representation of the maze to stdOut
-     * 
-     */
-    public void printMaze(File outputFile) {
-        try {
-            PrintWriter writer = new PrintWriter(outputFile);
-            writer.print(numOfRows + " "+ numOfCols + ghosts.size());
-            for (int row = 1; row < this.numOfRows - 1; row++) {
-                for (int column = 1; column < this.numOfCols - 1 ; column++) {
-                    if (this.fields.get(row).get(column) instanceof WallField) {
-                        writer.print('X');
-                    }else if (this.fields.get(row).get(column) instanceof TargetField) {
-                        writer.print('T');
-                    }else if (this.fields.get(row).get(column) instanceof PathField) {
-                        if(this.fields.get(row).get(column).get() instanceof PacmanObject) {
-                            writer.print('S');
-                        }else if(this.fields.get(row).get(column).get() instanceof GhostObject){
-                            writer.print('G');
-                        }else if(this.fields.get(row).get(column).get() instanceof KeyObject){
-                            writer.print('K');
-                        }else{
-                            writer.print('.');
-                        }
-                    }
-                }
-                writer.println();
-            }
-            writer.println("--- LOG");
-            writer.flush();
-            writer.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void moveObjectsToStart() throws GameException {
@@ -150,9 +116,7 @@ public class MazeClass implements Maze {
     }
 
 
-    public void colllectKey(){
-        this.keysToCollect--;
-    }
+
 
     public boolean canComplete(){
         return keysToCollect == 0;
@@ -170,6 +134,19 @@ public class MazeClass implements Maze {
         GhostObject ghost = this.findGhost(id);
         System.out.println(ghost);
         ghost.setPath(line);
+    }
+
+    public boolean addKey(MazeObject key){
+        if(key != null) {
+            this.keys.add(key);
+            return true;
+        }
+        return false;
+    }
+
+    public void removeKey(MazeObject key){
+        ((KeyObject)key).collectKey();
+        this.keys.remove(key);
     }
 }
 

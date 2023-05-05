@@ -18,19 +18,24 @@ public class PacManApp extends Application implements Observable.Observer {
 
     @Override
     public void start(Stage stage) {
+        /**
+         * Width and height of the screen
+         */
         double width = Screen.getPrimary().getVisualBounds().getWidth();
         double height = Screen.getPrimary().getVisualBounds().getHeight();
-        // Generate model
-        PacManModel model = new PacManModel(stage);
-        // Generate view
-        this.view =  new PacManView(model, width, height);
-        view.addObserver(this);
         // Generate controller
-        controller = new PacManController(model, view);
-        // Set controller for view
+        view =  new PacManView(width, height);
+        controller = new PacManController(view);
         view.setController(controller);
+        // Generate view
+
+
+        view.addObserver(this);
+
+        // Set controller for view
         // Generate main screen
         view.generateMainScreen();
+        // Set scene
         Scene scene = new Scene(view.currentScene, width, height);
         stage.setTitle("PacMan");
         stage.setScene(scene);
@@ -52,12 +57,14 @@ public class PacManApp extends Application implements Observable.Observer {
         privateUpdate();
     }
 
+    /**
+     * Updates the scene in the stage
+     */
     public void privateUpdate(){
         Scene newScene = new Scene(view.currentScene, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
         System.out.println(view.currentScene);
         newScene.setOnKeyPressed(controller::handleKeyPress);
         stage.setScene(newScene);
-        stage.show();
     }
 }
         
