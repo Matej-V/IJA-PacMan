@@ -179,7 +179,6 @@ public class PacManModel {
                                 throw new RuntimeException(e);
                             }
                             try {
-                                System.out.println("Sleeping" + duration.toMillis());
                                 Thread.sleep(duration.toMillis());
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
@@ -207,23 +206,26 @@ public class PacManModel {
 
     private void playOneMove(String nextLine){
         if (nextLine.startsWith("P")) {
-            System.out.println("Moving Pacman");
+            List<String> splitedLine = List.of(nextLine.split(" "));
+            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
+                    .map(Integer::parseInt)
+                    .toList();
+            int lives = Integer.parseInt(splitedLine.get(2));
+
+            try {
+                maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
+                ((PacmanObject) maze.getPacMan()).setLives(lives);
+            } catch (GameException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (nextLine.startsWith("G")) {
             List<String> splitedLine = List.of(nextLine.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                     .map(Integer::parseInt)
                     .toList();
 
-            try {
-                maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
-            } catch (GameException e) {
-                throw new RuntimeException(e);
-            }
-        } else if (nextLine.startsWith("G")) {
-            System.out.println("Moving Ghost");
-            List<String> splitedLine = List.of(nextLine.split(" "));
-            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
-                    .map(Integer::parseInt)
-                    .toList();
+            GhostObject ghost = (GhostObject) maze.ghosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
+            ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
             try {
                 maze.ghosts().get(Integer.parseInt(splitedLine.get(0).substring(1))).move(maze.getField(coords.get(0), coords.get(1)));

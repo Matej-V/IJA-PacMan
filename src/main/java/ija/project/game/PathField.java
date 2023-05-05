@@ -60,7 +60,6 @@ public class PathField extends AbstractObservableField implements Field {
     public boolean remove(MazeObject object) {
         this.mazeObjects.remove(object);
         notifyObservers();
-        System.out.println("Notified REMOVE");
         return true;
     }
 

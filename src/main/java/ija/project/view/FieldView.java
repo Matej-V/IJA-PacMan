@@ -36,7 +36,6 @@ public class FieldView extends Pane implements Observable.Observer {
      */
     @Override
     public void update(Observable var1) {
-        System.out.println("Updated");
         privateUpdate();
     }
 

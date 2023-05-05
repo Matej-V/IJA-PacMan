@@ -93,7 +93,6 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         try {
             lock.writeLock().lock();
             if(field.canMove()){
-                System.out.println("Moved");
                 //set direction accroding to the field position and current position
                 if(this.field.getRow() == field.getRow()){
                     if(this.field.getCol() < field.getCol()){
@@ -122,6 +121,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         }finally {
             lock.writeLock().unlock();
         }
+        notifyLogObservers(this);
         return true;
     }
 
@@ -196,11 +196,12 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     public void decreaseLives() throws GameException {
         this.lives--;
+        System.out.println("Lives: "+ lives);
         /* Notification for UI view update */
-        notifyObservers();
         if(lives == 0){
             throw new GameException(GameException.TypeOfException.LostGame);
         }
+        notifyObservers();
     }
 
     /**
@@ -210,10 +211,11 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     public void moveToStart() throws GameException {
         try {
             lock.writeLock().lock();
-            this.field.remove(this);
-            this.startField.put(this);
+            move(startField);
             this.field = this.startField;
-            this.decreaseLives();
+            decreaseLives();
+            notifyObservers();
+            notifyLogObservers(this);
         }finally {
             lock.writeLock().unlock();
         }

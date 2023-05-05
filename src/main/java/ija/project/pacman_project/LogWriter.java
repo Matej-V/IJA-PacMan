@@ -49,9 +49,9 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
         String timestamp = formatter.format(now);
         print("# " + timestamp + "\n");
         if(modelO instanceof PacmanObject){
-            print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + (((PacmanObject)modelO).pointCollected ? " p": "") + "\n" );
+            print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol()  + " " + modelO.getLives() + (((PacmanObject)modelO).pointCollected ? " p": "") + "\n" );
         }else if(modelO instanceof GhostObject){
-            print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + "\n");
+            print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
         }else if (modelO instanceof KeyObject) {
             print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " k" + "\n");
         }
