@@ -52,9 +52,8 @@ public class PacManController{
         }
     }
 
-    /*
-     * Set timer for moving ghosts and pacman
-     * Ghosts movement is handled differently than pacman's in separate task
+    /**
+     * Starts separate thread for enabling ghosts to be eaten by pacman
      */
     public void setEatableThread() {
         eatableThread = new Thread(() -> {
@@ -81,6 +80,10 @@ public class PacManController{
         eatableThread.start();
     }
 
+    /**
+     * Set timer for moving ghosts and pacman
+     * Ghosts movement is handled differently than pacman's in separate task
+     */
     private void setMoveTimer() {
         Timer timer = new Timer();
         timers.add(timer);
@@ -119,14 +122,9 @@ public class PacManController{
         cancelTimersThreads();
         if (e.type == GameException.TypeOfException.CompletedGame){
             System.out.println("Completed");
-            model.updateTotalScore();
-            model.nextGame();
-            view.generateGame();
-            setMoveTimer();
-            setEatableThread();
+            view.generateSuccessScreen();
         }else if (e.type == GameException.TypeOfException.LostGame){
             System.out.println("Lost");
-            model.updateTotalScore();
             view.generateEndScreen();
         }else {
             cancelTimersThreads();

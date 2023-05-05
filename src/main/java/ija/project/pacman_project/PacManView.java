@@ -105,7 +105,7 @@ public class PacManView implements Observable {
     public void generateEndScreen() {
         System.out.println("Generating end screen");
         //Score
-        Text score = new Text("Total score: " + model.totalScore);
+        Text score = new Text("Total score: " + model.pacman.getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"), drawButton("PLAY AGAIN"), score);
@@ -113,6 +113,25 @@ public class PacManView implements Observable {
         this.gameScreen = pane;
         notifyObservers();
     }
+
+    public void generateSuccessScreen(){
+        System.out.println("Generating success screen");
+        //Score
+        Text score = new Text("Total score: " + model.pacman.getScore());
+        score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
+        score.setTranslateY(-50);
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("PLAY AGAIN"), score);
+        // add win text
+        Text text = new Text("YOU WON");
+        text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
+        text.setTranslateY(-150);
+        pane.getChildren().add(text);
+        pane.setAlignment(Pos.CENTER);
+        this.gameScreen = pane;
+        notifyObservers();
+    }
+
+
 
     private ImageView drawBackgroundImage(String url){
         ImageView backgroundImage = new ImageView();

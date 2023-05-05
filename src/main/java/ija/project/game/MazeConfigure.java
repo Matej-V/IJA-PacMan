@@ -85,7 +85,11 @@ public class MazeConfigure {
                     GhostObject ghostObject = new GhostObject(ghostID, field);
                     ghostID++;
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
-                    field.put(ghostObject);
+                    try {
+                        field.put(ghostObject);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.ghosts.add(ghostObject);
                 }
                 case 'A', 'B', 'C', 'D', 'E' -> {
