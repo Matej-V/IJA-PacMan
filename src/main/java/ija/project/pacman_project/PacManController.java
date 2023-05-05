@@ -64,8 +64,8 @@ public class PacManController{
         // stop moving if any
         cancelTimersThreads();
         generateGame();
-        startLogging();
         view.generateGame();
+        startLogging();
         // start moving
         changeGameState(GameState.DEFAULT);
     }
