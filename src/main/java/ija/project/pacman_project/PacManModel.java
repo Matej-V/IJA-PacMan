@@ -210,10 +210,12 @@ public class PacManModel {
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                     .map(Integer::parseInt)
                     .toList();
-            int lives = Integer.parseInt(splitedLine.get(2));
+            int score= Integer.parseInt(splitedLine.get(2));
+            int lives = Integer.parseInt(splitedLine.get(3));
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
+                ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
             } catch (GameException e) {
                 throw new RuntimeException(e);
