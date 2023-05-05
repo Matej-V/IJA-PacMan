@@ -13,13 +13,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Class representing the pacman object.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
-    private PathField field;
+    private Field field;
     private final PathField startField;
     private Integer lives;
     private Integer score;
     private Field.Direction direction;
-    private List<Field.Direction> path;
+    private final List<Field.Direction> path;
     ReadWriteLock lock = new ReentrantReadWriteLock();
+    public boolean pointCollected;
 
     /**
      * Constructor for PacmanObject.
@@ -78,6 +79,43 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 if(this.field.hasKey()){
                     this.field.getKey().collectKey();
                 }
+            }
+        }finally {
+            lock.writeLock().unlock();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean move(Field field) throws GameException {
+        try {
+            lock.writeLock().lock();
+            if(field.canMove()){
+                System.out.println("Moved");
+                //set direction accroding to the field position and current position
+                if(this.field.getRow() == field.getRow()){
+                    if(this.field.getCol() < field.getCol()){
+                        setDirection(Field.Direction.R);
+                    }else{
+                        setDirection(Field.Direction.L);
+                    }
+                }else{
+                    if(this.field.getRow() < field.getRow()){
+                        setDirection(Field.Direction.D);
+                    }else{
+                        setDirection(Field.Direction.U);
+                    }
+                }
+
+                this.field.remove(this);
+                if (((PathField)field).put(this)) {
+                    this.field = field;
+                }
+                if(this.field.hasKey()){
+                    this.field.getKey().collectKey();
+                }
+            }else{
+                return false;
             }
         }finally {
             lock.writeLock().unlock();
@@ -195,9 +233,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     public void moveFromSave() throws GameException {
-        ListIterator<Field.Direction> it = this.path.listIterator();
-        while (it.hasNext()){
-            this.move(it.next());
+        for (Field.Direction value : this.path) {
+            this.move(value);
         }
     }
 }

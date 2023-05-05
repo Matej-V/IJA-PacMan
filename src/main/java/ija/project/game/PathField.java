@@ -45,19 +45,24 @@ public class PathField extends AbstractObservableField implements Field {
 
     public boolean put(MazeObject object) throws GameException{
         if (object instanceof PacmanObject) {
+            ((PacmanObject) object).pointCollected = false;
             if (this.point) {
                 ((PacmanObject) object).updateScore();
+                ((PacmanObject) object).pointCollected = true;
                 this.point = false;
             }
         }
         this.mazeObjects.add(object);
         notifyObservers();
+        System.out.println("Notified PUT");
+        notifyLogObservers(object);
         return true;
     }
 
     public boolean remove(MazeObject object) {
         this.mazeObjects.remove(object);
         notifyObservers();
+        System.out.println("Notified REMOVE");
         return true;
     }
 

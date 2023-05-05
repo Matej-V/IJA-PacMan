@@ -2,6 +2,7 @@ package ija.project.game;
 
 import javafx.scene.Group;
 
+import java.io.*;
 import java.util.ArrayList;
 
 import ija.project.common.*;
@@ -19,6 +20,7 @@ public class MazeClass implements Maze {
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeObject PacMan;
     public int keysToCollect;
+    public Field target;
 
     /**
      * Constructor.
@@ -98,24 +100,35 @@ public class MazeClass implements Maze {
      * Prints a string representation of the maze to stdOut
      * 
      */
-    public void printMaze() {
-        for (int row = 0; row < this.numOfRows; row++) {
-            for (int column = 0; column < this.numOfCols; column++) {
-                if (this.fields.get(row).get(column) instanceof WallField) {
-                    System.out.print('X');
-                }
-                if (this.fields.get(row).get(column) instanceof PathField) {
-                    if( this.fields.get(row).get(column).get() != null ) {
-                        System.out.print('S');
-                    }else {
-                        System.out.print('.');
+    public void printMaze(File outputFile) {
+        try {
+            PrintWriter writer = new PrintWriter(outputFile);
+            writer.print(numOfRows + " "+ numOfCols + ghosts.size());
+            for (int row = 1; row < this.numOfRows - 1; row++) {
+                for (int column = 1; column < this.numOfCols - 1 ; column++) {
+                    if (this.fields.get(row).get(column) instanceof WallField) {
+                        writer.print('X');
+                    }else if (this.fields.get(row).get(column) instanceof TargetField) {
+                        writer.print('T');
+                    }else if (this.fields.get(row).get(column) instanceof PathField) {
+                        if(this.fields.get(row).get(column).get() instanceof PacmanObject) {
+                            writer.print('S');
+                        }else if(this.fields.get(row).get(column).get() instanceof GhostObject){
+                            writer.print('G');
+                        }else if(this.fields.get(row).get(column).get() instanceof KeyObject){
+                            writer.print('K');
+                        }else{
+                            writer.print('.');
+                        }
                     }
                 }
-                if (this.fields.get(row).get(column) == null) {
-                    System.out.print('-');
-                }
+                writer.println();
             }
-            System.out.println();
+            writer.println("--- LOG");
+            writer.flush();
+            writer.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

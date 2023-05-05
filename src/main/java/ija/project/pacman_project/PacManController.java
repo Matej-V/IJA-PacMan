@@ -8,8 +8,10 @@ import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.IOException;
 import java.util.*;
 
 public class PacManController{
@@ -30,23 +32,37 @@ public class PacManController{
      * Changes pacman direction based on pressed key
      */
     public void handleKeyPress(KeyEvent e) {
-        switch (e.getCode()) {
-            case UP, W -> model.pacman.setDirection(Field.Direction.U);
-            case LEFT, A -> model.pacman.setDirection(Field.Direction.L);
-            case DOWN, S -> model.pacman.setDirection(Field.Direction.D);
-            case RIGHT, D -> model.pacman.setDirection(Field.Direction.R);
-            // pause game
-            case P -> {
-                if (timers.size() == 0) {
-                    resumeTimersThreads();
-                    view.gameScreen.getChildren().remove(view.gameScreen.getChildren().size() - 1);
-                } else {
+        if (model.gameState == PacManModel.GameState.DEFAULT || model.gameState == PacManModel.GameState.PAUSE) {
+            switch (e.getCode()) {
+                case UP, W -> model.maze.getPacMan().setDirection(Field.Direction.U);
+                case LEFT, A -> model.maze.getPacMan().setDirection(Field.Direction.L);
+                case DOWN, S -> model.maze.getPacMan().setDirection(Field.Direction.D);
+                case RIGHT, D -> model.maze.getPacMan().setDirection(Field.Direction.R);
+                // pause game
+                case P -> {
+                    if (timers.size() == 0) {
+                        resumeTimersThreads();
+                        view.gameBox.getChildren().remove(view.currentScene.getChildren().size() - 1);
+                    } else {
+                        model.changeGameState(PacManModel.GameState.PAUSE);
+                        cancelTimersThreads();
+                        StackPane pausePane = new StackPane();
+                        Text text = new Text("Game paused");
+                        text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
+                        pausePane.getChildren().add(text);
+                        view.gameBox.getChildren().add(pausePane);
+                    }
+                }
+                case R -> {
                     cancelTimersThreads();
-                    StackPane pausePane = new StackPane();
-                    Text text = new Text("Game paused");
-                    text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
-                    pausePane.getChildren().add(text);
-                    view.gameScreen.getChildren().add(pausePane);
+                    model.changeGameState(PacManModel.GameState.REPLAY);
+                    view.generateGame();
+                    try {
+                        model.replaySave();
+                    } catch (IOException | GameException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                 }
             }
         }
@@ -123,18 +139,20 @@ public class PacManController{
         if (e.type == GameException.TypeOfException.CompletedGame){
             System.out.println("Completed");
             view.generateSuccessScreen();
+            model.endLogging();
         }else if (e.type == GameException.TypeOfException.LostGame){
             System.out.println("Lost");
             view.generateEndScreen();
+            model.endLogging();
         }else {
             cancelTimersThreads();
+            model.endLogging();
             System.out.println("Unexpected Exception");
             e.getStackTrace();
             Platform.exit();
         }
     }
 
-    
     public void newGame(){
         cancelTimersThreads();
         model.newGame();
@@ -165,6 +183,7 @@ public class PacManController{
      */
     public void handleClose(WindowEvent windowEvent){
         cancelTimersThreads();
+        model.endLogging();
         Platform.exit();
     }
 }

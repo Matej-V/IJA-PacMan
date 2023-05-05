@@ -1,5 +1,7 @@
 package ija.project.common;
 
+import ija.project.game.KeyObject;
+
 import java.util.List;
 
 public interface Field extends Observable{
@@ -105,4 +107,6 @@ public interface Field extends Observable{
     boolean hasPoint();
 
     boolean hasKey();
+
+    public KeyObject getKey();
 }

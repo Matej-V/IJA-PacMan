@@ -23,6 +23,8 @@ public interface MazeObject extends Observable{
      */
     boolean move(Field.Direction dir) throws GameException;
 
+    boolean move(Field field) throws GameException;
+
     /**
      * Returns true if the object is a pacman.
      * 
@@ -54,5 +56,4 @@ public interface MazeObject extends Observable{
     void setDirection(Field.Direction dir);
 
     void moveToStart() throws GameException;
-
 }

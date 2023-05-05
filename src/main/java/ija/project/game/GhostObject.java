@@ -13,11 +13,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GhostObject extends AbstractObservableObject implements MazeObject {
-    private PathField field;
+    private Field field;
     private final PathField startField;
-    private char ID;
+    private int id;
     public Color color;
-    public List<Color> colors = new ArrayList<Color>(){{
+    public static List<Color> colors = new ArrayList<Color>(){{
        add(Color.GREENYELLOW);
        add(Color.HONEYDEW);
        add(Color.HOTPINK);
@@ -34,22 +34,11 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      *
      * @param field field on which the object is located
      */
-    public GhostObject(char ID, PathField field) {
-        this.ID = ID;
+    public GhostObject(PathField field, int id) {
+        this.id = id;
         this.field = field;
         this.startField = field;
-        if (this.ID == 'A') {
-            this.color = colors.get(0);
-        } else if (this.ID == 'B') {
-            this.color = colors.get(1);
-        } else if (this.ID == 'C') {
-            this.color = colors.get(2);
-        } else if (this.ID == 'D') {
-            this.color = colors.get(3);
-        } else if (this.ID == 'E') {
-            this.color = colors.get(4);
-        }
-
+        this.color = colors.get(this.id % colors.size());
         this.path = new ArrayList<>();
         this.direction = Field.Direction.values()[new Random().nextInt(Field.Direction.values().length)];
     }
@@ -92,7 +81,28 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }
         return true;
     }
-    
+
+    @Override
+    public boolean move(Field field) throws GameException {
+        try {
+            lock.writeLock().lock();
+            if(field.canMove()){
+                this.field.remove(this);
+                if (((PathField)field).put(this)) {
+                    this.field = field;
+                }
+                if(this.field.hasKey()){
+                    this.field.getKey().collectKey();
+                }
+            }else{
+                return false;
+            }
+        }finally {
+            lock.writeLock().unlock();
+        }
+        return true;
+    }
+
     /**
      * Returns true if the object is a pacman.
      *
@@ -175,7 +185,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }
     }
 
-    public char getId() {
-        return this.ID;
+    public int getId() {
+        return this.id;
     }
 }

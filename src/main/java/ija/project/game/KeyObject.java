@@ -19,6 +19,7 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
         this.field.remove(this);
         this.field = null;
         this.maze.colllectKey();
+        notifyLogObservers(this);
     }
     @Override
     public boolean canMove(Field.Direction dir) {
@@ -27,6 +28,11 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
 
     @Override
     public boolean move(Field.Direction dir) {
+        return false;
+    }
+
+    @Override
+    public boolean move(Field field) throws GameException {
         return false;
     }
 
@@ -64,4 +70,5 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
     public void moveToStart() {
         throw new UnsupportedOperationException();
     }
+
 }

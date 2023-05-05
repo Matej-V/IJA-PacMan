@@ -2,6 +2,7 @@ package ija.project.common;
 
 import ija.project.game.GameException;
 
+import java.io.File;
 import java.util.List;
 
 public interface Maze {
@@ -47,7 +48,7 @@ public interface Maze {
      * Prints a string representation of the maze to stdOut
      * 
      */
-    void printMaze();
+    void printMaze(File outputFile);
 
     void moveObjectsToStart() throws GameException;
 

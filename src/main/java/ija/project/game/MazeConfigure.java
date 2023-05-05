@@ -18,8 +18,6 @@ public class MazeConfigure {
     private final ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
     private MazeClass maze;
 
-    private char ghostID = 'A';
-
     /**
      * Constructor for MazeConfigure.
      */
@@ -82,21 +80,8 @@ public class MazeConfigure {
                 case 'G', 'g' -> {
                     PathField field = new PathField(this.rowToBeProcessed, c + 1);
                     field.setMaze(this.maze);
-                    GhostObject ghostObject = new GhostObject(ghostID, field);
-                    ghostID++;
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
-                    try {
-                        field.put(ghostObject);
-                    } catch (GameException e) {
-                        throw new RuntimeException(e);
-                    }
-                    this.ghosts.add(ghostObject);
-                }
-                case 'A', 'B', 'C', 'D', 'E' -> {
-                    PathField field = new PathField(this.rowToBeProcessed, c + 1);
-                    field.setMaze(this.maze);
-                    GhostObject ghostObject = new GhostObject(character, field);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
+                    GhostObject ghostObject = new GhostObject(field, ghosts.size());
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, field);
                     try {
                         field.put(ghostObject);
                     } catch (GameException e) {
@@ -108,6 +93,7 @@ public class MazeConfigure {
                     TargetField target = new TargetField(this.rowToBeProcessed, c + 1);
                     target.setMaze(this.maze);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, target);
+                    this.maze.target = target;
                 }
                 case 'K', 'k' -> {
                     PathField keyField = new PathField(this.rowToBeProcessed, c + 1);
