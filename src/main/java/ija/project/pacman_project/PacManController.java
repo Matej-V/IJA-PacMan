@@ -329,7 +329,7 @@ public class PacManController{
                 boolean logStarted = false;
                 LocalDateTime lastTimestamp = null;
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-                while (gameState == GameState.REPLAY) {
+                while (true) {
                     try {
                         if ((line = reader.readLine()) == null) break;
                     } catch (IOException e) {
@@ -357,7 +357,7 @@ public class PacManController{
                             try {
                                 Thread.sleep(duration.toMillis());
                             } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                                break;
                             }
 
                             Platform.runLater(new Runnable() {
