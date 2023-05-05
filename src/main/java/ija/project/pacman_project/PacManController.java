@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -255,6 +257,19 @@ public class PacManController{
         this.loadFile(PacManApp.class.getResource(currentMap));
     }
 
+    public void setLoadedMap(String map){
+        this.currentMap = map;
+        File file = new File(map);
+        URI uri = file.toURI();
+        URL url = null;
+        try {
+            url = uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        this.loadFile(url);
+    }
+
     /**
      * Method for loading file from game resources
      *
@@ -493,7 +508,7 @@ public class PacManController{
      */
 
     public void startLogging(){
-        logFile = new File("./src/main/resources/ija/project/pacman_project/saves/log.save");
+        logFile = new File("log.save");
         try {
             logWriter = new LogWriter(logFile, maze);
         } catch (FileNotFoundException e) {
@@ -511,7 +526,7 @@ public class PacManController{
             case REPLAY:
                 cancelTimersThreads();
                 endLogging();
-                loadGameFromSave();
+                setLoadedMap("log.save");
                 view.generateGame();
                 try {
                     replaySave();
