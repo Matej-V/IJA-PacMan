@@ -14,6 +14,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -115,6 +117,10 @@ public class PacManController{
                 case R -> {
                     cancelTimersThreads();
                     changeGameState(GameState.REPLAY);
+                }
+                case B -> {
+                    cancelTimersThreads();
+                    changeGameState(GameState.REPLAY_REVERSE);
                 }
             }
         }
@@ -397,6 +403,114 @@ public class PacManController{
         replayThread.start();
 
     }
+    
+    public void replaySaveReverse() throws IOException, GameException {
+        Thread reverseReplayThread = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                List<String> moves = null;
+                try {
+                    moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+                int end = moves.size() - 1;
+                String currentMove = null;
+                LocalDateTime lastTimestamp = null;
+                for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                    if (i == end) {
+                        String line = moves.get(i);
+                        System.out.println(line);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                playOneMoveReverse(line);
+                            }
+                        });
+                    }
+
+                    if (moves.get(i).startsWith("#")) {
+                        String line = currentMove;
+                        LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
+                        if (lastTimestamp != null) {
+                            Duration duration = Duration.between(timestamp, lastTimestamp);
+                            try {
+                                Thread.sleep(duration.toMillis());
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playOneMoveReverse(line);
+                                }
+                            });
+                        }
+                        lastTimestamp = timestamp;
+                    } else {
+                        currentMove = moves.get(i);
+                    }
+                }
+            }
+        });
+
+        threads.add(reverseReplayThread);
+        reverseReplayThread.start();
+    }
+
+    private void clearPacmanPath() {
+        List<String> moves = null;
+        try {
+            moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        for (int i = moves.size() - 1; !(moves.get(i).equals("--- LOG")); i--) {
+            if (moves.get(i).startsWith("P")) { // collecting all the field that should be without point
+                List<String> splitedLine = List.of(moves.get(i).split(" "));
+                List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
+                        .map(Integer::parseInt)
+                        .toList();
+                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
+                field.point = false;
+            }
+        }
+    }
+
+    private void playOneMoveReverse(String nextLine) {
+        List<String> splitedLine = List.of(nextLine.split(" "));
+        List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
+                .map(Integer::parseInt)
+                .toList();
+        System.out.println(splitedLine.get(0));
+        if (splitedLine.get(0).equals("P")) {
+            int score= Integer.parseInt(splitedLine.get(2));
+            int lives = Integer.parseInt(splitedLine.get(3));
+            boolean p = splitedLine.get(4).contains("p");
+
+            try {
+                maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
+                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
+                if (p) field.point = true;
+                ((PacmanObject) maze.getPacMan()).setScore(score);
+                ((PacmanObject) maze.getPacMan()).setLives(lives);
+            } catch (GameException e) {
+                throw new RuntimeException(e);
+            }
+
+        } else if (splitedLine.get(0).equals("G")) {
+            GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
+            ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
+
+            try {
+                ghost.move(maze.getField(coords.get(0), coords.get(1)));
+            } catch (GameException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
 
     /**
      * Function to replay one move accordingto line from log file
@@ -545,8 +659,20 @@ public class PacManController{
                 } catch (IOException | GameException ex) {
                     throw new RuntimeException(ex);
                 }
+                break;
             }
-            case DEFAULT -> {
+            case REPLAY_REVERSE:
+                cancelTimersThreads();
+                endLogging();
+                setLoadedMap("log.save");
+                clearPacmanPath();
+                view.generateGame();
+                try {
+                    replaySaveReverse();
+                } catch (IOException | GameException ex) {
+                    throw new RuntimeException(ex);
+                }
+            case DEFAULT:
                 cancelTimersThreads();
                 startTimersThreads();
             }

@@ -13,19 +13,39 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Class representing the pacman object.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
+    /**
+     * Current field where Pacman is located.
+     */
     private Field field;
+    /**
+     * Pacman's starting field.
+     */
     private final PathField startField;
+    /**
+     * Number of Pacman Lives.
+     */
     private Integer lives;
+    /**
+     * Pacman's score.
+     */
     private Integer score;
+    /**
+     * The direction of the pacman's movement.
+     */
     private Field.Direction direction;
-    private final List<Field.Direction> path;
+    /**
+     * Lock for the pacman object, to ensure that only one thread can access move method at a time.
+     */
     ReadWriteLock lock = new ReentrantReadWriteLock();
+    /**
+     * Indicator if the pacman has collected the point on the move.
+     */
     public boolean pointCollected;
 
     /**
      * Constructor for PacmanObject.
      * 
-     * @param field field on which the object is located
+     * @param field Field on which the object is located.
      */
     public PacmanObject(PathField field) {
         this.field = field;
@@ -33,11 +53,10 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         this.lives = 3;
         this.score = 0;
         this.direction = Field.Direction.U;
-        this.path = new ArrayList<>();
     }
 
     /**
-     * Verifies whether it is possible to move the object in the specified
+     * Verifies whether it is possible to move a pacman in the specified
      * direction.
      * 
      * @param dir Direction in which the object should be moved.
@@ -50,22 +69,13 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
-     * Check if object is PacMan
-     * @return True if object is PacMan, otherwise false
-     */
-    @Override
-    public boolean isPacman() {
-        return true;
-    }
-
-    /**
-     * Moves the object in the specified direction if possible.
-     * 
+     * Moves pacman in the specified direction if possible.
+     *
      * @param dir Direction in which the object should be moved.
      * @return True if the move was successful, false otherwise.
      */
     @Override
-    public boolean move(Field.Direction dir) throws GameException{
+    public boolean move(Field.Direction dir) throws GameException {
         try {
             lock.writeLock().lock();
             if (!canMove(dir)) {
@@ -87,6 +97,14 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         return true;
     }
 
+    /**
+     * Moves the object to the specified field if possible.
+     *
+     * @param field Field in which the object should be moved.
+     * @return True if the move was successful, false otherwise.
+     *
+     * @throws GameException if game is lost or won.
+     */
     @Override
     public boolean move(Field field) throws GameException {
         try {
@@ -125,8 +143,26 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
+     * Moves the pacman to the start position.
+     *
+     * @throws GameException if game is lost or won.
+     */
+    public void moveToStart() throws GameException {
+        try {
+            lock.writeLock().lock();
+            move(startField);
+            this.field = this.startField;
+            decreaseLives();
+            notifyObservers();
+            notifyLogObservers(this);
+        }finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    /**
      * Returns the field on which the object is located.
-     * 
+     *
      * @return Field on which the object is located.
      */
     public Field getField() {
@@ -143,8 +179,51 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
-     * Method to set amount of pacman lives (from save file)
-     * @param lives Saved lives
+     * Returns score in current game.
+     * @return Score of the pacman in the game.
+     */
+    public int getScore() {
+        return this.score;
+    }
+
+    /**
+     * Returns the direction of the object.
+     * {@link MazeObject#move(Field.Direction)} should be called with this return value of this method.
+     *
+     * @return Direction of the object.
+     */
+    @Override
+    public Field.Direction getDirection() {
+        return this.direction;
+    }
+
+    /**
+     * Sets the direction of the object in which it should move.
+     * Direction should be set before calling {@link MazeObject#move(Field.Direction)}.
+     *
+     * @param dir Direction in which object should move.
+     */
+    @Override
+    public void setDirection(Field.Direction dir) {
+        this.direction = dir;
+        /* Notify view when direction is changed to change view of PacMan */
+        notifyObservers();
+    }
+
+    /**
+     * Check if object is PacMan.
+     *
+     * @return True if object is PacMan, otherwise false.
+     */
+    @Override
+    public boolean isPacman() {
+        return true;
+    }
+
+    /**
+     * Method to set amount of pacman lives (from save file).
+     *
+     * @param lives Saved lives.
      */
     public void setLives(int lives){
         this.lives = lives;
@@ -152,16 +231,9 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
-     * Returns score in current game
-     * @return Score of the pacman in the game
-     */
-    public int getScore() {
-        return this.score;
-    }
-
-    /**
-     * Method to set score in current pacman game (from save file)
-     * @param score Saved score
+     * Method to set score in current pacman game (from save file).
+     *
+     * @param score Saved score.
      */
     public void setScore(int score){
         this.score = score;
@@ -169,23 +241,12 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
-     * Updates score of the pacman in the game
+     * Updates score of the pacman in the game.
      *
      */
     public void updateScore(){
         this.score++;
         /* Notification for UI view update */
-        notifyObservers();
-    }
-
-    @Override
-    public Field.Direction getDirection() {
-        return this.direction;
-    }
-    @Override
-    public void setDirection(Field.Direction dir) {
-        this.direction = dir;
-        /* Notify view when direction is changed to change view of PacMan */
         notifyObservers();
     }
 
@@ -201,43 +262,5 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
             throw new GameException(GameException.TypeOfException.LostGame);
         }
         notifyObservers();
-    }
-
-    /**
-     * Moves the pacman to the start position.
-     * 
-     */
-    public void moveToStart() throws GameException {
-        try {
-            lock.writeLock().lock();
-            move(startField);
-            this.field = this.startField;
-            decreaseLives();
-            notifyObservers();
-            notifyLogObservers();
-        }finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    public void updatePath(Field.Direction dir){
-        this.path.add(dir);
-    }
-
-    public void setPath(String line){
-        for (char c : line.toCharArray()) {
-            switch (c) {
-                case 'R' -> this.path.add(Field.Direction.R);
-                case 'L' -> this.path.add(Field.Direction.L);
-                case 'D' -> this.path.add(Field.Direction.D);
-                case 'U' -> this.path.add(Field.Direction.U);
-            }
-        }
-    }
-
-    public void moveFromSave() throws GameException {
-        for (Field.Direction value : this.path) {
-            this.move(value);
-        }
     }
 }

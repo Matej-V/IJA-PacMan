@@ -14,13 +14,37 @@ import java.util.ListIterator;
  * Class representing the maze.
  */
 public class MazeClass implements Maze {
+    /**
+     * Number of rows in the maze
+     */
     private final int numOfRows;
+    /**
+     * Number of columns in the maze
+     */
     private final int numOfCols;
+    /**
+     * Existing fields in the maze
+     */
     protected List<List<Field>> fields;
+    /**
+     * Existing ghosts in the maze
+     */
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
+    /**
+     * Existing keys in the maze
+     */
     private List<MazeObject> keys = new ArrayList<MazeObject>();
+    /**
+     * Pacman in the maze
+     */
     private MazeObject PacMan;
+    /**
+     * The number of keys that need to be collected to pass the maze
+     */
     public int keysToCollect;
+    /**
+     * Target field in the maze
+     */
     public Field target;
 
     /**
@@ -47,9 +71,22 @@ public class MazeClass implements Maze {
         }
     }
 
-    /* TODO */
+    /**
+     * Associates ghsots with the maze.
+     *
+     * @param ghosts ghosts to be associated with the maze
+     */
     public void setGhosts(List<MazeObject> ghosts) {
         this.ghosts = ghosts;
+    }
+
+    /**
+     * Associates pacman with the maze.
+     *
+     * @param pacMan pacman to be associated with the maze
+     */
+    public void setPacMan(MazeObject pacMan){
+        this.PacMan = pacMan;
     }
 
     /**
@@ -57,7 +94,7 @@ public class MazeClass implements Maze {
      * 
      * @param row row of the field
      * @param col column of the field
-     * @return Field
+     * @return Field at the given position
      */
     @Override
     public Field getField(int row, int col) {
@@ -65,26 +102,6 @@ public class MazeClass implements Maze {
             return null;
         }
         return this.fields.get(row).get(col);
-    }
-
-    /**
-     * Returns number of rows in the maze.
-     * 
-     * @return int number of rows
-     */
-    @Override
-    public int numRows() {
-        return (this.numOfRows);
-    }
-
-    /**
-     * Returns number of columns in the maze.
-     * 
-     * @return int number of columns
-     */
-    @Override
-    public int numCols() {
-        return (this.numOfCols);
     }
 
     /**
@@ -97,7 +114,41 @@ public class MazeClass implements Maze {
         return new ArrayList<>(this.ghosts);
     }
 
+    /**
+     * Returns pacman in the maze.
+     *
+     * @return Pacman in the maze
+     */
+    public MazeObject getPacMan(){
+        return this.PacMan;
+    }
 
+
+    /**
+     * Returns number of rows in the maze.
+     * 
+     * @return The number of rows in the maze
+     */
+    @Override
+    public int numRows() {
+        return (this.numOfRows);
+    }
+
+    /**
+     * Returns number of columns in the maze.
+     * 
+     * @return The number of columns in the maze
+     */
+    @Override
+    public int numCols() {
+        return (this.numOfCols);
+    }
+
+    /**
+     * Moves all objects to their start positions. Calls a method for every object to move to its start field.
+     *
+     * @throws GameException Exception to handle game scenarios such as completed game or lost game.
+     */
     @Override
     public void moveObjectsToStart() throws GameException {
         PacMan.moveToStart();
@@ -107,35 +158,12 @@ public class MazeClass implements Maze {
         }
     }
 
-    public void setPacMan(MazeObject pacMan){
-        this.PacMan = pacMan;
-    }
-
-    public MazeObject getPacMan(){
-        return this.PacMan;
-    }
-
-
-
-
-    public boolean canComplete(){
-        return keysToCollect == 0;
-    }
-
-    private GhostObject findGhost(char id) {
-        for (MazeObject mo : ghosts) {
-            if (((GhostObject)mo).getId() == id) return (GhostObject) mo;
-        }
-
-        return null;
-    }
-
-    public void registerGhostPath(char id, String line) {
-        GhostObject ghost = this.findGhost(id);
-        System.out.println(ghost);
-        ghost.setPath(line);
-    }
-
+    /**
+     * Adds key to the maze.
+     *
+     * @param key Key to add to the maze
+     * @return true if key was added to maze, otherwise false
+     */
     public boolean addKey(MazeObject key){
         if(key != null) {
             this.keys.add(key);
@@ -144,9 +172,23 @@ public class MazeClass implements Maze {
         return false;
     }
 
+    /**
+     * Removes key from the maze.
+     *
+     * @param key Key to remove from the maze
+     */
     public void removeKey(MazeObject key){
         ((KeyObject)key).collectKey();
         this.keys.remove(key);
+    }
+
+    /**
+     * Check if pacman can complete the maze.
+     *
+     * @return true if all the keys are collected, false otherwise
+     */
+    public boolean canComplete(){
+        return keysToCollect == 0;
     }
 }
 

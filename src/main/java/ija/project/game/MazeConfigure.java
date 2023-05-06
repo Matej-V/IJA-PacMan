@@ -11,11 +11,29 @@ import java.util.Random;
  * Class for configuring the maze.
  */
 public class MazeConfigure {
+    /**
+     * Number of rows in the maze
+     */
     private int rows;
+    /**
+     * Number of columns in the maze
+     */
     private int cols;
+    /**
+     * The number of the line to be processed from the file
+     */
     private int rowToBeProcessed;
+    /**
+     * Processing error indicator
+     */
     private boolean errorIndicator;
+    /**
+     * Ghosts processed from a file
+     */
     private final ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
+    /**
+     * A maze to be configured
+     */
     private MazeClass maze;
 
     /**
@@ -41,7 +59,7 @@ public class MazeConfigure {
 
     /**
      * Processes the line of the maze.
-     * 
+     *
      * @param line line to be processed
      * @return True if the line was processed, false otherwise
      */
@@ -135,7 +153,7 @@ public class MazeConfigure {
     /**
      * Creates the maze.
      * 
-     * @return Maze Maze object
+     * @return Maze object if the configuration was successful, null otherwise
      */
     public Maze createMaze() {
         if (!this.errorIndicator) {

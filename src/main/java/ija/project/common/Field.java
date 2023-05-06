@@ -1,12 +1,14 @@
 package ija.project.common;
 
 import ija.project.game.KeyObject;
-
 import java.util.List;
 
+/**
+ * Interface representing the field object.
+ */
 public interface Field extends Observable{
 
-    /*
+    /**
      * Direction of the field.
      */
     enum Direction {
@@ -30,7 +32,7 @@ public interface Field extends Observable{
                 return R;
             } else if (dir == R) {
                 return L;
-            }else{
+            }else {
                 return null;
             }
         }
@@ -47,7 +49,7 @@ public interface Field extends Observable{
      * Returns neighboring field in the given direction.
      * 
      * @param dirs direction
-     * @return Field
+     * @return Field neighboring field in the given direction.
      */
     Field nextField(Direction dirs);
 
@@ -90,14 +92,6 @@ public interface Field extends Observable{
     boolean canMove();
 
     /**
-     * Checks whether the field contains the object.
-     * 
-     * @param object object to be checked
-     * @return True if the field contains the object, false otherwise
-     */
-    boolean contains(MazeObject object);
-
-    /**
      * Returns the maze to which the field belongs.
      * 
      * @return maze to which the field belongs
@@ -120,19 +114,22 @@ public interface Field extends Observable{
 
     /**
      * Check if the field has point.
+     *
      * @return True if the field has point, false otherwise
      */
     boolean hasPoint();
 
     /**
      * Check if the field has key.
+     *
      * @return True if the field has key, false otherwise
      */
     boolean hasKey();
 
     /**
      * Get the key from the field.
+     *
      * @return KeyObject
      */
-    public KeyObject getKey();
+    KeyObject getKey();
 }

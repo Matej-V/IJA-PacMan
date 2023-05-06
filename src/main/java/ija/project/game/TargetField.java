@@ -1,5 +1,9 @@
 package ija.project.game;
 
+
+/**
+ * Class representing the target field object.
+ */
 public class TargetField extends PathField {
 
     /**

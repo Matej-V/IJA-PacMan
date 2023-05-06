@@ -10,13 +10,16 @@ import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Class representing the ghost object.
+ */
 public class GhostObject extends AbstractObservableObject implements MazeObject {
     /**
-     * Current field on which the ghost is located.
+     * Current field in which the ghost is located.
      */
     private Field field;
     /**
-     * Starting field of the ghost.
+     * Ghost starting field
      */
     private final PathField startField;
     /**
@@ -35,8 +38,6 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      * Boolean value indicating whether the ghost is eatable.
      */
     private boolean isEatable = false;
-    // TODO
-    private final List<Field.Direction> path;
     /**
      * Lock for the ghost object, to ensure that only one thread can access move method at a time.
      */
@@ -63,7 +64,6 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         this.field = field;
         this.startField = field;
         this.color = colors.get(this.id % colors.size());
-        this.path = new ArrayList<>();
         this.direction = Field.Direction.values()[new Random().nextInt(Field.Direction.values().length)];
     }
 
@@ -221,7 +221,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
     /**
      * Returns the eatable state of the ghost.
      * 
-     * @return Eatable state of the ghost.
+     * @return True if ghost is eatable, false otherwise.
      */
     public boolean isEatable(){
         return isEatable;
@@ -238,23 +238,10 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
 
     /**
      * Returns the color of the ghost.
+     *
+     * @return Color of the ghost.
      */
     public Color getColor() {
         return color;
     }
-
-    
-    // TODO
-    public void setPath(String line){
-        for (char c : line.toCharArray()) {
-            switch (c) {
-                case 'R' -> this.path.add(Field.Direction.R);
-                case 'L' -> this.path.add(Field.Direction.L);
-                case 'D' -> this.path.add(Field.Direction.D);
-                case 'U' -> this.path.add(Field.Direction.U);
-            }
-        }
-    }
-
-    
 }
