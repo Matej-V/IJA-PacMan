@@ -419,14 +419,7 @@ public class PacManController{
                 LocalDateTime lastTimestamp = null;
                 for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
                     if (i == end) {
-                        String line = moves.get(i);
-                        System.out.println(line);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                playOneMoveReverse(line);
-                            }
-                        });
+                        playOneMoveReverse(moves.get(i));
                     }
 
                     if (moves.get(i).startsWith("#")) {
