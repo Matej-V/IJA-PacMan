@@ -28,6 +28,8 @@ public class MazeClass implements Maze {
      * Existing keys in the maze
      */
     private List<MazeObject> keys = new ArrayList<MazeObject>();
+
+    private List<MazeObject> oldKeys = new ArrayList<MazeObject>();
     /**
      * Pacman in the maze
      */
@@ -174,6 +176,7 @@ public class MazeClass implements Maze {
     public void removeKey(MazeObject key){
         ((KeyObject)key).collectKey();
         this.keys.remove(key);
+        this.oldKeys.add(key);
     }
 
     /**
@@ -183,6 +186,10 @@ public class MazeClass implements Maze {
      */
     public boolean canComplete(){
         return keysToCollect == 0;
+    }
+
+    public List<MazeObject> getOldKeys() {
+        return this.oldKeys;
     }
 }
 

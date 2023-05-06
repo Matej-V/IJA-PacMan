@@ -50,6 +50,10 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
         return super.isPacman();
     }
 
+    public PathField getStartField() {
+        return null;
+    }
+
     /**
      * Return field in which the key is located.
      * @return

@@ -410,41 +410,55 @@ public class PacManController{
     }
     
     public void replaySaveReverse() throws IOException, GameException {
-        Thread reverseReplayThread = new Thread(() -> {
-            List<String> moves;
-            try {
-                moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-            int end = moves.size() - 1;
-            String currentMove = null;
-            LocalDateTime lastTimestamp = null;
-            for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
-                if (i == end) {
-                    playOneMoveReverse(moves.get(i));
+        Thread reverseReplayThread = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                List<String> moves = null;
+                try {
+                    moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
-                if (moves.get(i).startsWith("#")) {
-                    String line = currentMove;
-                    LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
-                    if (lastTimestamp != null) {
-                        Duration duration = Duration.between(timestamp, lastTimestamp);
-                        try {
-                            Thread.sleep(duration.toMillis());
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                        Platform.runLater(() -> playOneMoveReverse(line));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+                int end = moves.size() - 1;
+                String currentMove = null;
+                LocalDateTime lastTimestamp = null;
+                for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                    String line = moves.get(i);
+                    if (i == end) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                playOneMoveReverse(line);
+                            }
+                        });
                     }
-                    lastTimestamp = timestamp;
-                } else {
-                    currentMove = moves.get(i);
+
+                    if (line.startsWith("#")) {
+                        LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
+                        if (lastTimestamp != null) {
+                            Duration duration = Duration.between(timestamp, lastTimestamp);
+                            try {
+                                Thread.sleep(duration.toMillis());
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                            String move = currentMove;
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playOneMoveReverse(move);
+                                }
+                            });
+                        }
+                        lastTimestamp = timestamp;
+                    } else {
+                        currentMove = line;
+                    }
                 }
             }
-            Platform.runLater(this::cancelTimersThreads);
         });
+
         threads.add(reverseReplayThread);
         reverseReplayThread.start();
     }
@@ -473,23 +487,29 @@ public class PacManController{
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                 .map(Integer::parseInt)
                 .toList();
-        System.out.println(splitedLine.get(0));
-        if (splitedLine.get(0).equals("P")) {
+        if (nextLine.startsWith("P")) {
             int score= Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
-            boolean p = splitedLine.get(4).contains("p");
+            boolean p = false;
+            boolean k = false;
+            if (splitedLine.size() == 5) {
+                p = splitedLine.get(4).contains("p");
+            } else if (splitedLine.size() == 6) {
+                k = splitedLine.get(5).contains("k");
+            }
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 if (p) field.point = true;
+                if (k) field.setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
 
-        } else if (splitedLine.get(0).equals("G")) {
+        } else if (nextLine.startsWith("G")) {
             GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
             ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
@@ -655,6 +675,8 @@ public class PacManController{
                 endLogging();
                 setLoadedMap("log.save");
                 clearPacmanPath();
+                MazeObject mz = this.maze.getPacMan();
+                ((PacmanObject) mz).setReplayMode();
                 view.generateGame();
                 try {
                     replaySaveReverse();

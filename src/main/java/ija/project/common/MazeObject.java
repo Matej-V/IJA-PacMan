@@ -1,6 +1,7 @@
 package ija.project.common;
 
 import ija.project.game.GameException;
+import ija.project.game.PathField;
 
 /**
  * Interface representing the maze object.
@@ -87,5 +88,12 @@ public interface MazeObject extends Observable {
     default boolean isPacman(){
         return false;
     }
-    
+
+    /**
+     * Returns start field of a pacman.
+     *
+     * @return PathField start field.
+     */
+    PathField getStartField();
+
 }
