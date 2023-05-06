@@ -12,7 +12,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -107,6 +111,10 @@ public class PacManController{
 //                    text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
 //                    replayEndPane.getChildren().add(text);
 //                    view.gameBox.getChildren().add(replayEndPane);
+                }
+                case B -> {
+                    cancelTimersThreads();
+                    changeGameState(GameState.REPLAY_REVERSE);
                 }
             }
         }
@@ -255,6 +263,19 @@ public class PacManController{
         this.loadFile(PacManApp.class.getResource(currentMap));
     }
 
+    public void setLoadedMap(String map){
+        this.currentMap = map;
+        File file = new File(map);
+        URI uri = file.toURI();
+        URL url = null;
+        try {
+            url = uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        this.loadFile(url);
+    }
+
     /**
      * Method for loading file from game resources
      *
@@ -382,6 +403,45 @@ public class PacManController{
 
     }
 
+    public void replaySaveReverse() throws IOException, GameException {
+        List<String> moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+        int end = moves.size() - 1;
+        for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+            LocalDateTime lastTimestamp = null;
+            String move = moves.get(i);
+            if (moves.get(i).startsWith("#")) {
+                LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1]);
+            }
+            System.out.println(moves.get(i));
+        }
+//        if (line.startsWith("#")) {
+//            LocalDateTime timestamp = LocalDateTime.parse(line.substring(2), formatter);
+//            if (lastTimestamp != null) {
+//                Duration duration = Duration.between(lastTimestamp, timestamp);
+//                String nextLine;
+//                try {
+//                    if((nextLine = reader.readLine()) == null) break;
+//
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                try {
+//                    Thread.sleep(duration.toMillis());
+//                } catch (InterruptedException e) {
+//                    break;
+//                }
+//
+//                Platform.runLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        playOneMove(nextLine);
+//                    }
+//                });
+//            }
+//            lastTimestamp = timestamp;
+//        }
+    }
+
     private void playOneMove(String nextLine){
         if (nextLine.startsWith("P")) {
             List<String> splitedLine = List.of(nextLine.split(" "));
@@ -493,7 +553,7 @@ public class PacManController{
      */
 
     public void startLogging(){
-        logFile = new File("./src/main/resources/ija/project/pacman_project/saves/log.save");
+        logFile = new File("log.save");
         try {
             logWriter = new LogWriter(logFile, maze);
         } catch (FileNotFoundException e) {
@@ -511,7 +571,7 @@ public class PacManController{
             case REPLAY:
                 cancelTimersThreads();
                 endLogging();
-                loadGameFromSave();
+                setLoadedMap("log.save");
                 view.generateGame();
                 try {
                     replaySave();
@@ -519,6 +579,16 @@ public class PacManController{
                     throw new RuntimeException(ex);
                 }
                 break;
+            case REPLAY_REVERSE:
+                cancelTimersThreads();
+                endLogging();
+                setLoadedMap("log.save");
+                view.generateGame();
+                try {
+                    replaySaveReverse();
+                } catch (IOException | GameException ex) {
+                    throw new RuntimeException(ex);
+                }
             case DEFAULT:
                 cancelTimersThreads();
                 startTimersThreads();
