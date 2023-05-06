@@ -2,22 +2,50 @@ package ija.project.game;
 
 import javafx.scene.Group;
 
+import java.io.*;
 import java.util.ArrayList;
 
 import ija.project.common.*;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Class representing the maze.
  */
 public class MazeClass implements Maze {
+    /**
+     * Number of rows in the maze
+     */
     private final int numOfRows;
+    /**
+     * Number of columns in the maze
+     */
     private final int numOfCols;
+    /**
+     * Existing fields in the maze
+     */
     protected List<List<Field>> fields;
+    /**
+     * Existing ghosts in the maze
+     */
     private List<MazeObject> ghosts = new ArrayList<MazeObject>();
+    /**
+     * Existing keys in the maze
+     */
+    private List<MazeObject> keys = new ArrayList<MazeObject>();
+    /**
+     * Pacman in the maze
+     */
     private MazeObject PacMan;
-    private final Group mazeGroup;
+    /**
+     * The number of keys that need to be collected to pass the maze
+     */
+    public int keysToCollect;
+    /**
+     * Target field in the maze
+     */
+    public Field target;
 
     /**
      * Constructor.
@@ -41,16 +69,24 @@ public class MazeClass implements Maze {
                 }
             }
         }
-        this.mazeGroup = new Group();
     }
 
-    public Group getGroup(){
-        return this.mazeGroup;
-    }
-
-    /* TODO */
+    /**
+     * Associates ghsots with the maze.
+     *
+     * @param ghosts ghosts to be associated with the maze
+     */
     public void setGhosts(List<MazeObject> ghosts) {
         this.ghosts = ghosts;
+    }
+
+    /**
+     * Associates pacman with the maze.
+     *
+     * @param pacMan pacman to be associated with the maze
+     */
+    public void setPacMan(MazeObject pacMan){
+        this.PacMan = pacMan;
     }
 
     /**
@@ -58,7 +94,7 @@ public class MazeClass implements Maze {
      * 
      * @param row row of the field
      * @param col column of the field
-     * @return Field
+     * @return Field at the given position
      */
     @Override
     public Field getField(int row, int col) {
@@ -69,9 +105,29 @@ public class MazeClass implements Maze {
     }
 
     /**
+     * Returns ghosts in the maze.
+     *
+     * @return List of ghosts
+     */
+    @Override
+    public List<MazeObject> getGhosts() {
+        return new ArrayList<>(this.ghosts);
+    }
+
+    /**
+     * Returns pacman in the maze.
+     *
+     * @return Pacman in the maze
+     */
+    public MazeObject getPacMan(){
+        return this.PacMan;
+    }
+
+
+    /**
      * Returns number of rows in the maze.
      * 
-     * @return int number of rows
+     * @return The number of rows in the maze
      */
     @Override
     public int numRows() {
@@ -81,7 +137,7 @@ public class MazeClass implements Maze {
     /**
      * Returns number of columns in the maze.
      * 
-     * @return int number of columns
+     * @return The number of columns in the maze
      */
     @Override
     public int numCols() {
@@ -89,42 +145,12 @@ public class MazeClass implements Maze {
     }
 
     /**
-     * Returns ghosts in the maze.
+     * Moves all objects to their start positions. Calls a method for every object to move to its start field.
      *
-     * @return List of ghosts
+     * @throws GameException Exception to handle game scenarios such as completed game or lost game.
      */
     @Override
-    public List<MazeObject> ghosts() {
-        return new ArrayList<>(this.ghosts);
-    }
-
-    /**
-     * Prints a string representation of the maze to stdOut
-     * 
-     */
-    public void printMaze() {
-        for (int row = 0; row < this.numOfRows; row++) {
-            for (int column = 0; column < this.numOfCols; column++) {
-                if (this.fields.get(row).get(column) instanceof WallField) {
-                    System.out.print('X');
-                }
-                if (this.fields.get(row).get(column) instanceof PathField) {
-                    if( this.fields.get(row).get(column).get() != null ){
-                        System.out.print('S');
-                    }else{
-                        System.out.print('.');
-                    }
-                }
-                if (this.fields.get(row).get(column) == null) {
-                    System.out.print('-');
-                }
-            }
-            System.out.println();
-        }
-    }
-
-    @Override
-    public void moveObjectsToStart() {
+    public void moveObjectsToStart() throws GameException {
         PacMan.moveToStart();
         for (MazeObject mazeObject : ghosts) {
             GhostObject ghost = (GhostObject) mazeObject;
@@ -132,13 +158,37 @@ public class MazeClass implements Maze {
         }
     }
 
-    public void setPacMan(MazeObject pacMan){
-        this.PacMan = pacMan;
+    /**
+     * Adds key to the maze.
+     *
+     * @param key Key to add to the maze
+     * @return true if key was added to maze, otherwise false
+     */
+    public boolean addKey(MazeObject key){
+        if(key != null) {
+            this.keys.add(key);
+            return true;
+        }
+        return false;
     }
 
-    public MazeObject getPacMan(){
-        return this.PacMan;
+    /**
+     * Removes key from the maze.
+     *
+     * @param key Key to remove from the maze
+     */
+    public void removeKey(MazeObject key){
+        ((KeyObject)key).collectKey();
+        this.keys.remove(key);
     }
 
+    /**
+     * Check if pacman can complete the maze.
+     *
+     * @return true if all the keys are collected, false otherwise
+     */
+    public boolean canComplete(){
+        return keysToCollect == 0;
+    }
 }
 

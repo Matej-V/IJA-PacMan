@@ -11,13 +11,30 @@ import java.util.Random;
  * Class for configuring the maze.
  */
 public class MazeConfigure {
+    /**
+     * Number of rows in the maze
+     */
     private int rows;
+    /**
+     * Number of columns in the maze
+     */
     private int cols;
+    /**
+     * The number of the line to be processed from the file
+     */
     private int rowToBeProcessed;
+    /**
+     * Processing error indicator
+     */
     private boolean errorIndicator;
+    /**
+     * Ghosts processed from a file
+     */
     private final ArrayList<MazeObject> ghosts = new ArrayList<MazeObject>();
+    /**
+     * A maze to be configured
+     */
     private MazeClass maze;
-    private final List<Color> colorList;
 
     /**
      * Constructor for MazeConfigure.
@@ -26,11 +43,6 @@ public class MazeConfigure {
         this.rowToBeProcessed = 1;
         this.errorIndicator = false;
         this.maze = null;
-        this.colorList = new ArrayList<Color>();
-        colorList.add(Color.PINK);
-        colorList.add(Color.CYAN);
-        colorList.add(Color.ORANGE);
-        colorList.add(Color.WHITE);
     }
 
     /**
@@ -47,7 +59,7 @@ public class MazeConfigure {
 
     /**
      * Processes the line of the maze.
-     * 
+     *
      * @param line line to be processed
      * @return True if the line was processed, false otherwise
      */
@@ -76,27 +88,41 @@ public class MazeConfigure {
                     startField.setMaze(this.maze);
                     PacmanObject pacmanObject1 = new PacmanObject(startField);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1,startField);
-                    startField.put(pacmanObject1);
+                    try {
+                        startField.put(pacmanObject1);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.maze.setPacMan(pacmanObject1);
                 }
                 case 'G', 'g' -> {
                     PathField field = new PathField(this.rowToBeProcessed, c + 1);
                     field.setMaze(this.maze);
-                    Random rand = new Random();
-                    GhostObject ghostObject = new GhostObject(field, colorList.get(rand.nextInt(colorList.size())));
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, field);
-                    field.put(ghostObject);
+                    GhostObject ghostObject = new GhostObject(field, ghosts.size());
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, field);
+                    try {
+                        field.put(ghostObject);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
                     this.ghosts.add(ghostObject);
                 }
                 case 'T', 't' -> {
                     TargetField target = new TargetField(this.rowToBeProcessed, c + 1);
                     target.setMaze(this.maze);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, target);
+                    this.maze.target = target;
                 }
-                // TODO key field
                 case 'K', 'k' -> {
                     PathField keyField = new PathField(this.rowToBeProcessed, c + 1);
                     keyField.setMaze(this.maze);
+                    KeyObject key = new KeyObject(keyField);
+                    try {
+                        keyField.put(key);
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
+                    this.maze.addKey(key);
                     this.maze.fields.get(this.rowToBeProcessed).set(c+1, keyField);
                 }
                 default -> {
@@ -127,7 +153,7 @@ public class MazeConfigure {
     /**
      * Creates the maze.
      * 
-     * @return Maze Maze object
+     * @return Maze object if the configuration was successful, null otherwise
      */
     public Maze createMaze() {
         if (!this.errorIndicator) {
@@ -136,5 +162,4 @@ public class MazeConfigure {
         }
         return null;
     }
-
 }

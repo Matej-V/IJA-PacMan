@@ -1,8 +1,14 @@
 package ija.project.common;
 
+import ija.project.game.KeyObject;
+import java.util.List;
+
+/**
+ * Interface representing the field object.
+ */
 public interface Field extends Observable{
 
-    /*
+    /**
      * Direction of the field.
      */
     enum Direction {
@@ -11,7 +17,12 @@ public interface Field extends Observable{
         R, // right
         U // up
 ;
-
+        /**
+         * Returns the opposite direction.
+         * 
+         * @param dir direction
+         * @return opposite direction
+         */
         public Direction opposite(Direction dir) {
             if (dir == D) {
                 return U;
@@ -21,7 +32,7 @@ public interface Field extends Observable{
                 return R;
             } else if (dir == R) {
                 return L;
-            }else{
+            }else {
                 return null;
             }
         }
@@ -38,12 +49,12 @@ public interface Field extends Observable{
      * Returns neighboring field in the given direction.
      * 
      * @param dirs direction
-     * @return Field
+     * @return Field neighboring field in the given direction.
      */
     Field nextField(Direction dirs);
 
     /**
-     * Returns row of the field.
+     * Puts the object on the field.
      * 
      * @param object object to be put on the field
      * @return row of the field
@@ -67,11 +78,11 @@ public interface Field extends Observable{
     boolean isEmpty();
 
     /**
-     * Returns the object on the field.
+     * Returns the list of objects on the field.
      * 
-     * @return object on the field
+     * @return list of objects on the field
      */
-    MazeObject get();
+    List<MazeObject> get();
 
     /**
      * Checks whether the field is path field.
@@ -80,7 +91,12 @@ public interface Field extends Observable{
      */
     boolean canMove();
 
-    boolean contains(MazeObject object);
+    /**
+     * Returns the maze to which the field belongs.
+     * 
+     * @return maze to which the field belongs
+     */
+    Maze getMaze();
 
     /**
      * Returns the row of the field.
@@ -98,7 +114,22 @@ public interface Field extends Observable{
 
     /**
      * Check if the field has point.
+     *
      * @return True if the field has point, false otherwise
      */
     boolean hasPoint();
+
+    /**
+     * Check if the field has key.
+     *
+     * @return True if the field has key, false otherwise
+     */
+    boolean hasKey();
+
+    /**
+     * Get the key from the field.
+     *
+     * @return KeyObject
+     */
+    KeyObject getKey();
 }

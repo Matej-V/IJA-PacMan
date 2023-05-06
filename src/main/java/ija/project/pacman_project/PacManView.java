@@ -1,194 +1,203 @@
 package ija.project.pacman_project;
 
-
-import ija.project.game.PacmanObject;
 import ija.project.view.FieldView;
+import ija.project.view.UIBarView;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
-
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-
-import javafx.scene.layout.VBox;
-
-import javafx.scene.shape.*;
-
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
+import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-public class PacManView {
-    private PacManModel model;
-    private double cellWidth;
-    private double cellHeight;
-    private Group mazeGroup;
+/**
+ * PacManView class is responsible for generating all the views in the game
+ */
+public class PacManView extends AbstractObservableView{
 
-    private Circle pacMan;
+    /**
+     * Controller to be used for setting button actions
+     */
+    private PacManController controller;
+    /**
+     * Current scene that is displayed
+     */
+    public Pane currentScene;
+    /**
+     * Width of the screen
+     */
+    private final double widthOfScreen;
+    /**
+     * Height of the screen
+     */
+    private final double heightOfScreen;
+    /**
+     * Represents UI + maze part of currentScreen
+     */
+    public StackPane gameBox;
 
-    private Image heartImage;
-    private Image deathImage;
+    public PacManView( double width, double height) {
+        this.widthOfScreen = width;
+        this.heightOfScreen = height;
+    }
 
-    public PacManView(PacManModel model) {
-        this.model = model;
-        cellWidth = 500 / this.model.maze.numCols();
-        cellHeight = 500 / this.model.maze.numRows();
-        this.mazeGroup = new Group();
-
-        try {
-            this.heartImage = new Image(PacManApp.class.getResource("img/heart.png").openStream());
-            this.deathImage = new Image(PacManApp.class.getResource("img/death.png").openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void setController(PacManController controller) {
+        this.controller = controller;
     }
 
     /**
-     * Generates maze representation
-     *
-     * @return Group that represents Maze
+     * Generates maze representation using FieldView class objects
+     * @return Group od FieldView class objects that represents maze
      */
-    public Group drawMaze() throws IOException {
-        this.mazeGroup.getChildren().clear();
-
-//        for (int row = 0; row < this.model.maze.numRows(); row++) {
-//            for (int column = 0; column < this.model.maze.numCols(); column++) {
-//                Field currentField = this.model.maze.getField(row, column);
-//                Rectangle field = new Rectangle(column * cellWidth, row * cellHeight, cellWidth, cellHeight);
-//                if (currentField instanceof WallField) {
-//                    for (Field.Direction dir : ija.project.common.Field.Direction.values()) {
-//                        if (!(currentField.nextField(dir) instanceof WallField)) {
-//                            Line line = new Line();
-//                            // set the start and end points of the line
-//                            switch (dir) {
-//                                case U:
-//                                    line.setStartX(field.getX());
-//                                    line.setStartY(field.getY());
-//                                    line.setEndX(field.getX() + field.getWidth());
-//                                    line.setEndY(field.getY());
-//                                    break;
-//                                case D:
-//                                    line.setStartX(field.getX());
-//                                    line.setStartY(field.getY() + field.getHeight());
-//                                    line.setEndX(field.getX() + field.getWidth());
-//                                    line.setEndY(field.getY() + field.getHeight());
-//                                    break;
-//                                case L:
-//                                    line.setStartX(field.getX());
-//                                    line.setStartY(field.getY());
-//                                    line.setEndX(field.getX());
-//                                    line.setEndY(field.getY() + field.getHeight());
-//                                    break;
-//                                case R:
-//                                    line.setStartX(field.getX() + field.getWidth());
-//                                    line.setStartY(field.getY());
-//                                    line.setEndX(field.getX() + field.getWidth());
-//                                    line.setEndY(field.getY() + field.getHeight());
-//                                    break;
-//                            }
-//                            line.setStroke(Color.web("#051D9D"));
-//                            line.setStrokeWidth(5);
-//                            line.setStrokeLineCap(StrokeLineCap.BUTT);
-//                            this.mazeGroup.getChildren().add(line);
-//                        }
-//
-//                    }
-//                    this.mazeGroup.getChildren().add(field);
-//                } else if (currentField instanceof TargetField) {
-//                    Circle target = new Circle(field.getWidth() * 0.3, Color.web("#B02E0C"));
-//                    target.setCenterX(field.getX() + field.getWidth() / 2);
-//                    target.setCenterY(field.getY() + field.getHeight() / 2);
-//                    this.mazeGroup.getChildren().addAll(target);
-//                } else if (currentField instanceof PathField) {
-//                    Circle point = new Circle(3, Color.web("#CED6EE"));
-//                    if (currentField.isEmpty()){
-//                        if (((PathField) currentField).point){
-////                                System.out.println("Score: " + this.model.getScore());
-//                            point.setCenterX(field.getX() + field.getWidth()/2);
-//                            point.setCenterY(field.getY() + field.getHeight()/2);
-//                            this.mazeGroup.getChildren().addAll(point);
-//                        }
-//                    }
-//                    if (currentField.contains(this.model.pacman)) {
-//                        this.mazeGroup.getChildren().remove(this.pacMan);
-//                        this.pacMan = new Circle(field.getWidth() * 0.35, Color.web("#FFF901"));
-//                        this.pacMan.setCenterX(field.getX() + field.getWidth() / 2);
-//                        this.pacMan.setCenterY(field.getY() + field.getHeight() / 2);
-//                        this.mazeGroup.getChildren().addAll(pacMan);
-//                    }
-//                }
-//                for (MazeObject object : this.model.maze.ghosts()) {
-//                    if (currentField.contains(object)) {
-//                        Circle ghost = new Circle(field.getWidth() * 0.25, ((GhostObject) object).color);
-//                        ghost.setCenterX(field.getX() + field.getWidth() / 2);
-//                        ghost.setCenterY(field.getY() + field.getHeight() / 2);
-//                        ghost.setStrokeWidth(field.getWidth() * 0.1);
-//                        ghost.setStroke(Color.web("#B02E0C"));
-//                        this.mazeGroup.getChildren().addAll(ghost);
-//                    }
-//                }
-//            }
-//        }
-
-
-       /* Now all the fields are generated here as FieldView objects and added into mazeGroup */  
-        for (int row = 0; row < this.model.maze.numRows(); row++) {
-            for (int column = 0; column < this.model.maze.numCols(); column++) {
-                FieldView fieldView = new FieldView(this.model.maze.getField(row, column), cellWidth, row, column);
-                this.mazeGroup.getChildren().add(fieldView);
+    public Group drawMaze() {
+        Group mazeGroup = new Group();
+        for (int row = 0; row < controller.maze.numRows(); row++) {
+            for (int column = 0; column < controller.maze.numCols(); column++) {
+                FieldView fieldView = new FieldView(controller.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
+                mazeGroup.getChildren().add(fieldView);
             }
         }
-
-        /* TODO - implement observer logic with these UI elements*/
-        ImageView imageView1 = new ImageView(this.heartImage);
-        ImageView imageView2 = new ImageView(this.heartImage);
-        imageView2.setX(40);
-        ImageView imageView3 = new ImageView(this.heartImage);
-        imageView3.setX(80);
-
-        Group healthBar;
-
-        if (this.model.pacman.getLives() == 3){
-            healthBar = new Group(imageView1, imageView2, imageView3);
-        } else if(this.model.pacman.getLives() == 2){
-            healthBar = new Group(imageView1, imageView2);
-        } else if(this.model.pacman.getLives() == 1){
-            healthBar = new Group(imageView1);
-        } else {
-            ImageView death = new ImageView(this.deathImage);
-            healthBar = new Group(death);
-        }
-
-        Label score = new Label("Score: " + this.model.getScore());
-        score.setTranslateX(400);
-        score.setStyle("-fx-text-fill: #cfd0e6; -fx-font-size: 16px; ");
-
-        this.mazeGroup.getChildren().addAll(healthBar, score);
-
-        return this.mazeGroup;
+        return mazeGroup;
     }
 
-    public VBox generateGame() throws IOException {
+    /**
+     * 
+     * @return Score and healt bar representation
+     */
+    public Group drawUI() {
+        UIBarView UIBar = new UIBarView(controller.maze.getPacMan());
+        return new Group(UIBar);
+    }
+
+    /**
+     * Generates Main screen that is displayed when game is started
+     */
+    public void generateMainScreen() {
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("START THE GAME"));
+        pane.setAlignment(Pos.CENTER);
+        this.currentScene = pane;
+    }
+
+    /**
+     * generate game that consists of maze and UI
+     */
+    public void generateGame() {
         // Create Menu
         Menu menu = new Menu("Menu");
-        MenuItem mapChange = new MenuItem("Change Map");
+        MenuItem restartGame = new MenuItem("Restart game");
 
-        //Create MenuBar
+        // Create MenuBar
         MenuBar menuBar = new MenuBar(menu);
-        menu.getItems().addAll(mapChange);
-        mapChange.setOnAction(e -> {
-            System.out.println("Changing map");
+        menu.getItems().addAll(restartGame);
+        restartGame.setOnAction(e -> {
+            System.out.println("Restarting game");
+            controller.newGame();
         });
 
-        VBox gameBox = new VBox(menuBar, drawMaze());
-        gameBox.setStyle("-fx-background-color: #00022A");
-        return gameBox;
+        VBox uiMazeBox = new VBox();
+        HBox mazeHolder = new HBox(drawMaze());
+        mazeHolder.alignmentProperty().set(Pos.CENTER);
+        HBox statsHolder = new HBox(drawUI());
+        statsHolder.alignmentProperty().set(Pos.CENTER);
+        statsHolder.setStyle("-fx-background-color: #FFFFFF;");
+        uiMazeBox.getChildren().addAll(statsHolder, mazeHolder);
+        //Stack Pane to let us add pause screen over game screen
+        StackPane temp = new StackPane(uiMazeBox);
+        temp.setAlignment(Pos.CENTER);
+        this.gameBox = temp;
+        // Set background image
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), new VBox(menuBar, gameBox));
+        pane.setAlignment(Pos.CENTER);
+        this.currentScene = pane;
+        notifyObservers();
+    }
+
+    /**
+     * Generate screen that player sees when game is lost
+     */
+    public void generateEndScreen() {
+        System.out.println("Generating end screen");
+        //Score
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
+        score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
+        score.setTranslateY(-100);
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"), drawButton("PLAY AGAIN"), score);
+        pane.setAlignment(Pos.CENTER);
+        this.currentScene = pane;
+        notifyObservers();
+    }
+
+    /**
+     * Generates screen thath player sees when game is won
+     */
+    public void generateSuccessScreen(){
+        System.out.println("Generating success screen");
+        //Score
+        Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
+        score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
+        score.setTranslateY(-50);
+        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("PLAY AGAIN"), score);
+        // add win text
+        Text text = new Text("YOU WON");
+        text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
+        text.setTranslateY(-150);
+        pane.getChildren().add(text);
+        // Load button
+        pane.setAlignment(Pos.CENTER);
+        this.currentScene = pane;
+        notifyObservers();
+    }
+
+    /**
+     * Method that generates background image according to given url
+     * @param url url of image
+     * @return ImageView object that represents background image
+     */
+    private ImageView drawBackgroundImage(String url){
+        ImageView backgroundImage = new ImageView();
+        try {
+            backgroundImage.setImage(new Image(new FileInputStream(url)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        backgroundImage.setX(0);
+        backgroundImage.setY(0);
+        backgroundImage.setFitWidth(widthOfScreen);
+        backgroundImage.setFitHeight(heightOfScreen);
+        Blend blend = new Blend();
+        blend.setMode(BlendMode.MULTIPLY);
+        backgroundImage.setEffect(blend);
+        return backgroundImage;
+    }
+
+    /**
+     * Method that generates button with given text
+     * @param text text that will be displayed on button
+     * @return Button object
+     */
+    private Button drawButton(String text){
+        Button button = new Button();
+        button.setText(text);
+        button.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #00022A; -fx-border-radius: 20%; -fx-font-size: 16px");
+        button.setOnAction(e -> {
+            System.out.println(text + " button clicked");
+            controller.newGame();
+        });
+        button.requestFocus();
+        button.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                button.fire();      // Simulate button action
+                event.consume();    // Consume the event to prevent further processing
+            }
+        });
+        return button;
     }
 }

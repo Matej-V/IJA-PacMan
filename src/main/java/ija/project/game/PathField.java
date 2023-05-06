@@ -9,10 +9,25 @@ import java.util.List;
  * Class representing the path field.
  */
 public class PathField extends AbstractObservableField implements Field {
-    private final int row; // row of the field
-    private final int col; // column of the field
-    private Maze maze; // maze to which the field belongs
-    private final List<MazeObject> mazeObjects; // list of objects on the field - extension for future
+    /**
+     * Row of the field.
+     */
+    private final int row;
+    /**
+     * Column of the field
+     */
+    private final int col;
+    /**
+     * Maze to which the field belongs.
+     */
+    protected Maze maze;
+    /**
+     * List of objects on the field.
+     */
+    protected final List<MazeObject> mazeObjects;
+    /**
+     * Indicates whether the field contains a point or not.
+     */
     public boolean point;
 
     /**
@@ -29,10 +44,21 @@ public class PathField extends AbstractObservableField implements Field {
         this.point = true;
     }
 
+    /**
+     * Associates the field with the maze.
+     *
+     * @param maze maze to which the field belongs
+     */
     public void setMaze(Maze maze) {
         this.maze = maze;
     }
 
+    /**
+     * Returns neighboring field in the given direction.
+     *
+     * @param dirs direction
+     * @return Field neighboring field in the given direction.
+     */
     @Override
     public Field nextField(Direction dirs) {
         return switch (dirs) {
@@ -43,58 +69,140 @@ public class PathField extends AbstractObservableField implements Field {
         };
     }
 
-    public boolean put(MazeObject object) {
+    /**
+     * Puts the object on the field.
+     *
+     * @param object object to be put on the field.
+     * @return row of the field.
+     * @throws Exception if the field is WallField exception
+     *                   UnsupportedOperationException is thrown.
+     */
+    public boolean put(MazeObject object) throws GameException{
         if (object instanceof PacmanObject) {
+            ((PacmanObject) object).pointCollected = false;
             if (this.point) {
+                ((PacmanObject) object).updateScore();
+                ((PacmanObject) object).pointCollected = true;
                 this.point = false;
             }
-            for (MazeObject mazeObject : this.mazeObjects) {
-                if (mazeObject instanceof GhostObject) {
-                    ((PacmanObject) object).decreaseLives();
-                    this.maze.moveObjectsToStart();
-                    return false;
-                }
-            }
-        } else if (object instanceof GhostObject) {
-            for (MazeObject o : this.mazeObjects) {
-                if (o instanceof PacmanObject) {
-                    this.maze.moveObjectsToStart();
-                    return false;
-                }
-            }
         }
-
         this.mazeObjects.add(object);
         notifyObservers();
         return true;
     }
 
+    /**
+     * Removes the object from the field.
+     *
+     * @param object object to be removed from the field.
+     */
     public boolean remove(MazeObject object) {
         this.mazeObjects.remove(object);
         notifyObservers();
         return true;
     }
 
+    /**
+     * Checks whether the field is empty.
+     *
+     * @return True if the field is empty, false otherwise
+     */
     @Override
     public boolean isEmpty() {
         return this.mazeObjects.isEmpty();
     }
 
+    /**
+     * Returns the list of objects on the field.
+     *
+     * @return list of objects on the field
+     */
     @Override
-    public MazeObject get() {
-        if (this.mazeObjects.isEmpty()) {
-            return null;
-        }
-        return this.mazeObjects.get(0);
+    public List<MazeObject> get() {
+        return this.mazeObjects;
     }
 
+    /**
+     * Checks whether the field is path field.
+     *
+     * @return True if the field is path field, false otherwise
+     */
     @Override
     public boolean canMove() {
         return true;
     }
 
     /**
+     * Returns the maze to which the field belongs.
      *
+     * @return maze to which the field belongs
+     */
+    @Override
+    public Maze getMaze() {
+        return maze;
+    }
+
+    /**
+     * Returns the row of the field.
+     *
+     * @return row of the field
+     */
+    @Override
+    public int getRow() {
+        return this.row;
+    }
+
+    /**
+     * Returns the column of the field.
+     *
+     * @return column of the field
+     */
+    @Override
+    public int getCol() {
+        return this.col;
+    }
+
+    /**
+     * Check if the field has point.
+     *
+     * @return True if the field has point, false otherwise
+     */
+    @Override
+    public boolean hasPoint() {
+        return this.point;
+    }
+
+    /**
+     * Check if the field has key.
+     *
+     * @return True if the field has key, false otherwise
+     */
+    public boolean hasKey() {
+        boolean result = false;
+        for (MazeObject o : mazeObjects) {
+            if (o instanceof KeyObject) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get the key from the field.
+     *
+     * @return KeyObject
+     */
+    public KeyObject getKey() {
+        for (MazeObject o : mazeObjects) {
+            if (o instanceof KeyObject) {
+                return (KeyObject) o;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Compares objects. Objects are equal if both represent PathField and
      * are at the same position
      *
@@ -108,25 +216,4 @@ public class PathField extends AbstractObservableField implements Field {
         }
         return false;
     }
-
-    @Override
-    public boolean contains(MazeObject object) {
-        return this.mazeObjects.contains(object);
-    }
-
-    @Override
-    public int getRow() {
-        return this.row;
-    }
-
-    @Override
-    public int getCol() {
-        return this.col;
-    }
-
-    @Override
-    public boolean hasPoint() {
-        return this.point;
-    }
-
 }
