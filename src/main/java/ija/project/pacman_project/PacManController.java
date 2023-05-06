@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
@@ -25,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PacManController{
     /** */
-    private PacManView view;
+    private final PacManView view;
     /**
      * Speed of ghosts
      */
@@ -38,13 +37,33 @@ public class PacManController{
      * List of timers for ghosts and pacman movement
      */
     private final List<Timer> timers = new ArrayList<Timer>();
+    /**
+     * List of threads to they can be managed
+     */
     private List<Thread> threads = new ArrayList<Thread>();
+    /**
+     * Current map file string
+     */
     private String currentMap;
+    /**
+     * Current maze model
+     */
     public Maze maze;
+    /**
+     * Log file for logging game
+     */
     private File logFile;
+    /**
+     * Log writer for writing to log file
+     */
     private LogWriter logWriter;
+    /**
+     * Current game state
+     */
     public GameState gameState;
-    private Stage stage;
+    /**
+     * Game state enum
+     */
     enum GameState{
         DEFAULT,
         REPLAY,
@@ -56,13 +75,8 @@ public class PacManController{
         this.view = view;
     }
 
-    public void addView(PacManView view){
-        this.view = view;
-    }
-
-
     /**
-     * Generates new game and sets timer and thread for eatable state of ghosts
+     * Generates new game, loads map, generates maze model, starts all timer, threads and logging
      */
     public void newGame(){
         // stop moving if any
@@ -103,14 +117,6 @@ public class PacManController{
                 case R -> {
                     cancelTimersThreads();
                     changeGameState(GameState.REPLAY);
-//                    StackPane replayEndPane = new StackPane();
-//                    Text text = new Text("Restart Game");
-//                    text.onMouseClickedProperty().setValue(event -> {
-//                        newGame();
-//                    });
-//                    text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
-//                    replayEndPane.getChildren().add(text);
-//                    view.gameBox.getChildren().add(replayEndPane);
                 }
                 case B -> {
                     cancelTimersThreads();
@@ -267,7 +273,7 @@ public class PacManController{
         this.currentMap = map;
         File file = new File(map);
         URI uri = file.toURI();
-        URL url = null;
+        URL url;
         try {
             url = uri.toURL();
         } catch (MalformedURLException e) {
@@ -308,13 +314,9 @@ public class PacManController{
         }
     }
 
-    public void loadGameFromSave() {
-        setMap("saves/log.save");
-    }
-
     /**
      * Moves Ghosts in currently set directions
-     * @throws GameException
+     * @throws GameException when pacman loses game
      */
     public void moveGhosts() throws GameException {
         for (MazeObject mazeObject : maze.getGhosts()) {
@@ -327,7 +329,7 @@ public class PacManController{
 
     /**
      * Moves Pacman in currently set direction
-     * @throws GameException
+     * @throws GameException when pacman loses or wins game
      */
     public void movePacman() throws GameException {
         maze.getPacMan().move(maze.getPacMan().getDirection());
@@ -335,74 +337,73 @@ public class PacManController{
         checkWin();
     }
 
+    /**
+     * Function for MazeObjects controll on a separate thread
+     * 
+     * @throws GameException, IOException
+     */
     public void replaySave() throws IOException, GameException {
-
-        Thread replayThread = new Thread(new Runnable() {
-            @Override
-            public void run(){
-                BufferedReader reader = null;
+        // Create new thread that will replay the save
+        Thread replayThread = new Thread(() -> {
+            BufferedReader reader;
+            try {
+                reader = new BufferedReader(new FileReader(logFile));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            String line;
+            boolean logStarted = false;
+            LocalDateTime lastTimestamp = null;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+            while (true) {
                 try {
-                    reader = new BufferedReader(new FileReader(logFile));
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                String line;
-                boolean logStarted = false;
-                LocalDateTime lastTimestamp = null;
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-                while (true) {
-                    try {
-                        if ((line = reader.readLine()) == null) break;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (line.equals("--- LOG")) {
-                        logStarted = true;
-                        continue;
-                    }
-                    if (!logStarted) {
-                        continue;
-                    }
-
-                    if (line.startsWith("#")) {
-                        LocalDateTime timestamp = LocalDateTime.parse(line.substring(2), formatter);
-                        if (lastTimestamp != null) {
-                            Duration duration = Duration.between(lastTimestamp, timestamp);
-                            String nextLine;
-                            try {
-                                if((nextLine = reader.readLine()) == null) break;
-
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            try {
-                                Thread.sleep(duration.toMillis());
-                            } catch (InterruptedException e) {
-                                break;
-                            }
-
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    playOneMove(nextLine);
-                                }
-                            });
-                        }
-                        lastTimestamp = timestamp;
-                    }
-                }
-                try {
-                    reader.close();
+                    if ((line = reader.readLine()) == null) break;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                if (line.equals("--- LOG")) {
+                    logStarted = true;
+                    continue;
+                }
+                if (!logStarted) {
+                    continue;
+                }
+
+                if (line.startsWith("#")) {
+                    LocalDateTime timestamp = LocalDateTime.parse(line.substring(2), formatter);
+                    if (lastTimestamp != null) {
+                        Duration duration = Duration.between(lastTimestamp, timestamp);
+                        String nextLine;
+                        try {
+                            if((nextLine = reader.readLine()) == null) break;
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            Thread.sleep(duration.toMillis());
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+
+                        Platform.runLater(() -> playOneMove(nextLine));
+                    }
+                    lastTimestamp = timestamp;
+                }
             }
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            //stop thread when while ends
+            Platform.runLater(this::cancelTimersThreads);
         });
         threads.add(replayThread);
         replayThread.start();
 
     }
-
+    
     public void replaySaveReverse() throws IOException, GameException {
         Thread reverseReplayThread = new Thread(new Runnable() {
             @Override
@@ -504,9 +505,14 @@ public class PacManController{
         }
     }
 
-    private void playOneMove(String nextLine){
-        if (nextLine.startsWith("P")) {
-            List<String> splitedLine = List.of(nextLine.split(" "));
+    /**
+     * Function to replay one move accordingto line from log file
+     * 
+     * @param line line from log file with information about move
+     */
+    private void playOneMove(String line){
+        if (line.startsWith("P")) {
+            List<String> splitedLine = List.of(line.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                     .map(Integer::parseInt)
                     .toList();
@@ -520,8 +526,8 @@ public class PacManController{
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
-        } else if (nextLine.startsWith("G")) {
-            List<String> splitedLine = List.of(nextLine.split(" "));
+        } else if (line.startsWith("G")) {
+            List<String> splitedLine = List.of(line.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                     .map(Integer::parseInt)
                     .toList();
@@ -546,7 +552,7 @@ public class PacManController{
 
     /**
      * Checks if Pacman and Ghosts are on the same field. If so, checks if Ghost is eatable. If yes, Ghost is moved to start. If not, Pacman and Ghosts are moved to start.
-     * @throws GameException
+     * @throws GameException pacman looses all of lives
      */
     private void checkCollision() throws GameException{
         for (MazeObject mazeObject : maze.getGhosts()) {
@@ -564,7 +570,7 @@ public class PacManController{
 
     /**
      * Checks if Pacman is on TargetField and all keys are colledted. If so, throws CompletedGame exception.
-     * @throws GameException
+     * @throws GameException when pacman completes game
      */
     private void checkWin() throws GameException{
         if(maze.getPacMan().getField() instanceof TargetField){
@@ -623,14 +629,20 @@ public class PacManController{
         }
     }
 
+    /**
+     * Closes logWriter
+     */
     public void endLogging(){
         if (logWriter != null)logWriter.close();
     }
 
+    /**
+     * Change current game state and starts operations according to new game state
+     */
     public void changeGameState(GameState newGamestate){
         gameState = newGamestate;
-        switch (gameState){
-            case REPLAY:
+        switch (gameState) {
+            case REPLAY -> {
                 cancelTimersThreads();
                 endLogging();
                 setLoadedMap("log.save");
@@ -641,6 +653,7 @@ public class PacManController{
                     throw new RuntimeException(ex);
                 }
                 break;
+            }
             case REPLAY_REVERSE:
                 cancelTimersThreads();
                 endLogging();
@@ -655,7 +668,7 @@ public class PacManController{
             case DEFAULT:
                 cancelTimersThreads();
                 startTimersThreads();
-                break;
+            }
         }
 
     }

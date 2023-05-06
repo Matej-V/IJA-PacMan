@@ -9,9 +9,18 @@ import javafx.scene.shape.Circle;
 
 
 public class GhostObjectView extends Pane implements Observable.Observer {
-    private GhostObject model;
-    private FieldView parent;
-    private Circle ghost;
+    /**
+     * Model of the {@link GhostObject}
+     */
+    private final GhostObject model;
+    /**
+     * Parent {@link FieldView} of this object
+     */
+    private final FieldView parent;
+    /**
+     * Circle representing ghost
+     */
+    private final Circle ghost;
 
     public GhostObjectView(FieldView parent, MazeObject model){
         this.parent = parent;
@@ -23,7 +32,7 @@ public class GhostObjectView extends Pane implements Observable.Observer {
     }
 
     /**
-     * Paints a ghost as a <code>Circle</code> and adds it to self.
+     * Paints a ghost as a circle and adds it to own Observable list
      */
     private void paint() {
         if (model.isEatable()){
@@ -34,47 +43,47 @@ public class GhostObjectView extends Pane implements Observable.Observer {
         Circle eye2 = new Circle(parent.x + parent.size/2 + parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
         Circle eye1pupil = new Circle(parent.x + parent.size/2 - parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
         Circle eye2pupil = new Circle(parent.x + parent.size/2 + parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
-        switch(model.getDirection()){
-            case U:
-                eye1.setCenterX(parent.x + parent.size/2 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size/2 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size/2 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size/2 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                break;
-            case D:
-                eye1.setCenterX(parent.x + parent.size/2 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size/2 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size/2 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size/2 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                break;
-            case L:
-                eye1.setCenterX(parent.x + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size/2 - parent.size* 0.1);
-                eye2.setCenterX(parent.x + parent.size/2 + parent.size * 0.1 - parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size/2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size/2 + parent.size * 0.1 - parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                break;
-            case R:
-                eye1.setCenterX(parent.x + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size/2 + parent.size * 0.1 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size/2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size/2 + parent.size * 0.1 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size/2 - parent.size * 0.1);
-                break;
+        switch (model.getDirection()) {
+            case U -> {
+                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
+                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+            }
+            case D -> {
+                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
+                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+            }
+            case L -> {
+                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
+                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
+                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+            }
+            case R -> {
+                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
+                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+            }
         }
         // add eyes to ghost
         getChildren().add(eye1);
@@ -83,6 +92,9 @@ public class GhostObjectView extends Pane implements Observable.Observer {
         getChildren().add(eye2pupil);
     }
 
+    /**
+     * Updates the view when notified by the model.
+     */
     @Override
     public void update(Observable var1) {
         paint();

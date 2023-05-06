@@ -1,41 +1,48 @@
 package ija.project.pacman_project;
 
-import ija.project.common.Maze;
-import ija.project.common.MazeObject;
-import ija.project.common.Observable;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
-import java.util.Set;
 
-public class PacManView implements Observable {
-    private Maze model;
+/**
+ * PacManView class is responsible for generating all the views in the game
+ */
+public class PacManView extends AbstractObservableView{
+
+    /**
+     * Controller to be used for setting button actions
+     */
     private PacManController controller;
-
+    /**
+     * Current scene that is displayed
+     */
     public Pane currentScene;
-    private final Set<Observable.Observer> observers = new HashSet<>();
-    private double widthOfScreen;
-    private double heightOfScreen;
-    public StackPane gameBox; // UI + maze
+    /**
+     * Width of the screen
+     */
+    private final double widthOfScreen;
+    /**
+     * Height of the screen
+     */
+    private final double heightOfScreen;
+    /**
+     * Represents UI + maze part of currentScreen
+     */
+    public StackPane gameBox;
 
     public PacManView( double width, double height) {
         this.widthOfScreen = width;
@@ -44,19 +51,14 @@ public class PacManView implements Observable {
 
     public void setController(PacManController controller) {
         this.controller = controller;
-        this.model = controller.maze;
     }
 
     /**
-     * Generates maze representation using Pane objects
-     * @return Group od Pane objects that represents maze
+     * Generates maze representation using FieldView class objects
+     * @return Group od FieldView class objects that represents maze
      */
     public Group drawMaze() {
         Group mazeGroup = new Group();
-        /*
-         * Now all the fields are generated here as FieldView objects and added into
-         * mazeTile
-         */
         for (int row = 0; row < controller.maze.numRows(); row++) {
             for (int column = 0; column < controller.maze.numCols(); column++) {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
@@ -66,21 +68,28 @@ public class PacManView implements Observable {
         return mazeGroup;
     }
 
-
+    /**
+     * 
+     * @return Score and healt bar representation
+     */
     public Group drawUI() {
-        UIBarView UIBar = new UIBarView(this.controller.maze.getPacMan());
+        UIBarView UIBar = new UIBarView(controller.maze.getPacMan());
         return new Group(UIBar);
     }
 
+    /**
+     * Generates Main screen that is displayed when game is started
+     */
     public void generateMainScreen() {
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
     }
 
-
+    /**
+     * generate game that consists of maze and UI
+     */
     public void generateGame() {
-        System.out.println(currentScene);
         // Create Menu
         Menu menu = new Menu("Menu");
         MenuItem restartGame = new MenuItem("Restart game");
@@ -108,10 +117,12 @@ public class PacManView implements Observable {
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
-        System.out.println(currentScene);
         notifyObservers();
     }
 
+    /**
+     * Generate screen that player sees when game is lost
+     */
     public void generateEndScreen() {
         System.out.println("Generating end screen");
         //Score
@@ -124,6 +135,9 @@ public class PacManView implements Observable {
         notifyObservers();
     }
 
+    /**
+     * Generates screen thath player sees when game is won
+     */
     public void generateSuccessScreen(){
         System.out.println("Generating success screen");
         //Score
@@ -142,7 +156,11 @@ public class PacManView implements Observable {
         notifyObservers();
     }
 
-
+    /**
+     * Method that generates background image according to given url
+     * @param url url of image
+     * @return ImageView object that represents background image
+     */
     private ImageView drawBackgroundImage(String url){
         ImageView backgroundImage = new ImageView();
         try {
@@ -160,6 +178,11 @@ public class PacManView implements Observable {
         return backgroundImage;
     }
 
+    /**
+     * Method that generates button with given text
+     * @param text text that will be displayed on button
+     * @return Button object
+     */
     private Button drawButton(String text){
         Button button = new Button();
         button.setText(text);
@@ -177,24 +200,4 @@ public class PacManView implements Observable {
         });
         return button;
     }
-
-    public void addObserver(Observable.Observer o) {
-        this.observers.add(o);
-    }
-
-    public void removeObserver(Observable.Observer o) {
-        this.observers.remove(o);
-    }
-
-    public void notifyObservers() {
-        this.observers.forEach((o) -> o.update(this));
-    }
-
-    // Unused
-    @Override
-    public void addLogObserver(Observer var1) {}
-    @Override
-    public void removeLogObserver(Observer var1) {}
-    @Override
-    public void notifyLogObservers(MazeObject o) {}
 }
