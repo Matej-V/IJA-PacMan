@@ -652,9 +652,8 @@ public class PacManController{
                 } catch (IOException | GameException ex) {
                     throw new RuntimeException(ex);
                 }
-                break;
             }
-            case REPLAY_REVERSE:
+            case REPLAY_REVERSE -> {
                 cancelTimersThreads();
                 endLogging();
                 setLoadedMap("log.save");
@@ -665,7 +664,8 @@ public class PacManController{
                 } catch (IOException | GameException ex) {
                     throw new RuntimeException(ex);
                 }
-            case DEFAULT:
+            }
+            case DEFAULT -> {
                 cancelTimersThreads();
                 startTimersThreads();
             }
