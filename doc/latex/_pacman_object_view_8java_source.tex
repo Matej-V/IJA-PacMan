@@ -1,0 +1,45 @@
+\doxysection{Pacman\+Object\+View.\+java}
+\label{_pacman_object_view_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/view/PacmanObjectView.java@{D:/school/6sem/ija/src/main/java/ija/project/view/PacmanObjectView.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.view;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ ija.project.common.MazeObject;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ ija.project.common.Observable;}
+\DoxyCodeLine{00005\ \textcolor{keyword}{import}\ javafx.scene.layout.Pane;}
+\DoxyCodeLine{00006\ \textcolor{keyword}{import}\ javafx.scene.paint.Color;}
+\DoxyCodeLine{00007\ \textcolor{keyword}{import}\ javafx.scene.shape.Arc;}
+\DoxyCodeLine{00008\ \textcolor{keyword}{import}\ javafx.scene.shape.ArcType;}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }PacmanObjectView\ \textcolor{keyword}{extends}\ Pane\ implements\ Observable.Observer\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ MazeObject\ model;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ Arc\ mouth;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{public}\ PacmanObjectView(FieldView\ parent,\ MazeObject\ model)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ this.model\ =\ model;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ this.mouth\ =\ \textcolor{keyword}{new}\ Arc(parent.x\ +\ parent.size\ /\ 2,\ parent.y\ +\ parent.size\ /\ 2,\ parent.size\ *\ 0.35,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parent.size\ *\ 0.35,\ 30,\ 300);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ mouth.setType(ArcType.ROUND);}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ mouth.setFill(Color.web(\textcolor{stringliteral}{"{}f0d000"{}}));}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ getChildren().add(mouth);}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ model.addObserver(\textcolor{keyword}{this});}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ paint()\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (model.getDirection())\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ U\ -\/>\ mouth.setStartAngle(120);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ D\ -\/>\ mouth.setStartAngle(300);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ L\ -\/>\ mouth.setStartAngle(210);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ R\ -\/>\ mouth.setStartAngle(30);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00049\ \ \ \ \ @Override}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ update(Observable\ var1)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \}}
+
+\end{DoxyCode}

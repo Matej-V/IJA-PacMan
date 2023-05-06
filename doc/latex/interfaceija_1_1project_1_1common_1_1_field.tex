@@ -1,0 +1,286 @@
+\doxysection{ija.\+project.\+common.\+Field Interface Reference}
+\label{interfaceija_1_1project_1_1common_1_1_field}\index{ija.project.common.Field@{ija.project.common.Field}}
+Inheritance diagram for ija.\+project.\+common.\+Field\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{interfaceija_1_1project_1_1common_1_1_field}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+enum \textbf{ Direction}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ set\+Maze} (\textbf{ Maze} maze)
+\item 
+\textbf{ Field} \textbf{ next\+Field} (\textbf{ Direction} dirs)
+\item 
+boolean \textbf{ put} (\textbf{ Maze\+Object} object)  throws Exception
+\item 
+boolean \textbf{ remove} (\textbf{ Maze\+Object} object)
+\item 
+boolean \textbf{ is\+Empty} ()
+\item 
+List$<$ \textbf{ Maze\+Object} $>$ \textbf{ get} ()
+\item 
+boolean \textbf{ can\+Move} ()
+\item 
+\textbf{ Maze} \textbf{ get\+Maze} ()
+\item 
+int \textbf{ get\+Row} ()
+\item 
+int \textbf{ get\+Col} ()
+\item 
+boolean \textbf{ has\+Point} ()
+\item 
+boolean \textbf{ has\+Key} ()
+\item 
+\textbf{ Key\+Object} \textbf{ get\+Key} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Observable}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Interface representing the field object. 
+
+Definition at line \textbf{ 9} of file \textbf{ Field.\+java}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a62ed19c68fa99973b39fef9cc409d61d}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!canMove@{canMove}}
+\index{canMove@{canMove}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{canMove()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+can\+Move (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Checks whether the field is path field.
+
+\begin{DoxyReturn}{Returns}
+True if the field is path field, false otherwise 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a43ebfba1742d81714a7eaafa6bfc5849}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_ab3140d0f6c50b33ba63ec66e254256c1}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a5fad1c8580ef41c7f3d46301fef22e61}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!get@{get}}
+\index{get@{get}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{get()}
+{\footnotesize\ttfamily List$<$ \textbf{ Maze\+Object} $>$ ija.\+project.\+common.\+Field.\+get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the list of objects on the field.
+
+\begin{DoxyReturn}{Returns}
+list of objects on the field 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a56848c2d63c6a04240ba8cb333c70dcf}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a17294d9e393fa7e9e3c4bef5d122f70f}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a2de9634b18e2eaa89d83c67c7eb3c448}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!getCol@{getCol}}
+\index{getCol@{getCol}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{getCol()}
+{\footnotesize\ttfamily int ija.\+project.\+common.\+Field.\+get\+Col (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the column of the field.
+
+\begin{DoxyReturn}{Returns}
+column of the field 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_ac7d76e977ed6d1a1f3dbeafa00b38e9e}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a677701262a70bcb6b54fa0df1dda2977}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a0cf1790715870def52fc799322e5ac19}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!getKey@{getKey}}
+\index{getKey@{getKey}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{getKey()}
+{\footnotesize\ttfamily \textbf{ Key\+Object} ija.\+project.\+common.\+Field.\+get\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Get the key from the field.
+
+\begin{DoxyReturn}{Returns}
+Key\+Object 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a5f394e3568474cb257147aa1564c0be8}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_ad8459093a9799a599aaffb35e569052f}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a9190f12bd5966f47a48f1273479ef2cd}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!getMaze@{getMaze}}
+\index{getMaze@{getMaze}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{getMaze()}
+{\footnotesize\ttfamily \textbf{ Maze} ija.\+project.\+common.\+Field.\+get\+Maze (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the maze to which the field belongs.
+
+\begin{DoxyReturn}{Returns}
+maze to which the field belongs 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_ab5bc3505cb741dd8cded25a049bc8f9a}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a5652a11d920babc6ae89073cbcfb0260}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a1e20c31769cc3ccc03ca9275b1aa8b3c}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!getRow@{getRow}}
+\index{getRow@{getRow}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{getRow()}
+{\footnotesize\ttfamily int ija.\+project.\+common.\+Field.\+get\+Row (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the row of the field.
+
+\begin{DoxyReturn}{Returns}
+row of the field 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_af2c83aac17fc48d178af32b436900ce7}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a7c05637caffdfdd9c93051884efb1c0f}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_af915708cc62bd2e192da9adaf7160b59}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!hasKey@{hasKey}}
+\index{hasKey@{hasKey}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{hasKey()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+has\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Check if the field has key.
+
+\begin{DoxyReturn}{Returns}
+True if the field has key, false otherwise 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a69d1159459a29b0cf0b7179053cde694}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a7550f87a5df7c4fb180eac7bb93a6e6e}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a998428e87268c675478b77604b140b9e}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!hasPoint@{hasPoint}}
+\index{hasPoint@{hasPoint}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{hasPoint()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+has\+Point (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Check if the field has point.
+
+\begin{DoxyReturn}{Returns}
+True if the field has point, false otherwise 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a61423ef250e527ebee60b54090dd4610}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a7e73a10791d4188428f4998cb3a0b0c1}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a078dea990be58ff4765b3c55d0dad10f}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{isEmpty()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+is\+Empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Checks whether the field is empty.
+
+\begin{DoxyReturn}{Returns}
+True if the field is empty, false otherwise 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_aaec5af23d838361eeb2317310a0885c0}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a7c3192cf2352ffb1a0922bd16f27d7ae}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a743d89987c118c6e425cee1b3eadf08b}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!nextField@{nextField}}
+\index{nextField@{nextField}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{nextField()}
+{\footnotesize\ttfamily \textbf{ Field} ija.\+project.\+common.\+Field.\+next\+Field (\begin{DoxyParamCaption}\item[{\textbf{ Direction}}]{dirs }\end{DoxyParamCaption})}
+
+Returns neighboring field in the given direction.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dirs} & direction \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Field neighboring field in the given direction. 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_af095f8ef4b9822faf581b64863b36d97}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_ab1d9d1b29ab895941efc9cc77a820f21}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a2646374ad98eed9c893d95f48e1abae6}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!put@{put}}
+\index{put@{put}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{put()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+put (\begin{DoxyParamCaption}\item[{\textbf{ Maze\+Object}}]{object }\end{DoxyParamCaption}) throws Exception}
+
+Puts the object on the field.
+
+
+\begin{DoxyParams}{Parameters}
+{\em object} & object to be put on the field \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+row of the field 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & if the field is Wall\+Field exception Unsupported\+Operation\+Exception is thrown \\
+\hline
+\end{DoxyExceptions}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_afa3afb72bf40a66b7e7c7a18d7dd2a22}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a10e2b293cda25ab8896a6230c1f38da7}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a5b0cf5971b3861ee24d31bb803dd5758}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!remove@{remove}}
+\index{remove@{remove}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{remove()}
+{\footnotesize\ttfamily boolean ija.\+project.\+common.\+Field.\+remove (\begin{DoxyParamCaption}\item[{\textbf{ Maze\+Object}}]{object }\end{DoxyParamCaption})}
+
+Removes the object from the field.
+
+
+\begin{DoxyParams}{Parameters}
+{\em object} & object to be removed from the field \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_a7b790b02f25b3f705db4527447a776eb}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a817dbc0ec15ef849f64cb1bd0af3e59d}.
+
+\mbox{\label{interfaceija_1_1project_1_1common_1_1_field_a25863f43eb3304908be5c13c487e367f}} 
+\index{ija.project.common.Field@{ija.project.common.Field}!setMaze@{setMaze}}
+\index{setMaze@{setMaze}!ija.project.common.Field@{ija.project.common.Field}}
+\doxysubsubsection{setMaze()}
+{\footnotesize\ttfamily void ija.\+project.\+common.\+Field.\+set\+Maze (\begin{DoxyParamCaption}\item[{\textbf{ Maze}}]{maze }\end{DoxyParamCaption})}
+
+Associates the field with the maze.
+
+
+\begin{DoxyParams}{Parameters}
+{\em maze} & maze to which the field belongs \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ ija.\+project.\+game.\+Path\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_path_field_acacf940f1d3c36333b8634f42014e6e9}, and \textbf{ ija.\+project.\+game.\+Wall\+Field} \doxyref{}{p.}{classija_1_1project_1_1game_1_1_wall_field_a3300e6eba932ed1da3cd26d6f1a3d955}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/school/6sem/ija/src/main/java/ija/project/common/Field.\+java\end{DoxyCompactItemize}

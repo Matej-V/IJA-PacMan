@@ -1,0 +1,41 @@
+\doxysection{Abstract\+Observable\+View.\+java}
+\label{_abstract_observable_view_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/pacman\_project/AbstractObservableView.java@{D:/school/6sem/ija/src/main/java/ija/project/pacman\_project/AbstractObservableView.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.pacman\_project;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ ija.project.common.MazeObject;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ ija.project.common.Observable;}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{import}\ java.util.HashSet;}
+\DoxyCodeLine{00007\ \textcolor{keyword}{import}\ java.util.Set;}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}\ \textcolor{keyword}{abstract}\ \textcolor{keyword}{class\ }AbstractObservableView\ \textcolor{keyword}{implements}\ \ Observable\{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ Set<Observable.Observer>\ observers\ =\ \textcolor{keyword}{new}\ HashSet<>();}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ Set<Observable.Observer>\ logObservers\ =\ \textcolor{keyword}{new}\ HashSet<>();}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{public}\ AbstractObservableView()\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ addObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ this.observers.add(o);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ removeObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ this.observers.remove(o);}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ notifyObservers()\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ this.observers.forEach((o)\ -\/>\ o.update(\textcolor{keyword}{this}));}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ addLogObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ this.logObservers.add(o);}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ removeLogObserver(Observable.Observer\ o)\ \{this.logObservers.remove(o);\}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ notifyLogObservers()\{this.logObservers.forEach((o)\ -\/>\ o.update(\textcolor{keyword}{this}));\}}
+\DoxyCodeLine{00035\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,362 @@
+\doxysection{ija.\+project.\+game.\+Key\+Object Class Reference}
+\label{classija_1_1project_1_1game_1_1_key_object}\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+Inheritance diagram for ija.\+project.\+game.\+Key\+Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classija_1_1project_1_1game_1_1_key_object}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Key\+Object} (\textbf{ Path\+Field} field)
+\item 
+void \textbf{ collect\+Key} ()
+\item 
+boolean \textbf{ can\+Move} (Field.\+Direction dir)
+\item 
+boolean \textbf{ move} (Field.\+Direction dir)
+\item 
+boolean \textbf{ move} (\textbf{ Field} field)  throws Game\+Exception 
+\item 
+boolean \textbf{ is\+Pacman} ()
+\item 
+\textbf{ Field} \textbf{ get\+Field} ()
+\item 
+int \textbf{ get\+Lives} ()
+\item 
+int \textbf{ get\+Score} ()
+\item 
+Field.\+Direction \textbf{ get\+Direction} ()
+\item 
+void \textbf{ set\+Direction} (Field.\+Direction dir)
+\item 
+void \textbf{ move\+To\+Start} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Abstract\+Observable\+Object}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+boolean \textbf{ can\+Move} (Field.\+Direction dir)
+\item 
+boolean \textbf{ move} (Field.\+Direction dir)  throws Game\+Exception
+\item 
+boolean \textbf{ move} (\textbf{ Field} field)  throws Game\+Exception
+\item 
+void \textbf{ move\+To\+Start} ()  throws Game\+Exception
+\item 
+\textbf{ Field} \textbf{ get\+Field} ()
+\item 
+int \textbf{ get\+Lives} ()
+\item 
+int \textbf{ get\+Score} ()
+\item 
+Field.\+Direction \textbf{ get\+Direction} ()
+\item 
+void \textbf{ set\+Direction} (Field.\+Direction dir)
+\item 
+default boolean \textbf{ is\+Pacman} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Observable}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+boolean \textbf{ collected}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \textbf{ 8} of file \textbf{ Key\+Object.\+java}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_acf0e16b50e10f5bdfe33c610d6829c0d}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!KeyObject@{KeyObject}}
+\index{KeyObject@{KeyObject}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{KeyObject()}
+{\footnotesize\ttfamily ija.\+project.\+game.\+Key\+Object.\+Key\+Object (\begin{DoxyParamCaption}\item[{\textbf{ Path\+Field}}]{field }\end{DoxyParamCaption})}
+
+
+
+Definition at line \textbf{ 20} of file \textbf{ Key\+Object.\+java}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_aef8bc5403f8ae551852d4a4c61370364}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!canMove@{canMove}}
+\index{canMove@{canMove}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{canMove()}
+{\footnotesize\ttfamily boolean ija.\+project.\+game.\+Key\+Object.\+can\+Move (\begin{DoxyParamCaption}\item[{Field.\+Direction}]{dir }\end{DoxyParamCaption})}
+
+Verifies whether it is possible to move the object in the specified direction.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & Direction in which the object should be moved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the move is possible, false otherwise. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_ae80972834b0009ce97f91d49a577200d}.
+
+
+
+Definition at line \textbf{ 30} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a323a9e9b6907afd77bb97b8124d05fb5}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!collectKey@{collectKey}}
+\index{collectKey@{collectKey}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{collectKey()}
+{\footnotesize\ttfamily void ija.\+project.\+game.\+Key\+Object.\+collect\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \textbf{ 24} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_ad88b3a0af9a4e17869ed820b8c80ac21}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!getDirection@{getDirection}}
+\index{getDirection@{getDirection}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{getDirection()}
+{\footnotesize\ttfamily Field.\+Direction ija.\+project.\+game.\+Key\+Object.\+get\+Direction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the direction of the object. {\ttfamily \doxyref{Maze\+Object\#move(\+Field.\+Direction)}{p.}{}} should be called with this return value of this method.
+
+\begin{DoxyReturn}{Returns}
+Direction of the object. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_a00683ca3baa4b84e0ceb7ff2f8a982ac}.
+
+
+
+Definition at line \textbf{ 65} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a8dfdd4a4c9ba8e548ed06e1201a7df12}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!getField@{getField}}
+\index{getField@{getField}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{getField()}
+{\footnotesize\ttfamily \textbf{ Field} ija.\+project.\+game.\+Key\+Object.\+get\+Field (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the field on which the object is located.
+
+\begin{DoxyReturn}{Returns}
+Field on which the object is located. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_af13c6ddfdbbdafbc38f3d0e872ef1ed0}.
+
+
+
+Definition at line \textbf{ 50} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a576b9126cf24d590a952deb0507d4187}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!getLives@{getLives}}
+\index{getLives@{getLives}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{getLives()}
+{\footnotesize\ttfamily int ija.\+project.\+game.\+Key\+Object.\+get\+Lives (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the number of lives of the object.
+
+\begin{DoxyReturn}{Returns}
+Number of lives of the object. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_af360dff6dd038bbc0f931673d2025558}.
+
+
+
+Definition at line \textbf{ 55} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a9484ebfe906251fc993285c0cd1719a2}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!getScore@{getScore}}
+\index{getScore@{getScore}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{getScore()}
+{\footnotesize\ttfamily int ija.\+project.\+game.\+Key\+Object.\+get\+Score (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns the score of the object.
+
+\begin{DoxyReturn}{Returns}
+Score of the object. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_adcfd2b0380605c36ad6322c6595739b0}.
+
+
+
+Definition at line \textbf{ 60} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_ad4a5d17f25887559aa61e833241c5291}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!isPacman@{isPacman}}
+\index{isPacman@{isPacman}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{isPacman()}
+{\footnotesize\ttfamily boolean ija.\+project.\+game.\+Key\+Object.\+is\+Pacman (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns true if the object is a pacman.
+
+\begin{DoxyReturn}{Returns}
+True if the object is a pacman, false otherwise. 
+\end{DoxyReturn}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_a1362a66418d0b50aad0a1552149b2f88}.
+
+
+
+Definition at line \textbf{ 45} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_ab5c96b7febbc244cc3c8b4b4b7b1bdfb}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!move@{move}}
+\index{move@{move}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{move()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily boolean ija.\+project.\+game.\+Key\+Object.\+move (\begin{DoxyParamCaption}\item[{\textbf{ Field}}]{field }\end{DoxyParamCaption}) throws \textbf{ Game\+Exception}}
+
+Moves the object to the specified field if possible.
+
+
+\begin{DoxyParams}{Parameters}
+{\em field} & Field in which the object should be moved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the move was successful, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Game\+Exception} & if game is lost or won. \\
+\hline
+\end{DoxyExceptions}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_a6bad913685afc0a419c2a7e41e2a2d73}.
+
+
+
+Definition at line \textbf{ 40} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_ab8c4c9daa8eb7e1c0bbd961746f4c9f4}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!move@{move}}
+\index{move@{move}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{move()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily boolean ija.\+project.\+game.\+Key\+Object.\+move (\begin{DoxyParamCaption}\item[{Field.\+Direction}]{dir }\end{DoxyParamCaption})}
+
+Moves the object in the specified direction if possible.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & Direction in which the object should be moved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the move was successful, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Game\+Exception} & if game is lost or won \\
+\hline
+\end{DoxyExceptions}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_a4c5bc9abce4c97ff859655637da8d145}.
+
+
+
+Definition at line \textbf{ 35} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a2c27981137725524a35c9f5c36018ef3}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!moveToStart@{moveToStart}}
+\index{moveToStart@{moveToStart}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{moveToStart()}
+{\footnotesize\ttfamily void ija.\+project.\+game.\+Key\+Object.\+move\+To\+Start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Move the object to the start field.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Game\+Exception} & if game is lost or won. \\
+\hline
+\end{DoxyExceptions}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_af099e165596f1df8260c5bb6a9eb6c77}.
+
+
+
+Definition at line \textbf{ 75} of file \textbf{ Key\+Object.\+java}.
+
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a833ebdbdbff04953e08220454ff268eb}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!setDirection@{setDirection}}
+\index{setDirection@{setDirection}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{setDirection()}
+{\footnotesize\ttfamily void ija.\+project.\+game.\+Key\+Object.\+set\+Direction (\begin{DoxyParamCaption}\item[{Field.\+Direction}]{dir }\end{DoxyParamCaption})}
+
+Sets the direction of the object in which it should move. Direction should be set before calling {\ttfamily \doxyref{Maze\+Object\#move(\+Field.\+Direction)}{p.}{}}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & Direction in which object should move \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ ija.\+project.\+common.\+Maze\+Object} \doxyref{}{p.}{interfaceija_1_1project_1_1common_1_1_maze_object_a4c3437436284576d42ffcc5615d15a55}.
+
+
+
+Definition at line \textbf{ 70} of file \textbf{ Key\+Object.\+java}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\label{classija_1_1project_1_1game_1_1_key_object_a10c3edd0a79a0462b7ba0093fbb9e140}} 
+\index{ija.project.game.KeyObject@{ija.project.game.KeyObject}!collected@{collected}}
+\index{collected@{collected}!ija.project.game.KeyObject@{ija.project.game.KeyObject}}
+\doxysubsubsection{collected}
+{\footnotesize\ttfamily boolean ija.\+project.\+game.\+Key\+Object.\+collected}
+
+
+
+Definition at line \textbf{ 18} of file \textbf{ Key\+Object.\+java}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/school/6sem/ija/src/main/java/ija/project/game/Key\+Object.\+java\end{DoxyCompactItemize}

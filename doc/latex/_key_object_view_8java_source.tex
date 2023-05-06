@@ -1,0 +1,40 @@
+\doxysection{Key\+Object\+View.\+java}
+\label{_key_object_view_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/view/KeyObjectView.java@{D:/school/6sem/ija/src/main/java/ija/project/view/KeyObjectView.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.view;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ ija.project.common.MazeObject;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ ija.project.common.Observable;}
+\DoxyCodeLine{00005\ \textcolor{keyword}{import}\ ija.project.game.KeyObject;}
+\DoxyCodeLine{00006\ \textcolor{keyword}{import}\ javafx.scene.layout.Pane;}
+\DoxyCodeLine{00007\ \textcolor{keyword}{import}\ javafx.scene.paint.Color;}
+\DoxyCodeLine{00008\ \textcolor{keyword}{import}\ javafx.scene.shape.Rectangle;}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }KeyObjectView\ \textcolor{keyword}{extends}\ Pane\ implements\ Observable.Observer\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ Rectangle\ key;}
+\DoxyCodeLine{00018\ \ \ \ \ MazeObject\ model;}
+\DoxyCodeLine{00022\ \ \ \ \ FieldView\ parent;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{public}\ KeyObjectView(FieldView\ parent,\ MazeObject\ model)\{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ this.parent\ =\ parent;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ this.model\ =\ model;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ key\ =\ \textcolor{keyword}{new}\ Rectangle(parent.x\ +\ parent.size\ *\ 0.3,\ parent.y\ +\ parent.size\ *\ 0.3,\ parent.size\ *\ 0.4,\ parent.size\ *\ 0.4);}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ key.setFill(Color.YELLOW);}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ getChildren().add(key);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ model.addObserver(\textcolor{keyword}{this});}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ paint()\{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(((KeyObject)\ model).collected)\{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00045\ \ \ \ \ @Override}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ update(Observable\ var1)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \}}
+
+\end{DoxyCode}
