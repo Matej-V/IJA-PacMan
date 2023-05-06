@@ -6,7 +6,7 @@
 
     <groupId>ija.project</groupId>
     <artifactId>PacMan_Project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>PacMan_Project</name>
 
     <properties>
@@ -41,6 +41,7 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -71,6 +72,30 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Java Doc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <reportOutputDirectory>${basedir}</reportOutputDirectory>
+                    <destDir>doc</destDir>
+                    <additionalJOption>-private</additionalJOption>
+                </configuration>
+            </plugin>
+            <!-- Jar -->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>ija.project.pacman_project/ija.project.pacman_project.PacManApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

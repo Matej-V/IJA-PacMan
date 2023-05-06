@@ -1,7 +1,6 @@
 package ija.project.common;
 
 import ija.project.game.GameException;
-import javafx.application.Platform;
 
 /**
  * Interface representing the maze object.
