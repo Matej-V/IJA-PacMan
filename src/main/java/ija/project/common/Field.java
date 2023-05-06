@@ -134,5 +134,5 @@ public interface Field extends Observable{
      * Get the key from the field.
      * @return KeyObject
      */
-    public KeyObject getKey();
+    KeyObject getKey();
 }
