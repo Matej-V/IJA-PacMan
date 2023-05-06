@@ -202,6 +202,14 @@ public class PathField extends AbstractObservableField implements Field {
         return null;
     }
 
+    public void setKey() {
+        for (MazeObject k : this.maze.getOldKeys()) {
+            if (k.getField().equals(this)) {
+                this.maze.addKey(k);
+            }
+        }
+    }
+
     /**
      * Compares objects. Objects are equal if both represent PathField and
      * are at the same position

@@ -41,8 +41,9 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * Indicator if the pacman has collected the point on the move.
      */
     public boolean pointCollected;
+    public boolean keyCollected;
 
-    private int gameMode;
+    private boolean replayMode;
 
     /**
      * Constructor for PacmanObject.
@@ -90,12 +91,14 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 }
                 if(field.hasKey()){
                     field.getMaze().removeKey(field.getKey());
+                    this.keyCollected = true;
                 }
             }
         }finally {
             lock.writeLock().unlock();
         }
         notifyLogObservers();
+        this.keyCollected = false;
         return true;
     }
 
@@ -275,11 +278,14 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         notifyObservers();
     }
 
+    /**
+     * Sets
+     */
     public void setReplayMode() {
-        this.gameMode = 1;
+        this.replayMode = true;
     }
 
-    public int getGameMode() {
-        return this.gameMode;
+    public boolean isReplayMode() {
+        return this.replayMode;
     }
 }

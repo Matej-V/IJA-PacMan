@@ -86,4 +86,6 @@ public interface Maze {
      * @return true if all the keys are collected, false otherwise
      */
     boolean canComplete();
+
+    List<MazeObject> getOldKeys();
 }

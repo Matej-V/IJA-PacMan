@@ -486,14 +486,18 @@ public class PacManController{
             int score= Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
             boolean p = false;
+            boolean k = false;
             if (splitedLine.size() == 5) {
                 p = splitedLine.get(4).contains("p");
+            } else if (splitedLine.size() == 6) {
+                k = splitedLine.get(5).contains("k");
             }
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 if (p) field.point = true;
+                if (k) field.setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
             } catch (GameException e) {

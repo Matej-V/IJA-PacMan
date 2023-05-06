@@ -37,10 +37,10 @@ public class PacmanObjectView extends Pane implements Observable.Observer {
      * is 60 degrees wide.
      */
     private void paint() {
-        Field.Direction dir = ((PacmanObject) model).getGameMode() == 1
+        Field.Direction dir = ((PacmanObject) model).isReplayMode()
                 ? model.getDirection().opposite(model.getDirection())
                 : model.getDirection();
-        
+
         switch (dir) {
             case U -> mouth.setStartAngle(120);
             case D -> mouth.setStartAngle(300);
