@@ -13,13 +13,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FieldView extends Pane implements Observable.Observer {
+    /**
+     * Model of the {@link Field}
+     */
     private final Field model;
+    /**
+     * Represents food on a field
+     */
     private Circle Food;
+    /**
+     * Rectangle representing field
+     */
     private Rectangle Border;
-    private Rectangle Key;
+    /**
+     * List of objects on a field
+     */
     private final List<Pane> objects = new ArrayList<>();
+    /**
+     * X coordinate of a field
+     */
     double x;
+    /**
+     * Y coordinate of a field
+     */
     double y;
+    /**
+     * Width and height of a field
+     */
     double size;
 
     public FieldView(Field model, double cellSize, int row, int col) {
@@ -60,7 +80,7 @@ public class FieldView extends Pane implements Observable.Observer {
     }
 
     /**
-     * Generates and set visibility of food on a field
+     * Generates and sets visibility of food on a field
      */
     public void generateFood() {
         if (Food == null) {
@@ -79,6 +99,7 @@ public class FieldView extends Pane implements Observable.Observer {
     private void privateUpdate() {
         generateBorder();
         generateFood();
+        getChildren().setAll(Border, Food);
         if (model.canMove()) {
             objects.clear();
             List<MazeObject> objectsOnField = model.get();
@@ -94,7 +115,6 @@ public class FieldView extends Pane implements Observable.Observer {
             }
 
         }
-        getChildren().setAll(Border, Food);
         getChildren().addAll(objects);
     }
 }

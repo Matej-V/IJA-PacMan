@@ -8,9 +8,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class KeyObjectView extends Pane implements Observable.Observer {
+    /**
+     * Rectangle representing key
+     */
     Rectangle key;
+    /**
+     * Model of the {@link MazeObject}
+     */
     MazeObject model;
+    /**
+     * Parent {@link FieldView} of this object
+     */
     FieldView parent;
+
     public KeyObjectView(FieldView parent, MazeObject model){
         this.parent = parent;
         this.model = model;
@@ -20,12 +30,18 @@ public class KeyObjectView extends Pane implements Observable.Observer {
         paint();
         model.addObserver(this);
     }
+    /**
+     * Paints a key as a rectangle and adds it to own Observable list
+     */
     private void paint(){
         if(((KeyObject) model).collected){
             setVisible(false);
         }
     }
 
+    /**
+     * Updates the view when notified by the model.
+     */
     @Override
     public void update(Observable var1) {
         paint();
