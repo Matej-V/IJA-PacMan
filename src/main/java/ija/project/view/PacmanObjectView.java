@@ -1,7 +1,9 @@
 package ija.project.view;
 
+import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
+import ija.project.game.PacmanObject;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -35,7 +37,11 @@ public class PacmanObjectView extends Pane implements Observable.Observer {
      * is 60 degrees wide.
      */
     private void paint() {
-        switch (model.getDirection()) {
+        Field.Direction dir = ((PacmanObject) model).getGameMode() == 1
+                ? model.getDirection().opposite(model.getDirection())
+                : model.getDirection();
+        
+        switch (dir) {
             case U -> mouth.setStartAngle(120);
             case D -> mouth.setStartAngle(300);
             case L -> mouth.setStartAngle(210);

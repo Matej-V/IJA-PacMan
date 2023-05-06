@@ -419,13 +419,18 @@ public class PacManController{
                 String currentMove = null;
                 LocalDateTime lastTimestamp = null;
                 for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                    String line = moves.get(i);
                     if (i == end) {
-                        playOneMoveReverse(moves.get(i));
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                playOneMoveReverse(line);
+                            }
+                        });
                     }
 
-                    if (moves.get(i).startsWith("#")) {
-                        String line = currentMove;
-                        LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
+                    if (line.startsWith("#")) {
+                        LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
                         if (lastTimestamp != null) {
                             Duration duration = Duration.between(timestamp, lastTimestamp);
                             try {
@@ -433,16 +438,17 @@ public class PacManController{
                             } catch (InterruptedException e) {
                                 break;
                             }
+                            String move = currentMove;
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    playOneMoveReverse(line);
+                                    playOneMoveReverse(move);
                                 }
                             });
                         }
                         lastTimestamp = timestamp;
                     } else {
-                        currentMove = moves.get(i);
+                        currentMove = line;
                     }
                 }
             }
@@ -476,11 +482,13 @@ public class PacManController{
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                 .map(Integer::parseInt)
                 .toList();
-        System.out.println(splitedLine.get(0));
-        if (splitedLine.get(0).equals("P")) {
+        if (nextLine.startsWith("P")) {
             int score= Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
-            boolean p = splitedLine.get(4).contains("p");
+            boolean p = false;
+            if (splitedLine.size() == 5) {
+                p = splitedLine.get(4).contains("p");
+            }
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
@@ -492,7 +500,7 @@ public class PacManController{
                 throw new RuntimeException(e);
             }
 
-        } else if (splitedLine.get(0).equals("G")) {
+        } else if (nextLine.startsWith("G")) {
             GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
             ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
@@ -658,6 +666,8 @@ public class PacManController{
                 endLogging();
                 setLoadedMap("log.save");
                 clearPacmanPath();
+                MazeObject mz = this.maze.getPacMan();
+                ((PacmanObject) mz).setReplayMode();
                 view.generateGame();
                 try {
                     replaySaveReverse();

@@ -42,6 +42,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     public boolean pointCollected;
 
+    private int gameMode;
+
     /**
      * Constructor for PacmanObject.
      * 
@@ -221,6 +223,15 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
+     * Returns start field of a pacman.
+     *
+     * @return PathField start field.
+     */
+    public PathField getStartField() {
+        return this.startField;
+    }
+
+    /**
      * Method to set amount of pacman lives (from save file).
      *
      * @param lives Saved lives.
@@ -262,5 +273,13 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
             throw new GameException(GameException.TypeOfException.LostGame);
         }
         notifyObservers();
+    }
+
+    public void setReplayMode() {
+        this.gameMode = 1;
+    }
+
+    public int getGameMode() {
+        return this.gameMode;
     }
 }

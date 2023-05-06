@@ -94,7 +94,13 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
         String timestamp = formatter.format(now);
+        // Saving start positions of objects in the maze
         print("# " + timestamp + "\n");
+        print("P " + maze.getPacMan().getStartField().getRow() + "/" + maze.getPacMan().getStartField().getCol() + " 0 3\n");
+        for (MazeObject gh : maze.getGhosts()) {
+            print("# " + timestamp + "\n");
+            print("G" + ((GhostObject) gh).getId() + " " + gh.getStartField().getRow() + "/" + gh.getStartField().getCol() + " false\n");
+        }
         flush();
     }
 }

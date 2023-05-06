@@ -46,6 +46,10 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
         return super.isPacman();
     }
 
+    public PathField getStartField() {
+        return null;
+    }
+
     @Override
     public Field getField() {
         return this.field;

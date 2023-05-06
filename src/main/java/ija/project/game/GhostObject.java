@@ -210,6 +210,15 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
     }
 
     /**
+     * Returns start field of a pacman.
+     *
+     * @return PathField start field.
+     */
+    public PathField getStartField() {
+        return this.startField;
+    }
+
+    /**
      * Change the eatable state of the ghost.
      * 
      * @param eatable New eatable state of the ghost.
