@@ -10,13 +10,16 @@ import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Class representing the ghost object.
+ */
 public class GhostObject extends AbstractObservableObject implements MazeObject {
     /**
-     * Current field on which the ghost is located.
+     * Current field in which the ghost is located.
      */
     private Field field;
     /**
-     * Starting field of the ghost.
+     * Ghost starting field
      */
     private final PathField startField;
     /**

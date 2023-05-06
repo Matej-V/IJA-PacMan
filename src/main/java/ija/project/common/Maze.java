@@ -20,13 +20,13 @@ public interface Maze {
      * @param pacman pacman to be associated with the maze
      */
     void setPacMan(MazeObject pacman);
-    
+
     /**
      * Returns a field at a given position.
-     * 
+     *
      * @param row row of the field
      * @param col column of the field
-     * @return Field
+     * @return Field at the given position
      */
     Field getField(int row, int col);
 
@@ -39,42 +39,50 @@ public interface Maze {
 
     /**
      * Returns pacman in the maze.
-     * @return pacman
+     *
+     * @return Pacman in the maze
      */
     MazeObject getPacMan();
 
     /**
      * Returns number of rows in the maze.
      * 
-     * @return number of rows
+     * @return The number of rows in the maze
      */
     int numRows();
 
     /**
      * Returns number of columns in the maze.
      * 
-     * @return number of columns
+     * @return The number of columns in the maze
      */
     int numCols();
     
     /**
      * Moves all objects to their start positions. Calls a method for every object to move to its start field.
-     * @throws GameException
+     *
+     * @throws GameException Exception to handle game scenarios such as completed game or lost game.
      */
     void moveObjectsToStart() throws GameException;
 
     /**
-     * Add key to the maze.
+     * Adds key to the maze.
+     *
+     * @param key Key to add to the maze
+     * @return true if key was added to maze, otherwise false
      */
     boolean addKey(MazeObject key);
 
     /**
-     * Collect key from the maze.
+     * Removes key from the maze.
+     *
+     * @param key Key to remove from the maze
      */
     void removeKey(MazeObject key);
 
     /**
      * Check if pacman can complete the maze.
+     *
      * @return true if all the keys are collected, false otherwise
      */
     boolean canComplete();
