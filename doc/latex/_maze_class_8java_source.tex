@@ -1,0 +1,109 @@
+\doxysection{Maze\+Class.\+java}
+\label{_maze_class_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/game/MazeClass.java@{D:/school/6sem/ija/src/main/java/ija/project/game/MazeClass.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.game;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ javafx.scene.Group;}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{import}\ java.io.*;}
+\DoxyCodeLine{00006\ \textcolor{keyword}{import}\ java.util.ArrayList;}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{import}\ ija.project.common.*;}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{import}\ java.util.List;}
+\DoxyCodeLine{00011\ \textcolor{keyword}{import}\ java.util.ListIterator;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }MazeClass\ \textcolor{keyword}{implements}\ Maze\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ \textcolor{keywordtype}{int}\ numOfRows;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ \textcolor{keywordtype}{int}\ numOfCols;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{protected}\ List<List<Field>>\ fields;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{private}\ List<MazeObject>\ ghosts\ =\ \textcolor{keyword}{new}\ ArrayList<MazeObject>();}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{private}\ List<MazeObject>\ keys\ =\ \textcolor{keyword}{new}\ ArrayList<MazeObject>();}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{private}\ MazeObject\ PacMan;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ keysToCollect;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{public}\ Field\ target;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{public}\ MazeClass(\textcolor{keywordtype}{int}\ rows,\ \textcolor{keywordtype}{int}\ cols)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ this.numOfRows\ =\ rows\ +\ 2;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ this.numOfCols\ =\ cols\ +\ 2;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ this.fields\ =\ \textcolor{keyword}{new}\ ArrayList<List<Field>>();}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ row\ =\ 0;\ row\ <\ this.numOfRows;\ row++)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ fields.add(\textcolor{keyword}{new}\ ArrayList<Field>(cols));}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ column\ =\ 0;\ column\ <\ this.numOfCols;\ column++)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (row\ ==\ 0\ ||\ column\ ==\ 0\ ||\ row\ ==\ (this.numOfRows\ -\/\ 1)\ ||\ column\ ==\ (this.numOfCols\ -\/\ 1))\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WallField\ field\ =\ \textcolor{keyword}{new}\ WallField(row,\ column);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ field.setMaze(\textcolor{keyword}{this});}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this.fields.get(row).add(field);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this.fields.get(row).add(\textcolor{keyword}{null});}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ setGhosts(List<MazeObject>\ ghosts)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ this.ghosts\ =\ ghosts;}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ setPacMan(MazeObject\ pacMan)\{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ this.PacMan\ =\ pacMan;}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00099\ \ \ \ \ @Override}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{public}\ Field\ getField(\textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (row\ <\ 0\ ||\ row\ >=\ this.numOfRows\ ||\ col\ <\ 0\ ||\ col\ >=\ this.numOfCols)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{null};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this.fields.get(row).get(col);}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00112\ \ \ \ \ @Override}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{public}\ List<MazeObject>\ getGhosts()\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ ArrayList<>(this.ghosts);}
+\DoxyCodeLine{00115\ \ \ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{public}\ MazeObject\ getPacMan()\{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this.PacMan;}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00132\ \ \ \ \ @Override}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ numRows()\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (this.numOfRows);}
+\DoxyCodeLine{00135\ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00142\ \ \ \ \ @Override}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ numCols()\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (this.numOfCols);}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00152\ \ \ \ \ @Override}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ moveObjectsToStart()\ throws\ GameException\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ PacMan.moveToStart();}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (MazeObject\ mazeObject\ :\ ghosts)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ GhostObject\ ghost\ =\ (GhostObject)\ mazeObject;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ ghost.moveToStart();}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00159\ \ \ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ addKey(MazeObject\ key)\{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(key\ !=\ \textcolor{keyword}{null})\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ this.keys.add(key);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ removeKey(MazeObject\ key)\{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ ((KeyObject)key).collectKey();}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ this.keys.remove(key);}
+\DoxyCodeLine{00183\ \ \ \ \ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ canComplete()\{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ keysToCollect\ ==\ 0;}
+\DoxyCodeLine{00192\ \ \ \ \ \}}
+\DoxyCodeLine{00193\ \}}
+\DoxyCodeLine{00194\ }
+
+\end{DoxyCode}

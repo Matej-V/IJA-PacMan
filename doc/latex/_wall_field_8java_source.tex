@@ -1,0 +1,100 @@
+\doxysection{Wall\+Field.\+java}
+\label{_wall_field_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/game/WallField.java@{D:/school/6sem/ija/src/main/java/ija/project/game/WallField.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.game;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ ija.project.common.*;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ java.util.List;}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }WallField\ \textcolor{keyword}{extends}\ AbstractObservableField\ implements\ Field\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ \textcolor{keywordtype}{int}\ row;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ \textcolor{keywordtype}{int}\ col;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{private}\ Maze\ maze;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{public}\ WallField(\textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ this.row\ =\ row;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ this.col\ =\ col;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ this.maze\ =\ \textcolor{keyword}{null};}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ setMaze(Maze\ maze)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ this.maze\ =\ maze;}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00050\ \ \ \ \ @Override}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{public}\ Field\ nextField(Direction\ dirs)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordflow}{switch}\ (dirs)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ D\ -\/>\ this.maze.getField(this.row\ +\ 1,\ this.col);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ L\ -\/>\ this.maze.getField(this.row,\ this.col\ -\/\ 1);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ R\ -\/>\ this.maze.getField(this.row,\ this.col\ +\ 1);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ U\ -\/>\ this.maze.getField(this.row\ -\/\ 1,\ this.col);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ put(MazeObject\ \textcolor{keywordtype}{object})\ \textcolor{keywordflow}{throws}\ UnsupportedOperationException\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ UnsupportedOperationException(\textcolor{stringliteral}{"{}Error"{}});}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ \textcolor{keyword}{remove}(MazeObject\ object)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ System.out.println(\textcolor{stringliteral}{"{}Unsupported\ operation"{}});}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00086\ \ \ \ \ @Override}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ isEmpty()\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00096\ \ \ \ \ @Override}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{public}\ List<MazeObject>\ \textcolor{keyword}{get}()\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{null};}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00106\ \ \ \ \ @Override}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ canMove()\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00117\ \ \ \ \ @Override}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{public}\ Maze\ getMaze()\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ maze;}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00127\ \ \ \ \ @Override}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ getRow()\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this.row;}
+\DoxyCodeLine{00130\ \ \ \ \ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00137\ \ \ \ \ @Override}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ getCol()\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this.col;}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00147\ \ \ \ \ @Override}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ hasPoint()\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ hasKey()\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00159\ \ \ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00166\ \ \ \ \ @Override}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{public}\ KeyObject\ getKey()\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{null};}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00178\ \ \ \ \ @Override}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{boolean}\ equals(Object\ obj)\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj\ instanceof\ WallField\ wall)\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (wall.row\ ==\ \textcolor{keyword}{this}.row\ \&\&\ wall.col\ ==\ \textcolor{keyword}{this}.col);}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00184\ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \}}
+
+\end{DoxyCode}

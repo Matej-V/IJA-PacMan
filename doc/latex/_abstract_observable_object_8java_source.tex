@@ -1,0 +1,38 @@
+\doxysection{Abstract\+Observable\+Object.\+java}
+\label{_abstract_observable_object_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/common/AbstractObservableObject.java@{D:/school/6sem/ija/src/main/java/ija/project/common/AbstractObservableObject.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.common;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ java.util.HashSet;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ java.util.Set;}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{public}\ \textcolor{keyword}{abstract}\ \textcolor{keyword}{class\ }AbstractObservableObject\ \textcolor{keyword}{implements}\ \ MazeObject\{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ Set<Observable.Observer>\ observers\ =\ \textcolor{keyword}{new}\ HashSet<>();}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ Set<Observable.Observer>\ logObservers\ =\ \textcolor{keyword}{new}\ HashSet<>();}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{public}\ AbstractObservableObject()\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ addObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ this.observers.add(o);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ removeObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ this.observers.remove(o);}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ notifyObservers()\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ this.observers.forEach((o)\ -\/>\ o.update(\textcolor{keyword}{this}));}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ addLogObserver(Observable.Observer\ o)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ this.logObservers.add(o);}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ removeLogObserver(Observable.Observer\ o)\ \{this.logObservers.remove(o);\}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ notifyLogObservers()\{this.logObservers.forEach((o)\ -\/>\ o.update(\textcolor{keyword}{this}));\}}
+\DoxyCodeLine{00032\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,151 @@
+\doxysection{ija.\+project.\+game.\+Target\+Field Class Reference}
+\label{classija_1_1project_1_1game_1_1_target_field}\index{ija.project.game.TargetField@{ija.project.game.TargetField}}
+Inheritance diagram for ija.\+project.\+game.\+Target\+Field\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classija_1_1project_1_1game_1_1_target_field}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Target\+Field} (int row, int col)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+game.\+Path\+Field}}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Path\+Field} (int row, int col)
+\item 
+void \textbf{ set\+Maze} (\textbf{ Maze} \textbf{ maze})
+\item 
+\textbf{ Field} \textbf{ next\+Field} (\textbf{ Direction} dirs)
+\item 
+boolean \textbf{ put} (\textbf{ Maze\+Object} object)  throws Game\+Exception
+\item 
+boolean \textbf{ remove} (\textbf{ Maze\+Object} object)
+\item 
+boolean \textbf{ is\+Empty} ()
+\item 
+List$<$ \textbf{ Maze\+Object} $>$ \textbf{ get} ()
+\item 
+boolean \textbf{ can\+Move} ()
+\item 
+\textbf{ Maze} \textbf{ get\+Maze} ()
+\item 
+int \textbf{ get\+Row} ()
+\item 
+int \textbf{ get\+Col} ()
+\item 
+boolean \textbf{ has\+Point} ()
+\item 
+boolean \textbf{ has\+Key} ()
+\item 
+\textbf{ Key\+Object} \textbf{ get\+Key} ()
+\item 
+boolean \textbf{ equals} (Object obj)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Abstract\+Observable\+Field}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ set\+Maze} (\textbf{ Maze} maze)
+\item 
+\textbf{ Field} \textbf{ next\+Field} (\textbf{ Direction} dirs)
+\item 
+boolean \textbf{ put} (\textbf{ Maze\+Object} object)  throws Exception
+\item 
+boolean \textbf{ remove} (\textbf{ Maze\+Object} object)
+\item 
+boolean \textbf{ is\+Empty} ()
+\item 
+List$<$ \textbf{ Maze\+Object} $>$ \textbf{ get} ()
+\item 
+boolean \textbf{ can\+Move} ()
+\item 
+\textbf{ Maze} \textbf{ get\+Maze} ()
+\item 
+int \textbf{ get\+Row} ()
+\item 
+int \textbf{ get\+Col} ()
+\item 
+boolean \textbf{ has\+Point} ()
+\item 
+boolean \textbf{ has\+Key} ()
+\item 
+\textbf{ Key\+Object} \textbf{ get\+Key} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Observable}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+\doxysubsubsection*{Public Attributes inherited from \textbf{ ija.\+project.\+game.\+Path\+Field}}
+\begin{DoxyCompactItemize}
+\item 
+boolean \textbf{ point}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes inherited from \textbf{ ija.\+project.\+game.\+Path\+Field}}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Maze} \textbf{ maze}
+\item 
+final List$<$ \textbf{ Maze\+Object} $>$ \textbf{ maze\+Objects}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing the target field object. 
+
+Definition at line \textbf{ 7} of file \textbf{ Target\+Field.\+java}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{classija_1_1project_1_1game_1_1_target_field_a4cd55c1258768937a08b86e03650b5c3}} 
+\index{ija.project.game.TargetField@{ija.project.game.TargetField}!TargetField@{TargetField}}
+\index{TargetField@{TargetField}!ija.project.game.TargetField@{ija.project.game.TargetField}}
+\doxysubsubsection{TargetField()}
+{\footnotesize\ttfamily ija.\+project.\+game.\+Target\+Field.\+Target\+Field (\begin{DoxyParamCaption}\item[{int}]{row,  }\item[{int}]{col }\end{DoxyParamCaption})}
+
+Constructor.
+
+
+\begin{DoxyParams}{Parameters}
+{\em row} & row of the field \\
+\hline
+{\em col} & column of the field \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \textbf{ 15} of file \textbf{ Target\+Field.\+java}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/school/6sem/ija/src/main/java/ija/project/game/Target\+Field.\+java\end{DoxyCompactItemize}

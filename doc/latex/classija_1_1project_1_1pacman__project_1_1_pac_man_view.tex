@@ -1,0 +1,191 @@
+\doxysection{ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View Class Reference}
+\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view}\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+Inheritance diagram for ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classija_1_1project_1_1pacman__project_1_1_pac_man_view}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Pac\+Man\+View} (double width, double height)
+\item 
+void \textbf{ set\+Controller} (\textbf{ Pac\+Man\+Controller} controller)
+\item 
+Group \textbf{ draw\+Maze} ()
+\item 
+Group \textbf{ draw\+UI} ()
+\item 
+void \textbf{ generate\+Main\+Screen} ()
+\item 
+void \textbf{ generate\+Game} ()
+\item 
+void \textbf{ generate\+End\+Screen} ()
+\item 
+void \textbf{ generate\+Success\+Screen} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+pacman\+\_\+project.\+Abstract\+Observable\+View}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ remove\+Log\+Observer} (Observable.\+Observer o)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions inherited from \textbf{ ija.\+project.\+common.\+Observable}}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ add\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Observers} ()
+\item 
+void \textbf{ add\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ remove\+Log\+Observer} (\textbf{ Observer} var1)
+\item 
+void \textbf{ notify\+Log\+Observers} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Pane \textbf{ current\+Scene}
+\item 
+Stack\+Pane \textbf{ game\+Box}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Pac\+Man\+View class is responsible for generating all the views in the game 
+
+Definition at line \textbf{ 24} of file \textbf{ Pac\+Man\+View.\+java}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_a0d4e8b62283923b641be1e9c72922ab7}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!PacManView@{PacManView}}
+\index{PacManView@{PacManView}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{PacManView()}
+{\footnotesize\ttfamily ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+Pac\+Man\+View (\begin{DoxyParamCaption}\item[{double}]{width,  }\item[{double}]{height }\end{DoxyParamCaption})}
+
+
+
+Definition at line \textbf{ 47} of file \textbf{ Pac\+Man\+View.\+java}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_ae82a03d7c5c642d2042d74deee128968}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!drawMaze@{drawMaze}}
+\index{drawMaze@{drawMaze}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{drawMaze()}
+{\footnotesize\ttfamily Group ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+draw\+Maze (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Generates maze representation using Field\+View class objects \begin{DoxyReturn}{Returns}
+Group od Field\+View class objects that represents maze 
+\end{DoxyReturn}
+
+
+Definition at line \textbf{ 60} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_abdc497860757ebb0e7476fef0c2da6ca}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!drawUI@{drawUI}}
+\index{drawUI@{drawUI}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{drawUI()}
+{\footnotesize\ttfamily Group ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+draw\+UI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+Score and healt bar representation 
+\end{DoxyReturn}
+
+
+Definition at line \textbf{ 75} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_af12523928776c1fd84334470f621a3f8}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!generateEndScreen@{generateEndScreen}}
+\index{generateEndScreen@{generateEndScreen}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{generateEndScreen()}
+{\footnotesize\ttfamily void ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+generate\+End\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Generate screen that player sees when game is lost 
+
+Definition at line \textbf{ 126} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_aaa0b0209ac8ac32e2874f9f4388e67d3}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!generateGame@{generateGame}}
+\index{generateGame@{generateGame}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{generateGame()}
+{\footnotesize\ttfamily void ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+generate\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+generate game that consists of maze and UI 
+
+Definition at line \textbf{ 92} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_a1eeaf9c31e5a23ff075ddce0d97449a4}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!generateMainScreen@{generateMainScreen}}
+\index{generateMainScreen@{generateMainScreen}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{generateMainScreen()}
+{\footnotesize\ttfamily void ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+generate\+Main\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Generates Main screen that is displayed when game is started 
+
+Definition at line \textbf{ 83} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_a6040a6b3caf88c343cf0ede454cc021e}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!generateSuccessScreen@{generateSuccessScreen}}
+\index{generateSuccessScreen@{generateSuccessScreen}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{generateSuccessScreen()}
+{\footnotesize\ttfamily void ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+generate\+Success\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Generates screen thath player sees when game is won 
+
+Definition at line \textbf{ 141} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_a46a5f01fdb318111b9b3620339946673}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!setController@{setController}}
+\index{setController@{setController}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{setController()}
+{\footnotesize\ttfamily void ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+set\+Controller (\begin{DoxyParamCaption}\item[{\textbf{ Pac\+Man\+Controller}}]{controller }\end{DoxyParamCaption})}
+
+
+
+Definition at line \textbf{ 52} of file \textbf{ Pac\+Man\+View.\+java}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_aa1dacdf34c635575e6d95e1c625dd097}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!currentScene@{currentScene}}
+\index{currentScene@{currentScene}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{currentScene}
+{\footnotesize\ttfamily Pane ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+current\+Scene}
+
+Current scene that is displayed 
+
+Definition at line \textbf{ 33} of file \textbf{ Pac\+Man\+View.\+java}.
+
+\mbox{\label{classija_1_1project_1_1pacman__project_1_1_pac_man_view_a20d8c175f2173bcf3c246574ab9ae2b3}} 
+\index{ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}!gameBox@{gameBox}}
+\index{gameBox@{gameBox}!ija.project.pacman\_project.PacManView@{ija.project.pacman\_project.PacManView}}
+\doxysubsubsection{gameBox}
+{\footnotesize\ttfamily Stack\+Pane ija.\+project.\+pacman\+\_\+project.\+Pac\+Man\+View.\+game\+Box}
+
+Represents UI + maze part of current\+Screen 
+
+Definition at line \textbf{ 45} of file \textbf{ Pac\+Man\+View.\+java}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/school/6sem/ija/src/main/java/ija/project/pacman\+\_\+project/Pac\+Man\+View.\+java\end{DoxyCompactItemize}

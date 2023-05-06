@@ -1,0 +1,56 @@
+\doxysection{UIBar\+View.\+java}
+\label{_u_i_bar_view_8java_source}\index{D:/school/6sem/ija/src/main/java/ija/project/view/UIBarView.java@{D:/school/6sem/ija/src/main/java/ija/project/view/UIBarView.java}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{package\ }ija.project.view;}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ ija.project.common.MazeObject;}
+\DoxyCodeLine{00004\ \textcolor{keyword}{import}\ ija.project.common.Observable;}
+\DoxyCodeLine{00005\ \textcolor{keyword}{import}\ ija.project.pacman\_project.PacManApp;}
+\DoxyCodeLine{00006\ \textcolor{keyword}{import}\ javafx.scene.Group;}
+\DoxyCodeLine{00007\ \textcolor{keyword}{import}\ javafx.scene.control.Label;}
+\DoxyCodeLine{00008\ \textcolor{keyword}{import}\ javafx.scene.image.Image;}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{import}\ java.io.IOException;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }UIBarView\ \textcolor{keyword}{extends}\ Group\ implements\ Observable.Observer\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{final}\ MazeObject\ model;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{private}\ Image\ heartImage;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{private}\ Image\ deathImage;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{public}\ UIBarView(MazeObject\ model)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ this.model\ =\ model;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ this.heartImage\ =\ \textcolor{keyword}{new}\ Image(PacManApp.class.getResource(\textcolor{stringliteral}{"{}img/heart.png"{}}).openStream());}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ this.deathImage\ =\ \textcolor{keyword}{new}\ Image(PacManApp.class.getResource(\textcolor{stringliteral}{"{}img/death.png"{}}).openStream());}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (IOException\ e)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ RuntimeException(e);}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ model.addObserver(\textcolor{keyword}{this});}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ paint()\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ getChildren().clear();}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ImageView\ heart\ =\ new\ ImageView(this.heartImage);}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ImageView\ heart2\ =\ new\ ImageView(this.heartImage);}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ImageView\ heart3\ =\ new\ ImageView(this.heartImage);}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ Label\ hearts\ =\ \textcolor{keyword}{new}\ Label(\textcolor{stringliteral}{"{}Health:\ "{}}\ +\ this.model.getLives());}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ Label\ score\ =\ \textcolor{keyword}{new}\ Label(\textcolor{stringliteral}{"{}Score:\ "{}}\ +\ this.model.getScore());}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ score.setTranslateX(400);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ hearts.setTranslateX(800);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ score.setStyle(\textcolor{stringliteral}{"{}-\/fx-\/text-\/fill:\ \#00022A;\ -\/fx-\/font-\/size:\ 16px;\ "{}});}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ hearts.setStyle(\textcolor{stringliteral}{"{}-\/fx-\/text-\/fill:\ \#00022A;\ -\/fx-\/font-\/size:\ 16px;\ "{}});}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ getChildren().addAll(hearts,\ score);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ update(Observable\ var1)\{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ paint();}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \}}
+
+\end{DoxyCode}
