@@ -78,8 +78,4 @@ public interface Maze {
      * @return true if all the keys are collected, false otherwise
      */
     boolean canComplete();
-
-    // TODO
-    void registerGhostPath(char id, String line);
-
 }

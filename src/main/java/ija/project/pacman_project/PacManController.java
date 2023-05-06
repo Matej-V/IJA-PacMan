@@ -420,6 +420,7 @@ public class PacManController{
                 for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
                     if (i == end) {
                         String line = moves.get(i);
+                        System.out.println(line);
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -427,13 +428,12 @@ public class PacManController{
                             }
                         });
                     }
-                    System.out.println(moves.get(i));
+
                     if (moves.get(i).startsWith("#")) {
                         String line = currentMove;
                         LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
                         if (lastTimestamp != null) {
                             Duration duration = Duration.between(timestamp, lastTimestamp);
-                            System.out.println("Duration is " + duration);
                             try {
                                 Thread.sleep(duration.toMillis());
                             } catch (InterruptedException e) {
@@ -486,11 +486,12 @@ public class PacManController{
         if (splitedLine.get(0).equals("P")) {
             int score= Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
+            boolean p = splitedLine.get(4).contains("p");
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
-                field.point = true;
+                if (p) field.point = true;
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
             } catch (GameException e) {
@@ -498,6 +499,14 @@ public class PacManController{
             }
 
         } else if (splitedLine.get(0).equals("G")) {
+            GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
+            ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
+
+            try {
+                ghost.move(maze.getField(coords.get(0), coords.get(1)));
+            } catch (GameException e) {
+                throw new RuntimeException(e);
+            }
 
         }
     }

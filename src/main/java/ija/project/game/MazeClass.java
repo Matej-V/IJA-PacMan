@@ -115,25 +115,8 @@ public class MazeClass implements Maze {
         return this.PacMan;
     }
 
-
-
-
     public boolean canComplete(){
         return keysToCollect == 0;
-    }
-
-    private GhostObject findGhost(char id) {
-        for (MazeObject mo : ghosts) {
-            if (((GhostObject)mo).getId() == id) return (GhostObject) mo;
-        }
-
-        return null;
-    }
-
-    public void registerGhostPath(char id, String line) {
-        GhostObject ghost = this.findGhost(id);
-        System.out.println(ghost);
-        ghost.setPath(line);
     }
 
     public boolean addKey(MazeObject key){
