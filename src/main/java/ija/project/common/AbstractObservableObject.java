@@ -28,5 +28,5 @@ public abstract class AbstractObservableObject implements  MazeObject{
 
     public void removeLogObserver(Observable.Observer o) {this.logObservers.remove(o);}
 
-    public void notifyLogObservers(MazeObject observable){this.logObservers.forEach((o) -> o.update(this));}
+    public void notifyLogObservers(){this.logObservers.forEach((o) -> o.update(this));}
 }

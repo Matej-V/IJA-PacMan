@@ -105,7 +105,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         }finally {
             lock.writeLock().unlock();
         }
-        notifyLogObservers(this);
+        notifyLogObservers();
         return true;
     }
 
@@ -146,7 +146,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
             this.startField.put(this);
             this.field = this.startField;
             notifyObservers();
-            notifyLogObservers(this);
+            notifyLogObservers();
         }finally {
             lock.writeLock().unlock();
         }
