@@ -1,14 +1,8 @@
 package ija.project.game;
 
-import javafx.scene.Group;
-
-import java.io.*;
 import java.util.ArrayList;
-
 import ija.project.common.*;
-
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Class representing the maze.

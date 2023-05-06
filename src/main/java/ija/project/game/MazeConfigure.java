@@ -1,11 +1,7 @@
 package ija.project.game;
 
 import ija.project.common.*;
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Class for configuring the maze.

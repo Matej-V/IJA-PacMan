@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
  * PacManView class is responsible for generating all the views in the game
  */
 public class PacManView extends AbstractObservableView{
-
     /**
      * Controller to be used for setting button actions
      */
@@ -44,11 +43,21 @@ public class PacManView extends AbstractObservableView{
      */
     public StackPane gameBox;
 
+    /**
+     * PacManView constructor
+     * 
+     * @param width  of the screen
+     * @param height of the screen
+     */
     public PacManView( double width, double height) {
         this.widthOfScreen = width;
         this.heightOfScreen = height;
     }
 
+    /**
+     * Sets controller that is used for setting button actions and accessing model
+     * @param controller to be set
+     */
     public void setController(PacManController controller) {
         this.controller = controller;
     }

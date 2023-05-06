@@ -17,6 +17,12 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
      */
     private static final Object lock = new Object();
 
+    /**
+     * Creates a new LogWriter object. The file is created if it does not exist.
+     * 
+     * @param file File to be written to.
+     * @param maze Maze to be logged.
+     */
     public LogWriter(File file, Maze maze) throws FileNotFoundException {
         super(file);
         synchronized (lock) {

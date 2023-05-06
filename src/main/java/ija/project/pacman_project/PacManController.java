@@ -71,6 +71,11 @@ public class PacManController{
         PAUSE
     }
 
+    /**
+     * PacManController constructor
+     * 
+     * @param view PacManView object that is used for generating game views
+     */
     public PacManController(PacManView view){
         this.view = view;
     }
@@ -405,55 +410,47 @@ public class PacManController{
     }
     
     public void replaySaveReverse() throws IOException, GameException {
-        Thread reverseReplayThread = new Thread(new Runnable() {
-            @Override
-            public void run(){
-                List<String> moves = null;
-                try {
-                    moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        Thread reverseReplayThread = new Thread(() -> {
+            List<String> moves;
+            try {
+                moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+            int end = moves.size() - 1;
+            String currentMove = null;
+            LocalDateTime lastTimestamp = null;
+            for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                if (i == end) {
+                    playOneMoveReverse(moves.get(i));
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-                int end = moves.size() - 1;
-                String currentMove = null;
-                LocalDateTime lastTimestamp = null;
-                for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
-                    if (i == end) {
-                        playOneMoveReverse(moves.get(i));
-                    }
 
-                    if (moves.get(i).startsWith("#")) {
-                        String line = currentMove;
-                        LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
-                        if (lastTimestamp != null) {
-                            Duration duration = Duration.between(timestamp, lastTimestamp);
-                            try {
-                                Thread.sleep(duration.toMillis());
-                            } catch (InterruptedException e) {
-                                break;
-                            }
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    playOneMoveReverse(line);
-                                }
-                            });
+                if (moves.get(i).startsWith("#")) {
+                    String line = currentMove;
+                    LocalDateTime timestamp = LocalDateTime.parse(moves.get(i).split("\\s+")[1], formatter);
+                    if (lastTimestamp != null) {
+                        Duration duration = Duration.between(timestamp, lastTimestamp);
+                        try {
+                            Thread.sleep(duration.toMillis());
+                        } catch (InterruptedException e) {
+                            break;
                         }
-                        lastTimestamp = timestamp;
-                    } else {
-                        currentMove = moves.get(i);
+                        Platform.runLater(() -> playOneMoveReverse(line));
                     }
+                    lastTimestamp = timestamp;
+                } else {
+                    currentMove = moves.get(i);
                 }
             }
+            Platform.runLater(this::cancelTimersThreads);
         });
-
         threads.add(reverseReplayThread);
         reverseReplayThread.start();
     }
 
     private void clearPacmanPath() {
-        List<String> moves = null;
+        List<String> moves;
         try {
             moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
         } catch (IOException e) {
