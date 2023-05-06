@@ -81,7 +81,6 @@
                 <configuration>
                     <reportOutputDirectory>${basedir}</reportOutputDirectory>
                     <destDir>doc</destDir>
-                    <additionalJOption>-private</additionalJOption>
                 </configuration>
             </plugin>
             <!-- Jar -->
