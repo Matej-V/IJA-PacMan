@@ -71,6 +71,11 @@ public class PacManController{
         PAUSE
     }
 
+    /**
+     * PacManController constructor
+     * 
+     * @param view PacManView object that is used for generating game views
+     */
     public PacManController(PacManView view){
         this.view = view;
     }
@@ -459,7 +464,7 @@ public class PacManController{
     }
 
     private void clearPacmanPath() {
-        List<String> moves = null;
+        List<String> moves;
         try {
             moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
         } catch (IOException e) {

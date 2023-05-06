@@ -38,4 +38,8 @@ build/
 ### Mac OS ###
 .DS_Store
 
+### Idea ###
+.idea
+
+run.txt
 log.save

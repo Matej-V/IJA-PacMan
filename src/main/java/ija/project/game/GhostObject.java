@@ -1,6 +1,5 @@
 package ija.project.game;
 
-import ija.project.common.AbstractObservableObject;
 import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import javafx.scene.paint.Color;

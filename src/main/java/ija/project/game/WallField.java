@@ -61,7 +61,7 @@ public class WallField extends AbstractObservableField implements Field {
      * Puts the object on the field.
      *
      * @param object object to be put on the field.
-     * @throws Exception since it is impossible to place any object on the wall field.
+     * @throws UnsupportedOperationException since it is impossible to place any object on the wall field.
      */
     public boolean put(MazeObject object) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Error");

@@ -11,6 +11,10 @@ public class GameException extends Exception{
         Other
     }
 
+    /**
+     * Constructor for GameException
+     * @param type type of exception
+     */
     public GameException(TypeOfException type){
         super();
         this.type = type;
