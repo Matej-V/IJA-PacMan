@@ -6,6 +6,8 @@ import ija.project.pacman_project.PacManApp;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
 
 import java.io.IOException;
@@ -31,16 +33,17 @@ public class UIBarView extends Group implements Observable.Observer {
 
     public void paint() {
         getChildren().clear();
-//        ImageView heart = new ImageView(this.heartImage);
-//        ImageView heart2 = new ImageView(this.heartImage);
-//        ImageView heart3 = new ImageView(this.heartImage);
-        Label hearts = new Label("Health: " + this.model.getLives());
-        Label score = new Label("Score: " + this.model.getScore());
+        HBox hbox = new HBox(2);
+        switch (this.model.getLives()) {
+            case 1 -> hbox.getChildren().addAll(new ImageView(this.heartImage));
+            case 2 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage));
+            case 3 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage), new ImageView(this.heartImage));
+        }
+
+        Label score = new Label("SCORE: " + this.model.getScore());
         score.setTranslateX(400);
-        hearts.setTranslateX(800);
-        score.setStyle("-fx-text-fill: #00022A; -fx-font-size: 16px; ");
-        hearts.setStyle("-fx-text-fill: #00022A; -fx-font-size: 16px; ");
-        getChildren().addAll(hearts, score);
+        score.setStyle("-fx-text-fill: #00022A; -fx-font-size: 20px; -fx-font-weight: bold ");
+        getChildren().addAll(hbox, score);
 
     }
 
