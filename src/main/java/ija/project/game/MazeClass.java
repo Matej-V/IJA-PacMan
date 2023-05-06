@@ -29,6 +29,9 @@ public class MazeClass implements Maze {
      */
     private List<MazeObject> keys = new ArrayList<MazeObject>();
 
+    /**
+     * Collected keys in the maze.
+     */
     private List<MazeObject> oldKeys = new ArrayList<MazeObject>();
     /**
      * Pacman in the maze
@@ -188,6 +191,11 @@ public class MazeClass implements Maze {
         return keysToCollect == 0;
     }
 
+
+    /**
+     * Returns the list of collected keys.
+     * @return list of keys
+     */
     public List<MazeObject> getOldKeys() {
         return this.oldKeys;
     }

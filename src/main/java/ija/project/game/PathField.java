@@ -202,14 +202,6 @@ public class PathField extends AbstractObservableField implements Field {
         return null;
     }
 
-    public void setKey() {
-        for (MazeObject k : this.maze.getOldKeys()) {
-            if (k.getField().equals(this)) {
-                this.maze.addKey(k);
-            }
-        }
-    }
-
     /**
      * Compares objects. Objects are equal if both represent PathField and
      * are at the same position
@@ -223,5 +215,17 @@ public class PathField extends AbstractObservableField implements Field {
             return path.row == this.row && path.col == this.col;
         }
         return false;
+    }
+
+    /**
+     * Sets a key from the list of existed keys to the field.
+     * Used for reverse replay move view.
+     */
+    public void setKey() {
+        for (MazeObject k : this.maze.getOldKeys()) {
+            if (k.getField().equals(this)) {
+                this.maze.addKey(k);
+            }
+        }
     }
 }

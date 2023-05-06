@@ -87,5 +87,9 @@ public interface Maze {
      */
     boolean canComplete();
 
+    /**
+     * Returns the list of collected keys.
+     * @return list of keys
+     */
     List<MazeObject> getOldKeys();
 }

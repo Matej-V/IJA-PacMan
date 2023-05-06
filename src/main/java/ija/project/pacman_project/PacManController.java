@@ -343,7 +343,7 @@ public class PacManController{
     }
 
     /**
-     * Function for MazeObjects controll on a separate thread
+     * Method for MazeObjects controll on a separate thread
      * 
      * @throws GameException, IOException
      */
@@ -408,7 +408,12 @@ public class PacManController{
         replayThread.start();
 
     }
-    
+
+    /**
+     * Method for MazeObjects controll on a separate thread
+     *
+     * @throws GameException, IOException
+     */
     public void replaySaveReverse() throws IOException, GameException {
         Thread reverseReplayThread = new Thread(new Runnable() {
             @Override
@@ -463,6 +468,10 @@ public class PacManController{
         reverseReplayThread.start();
     }
 
+    /**
+     * Method to clear pacam path according to his move history.
+     * Used for reverse replay functionality.
+     */
     private void clearPacmanPath() {
         List<String> moves;
         try {
@@ -482,6 +491,11 @@ public class PacManController{
         }
     }
 
+    /**
+     * Play one move from log in reverse replay mode
+     *
+     * @param nextLine line containing move history from log
+     */
     private void playOneMoveReverse(String nextLine) {
         List<String> splitedLine = List.of(nextLine.split(" "));
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
@@ -523,7 +537,7 @@ public class PacManController{
     }
 
     /**
-     * Function to replay one move accordingto line from log file
+     * Function to replay one move according to line from log file
      * 
      * @param line line from log file with information about move
      */

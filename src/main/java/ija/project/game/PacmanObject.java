@@ -36,8 +36,13 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * Indicator if the pacman has collected the point on the move.
      */
     public boolean pointCollected;
+    /**
+     * Indicator if the pacman has collected a key on the move.
+     */
     public boolean keyCollected;
-
+    /**
+     * Current gamemode of a pacman.
+     */
     private boolean replayMode;
 
     /**
@@ -274,12 +279,18 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     }
 
     /**
-     * Sets
+     * Sets mode of the pacman to replay.
+     *
      */
     public void setReplayMode() {
         this.replayMode = true;
     }
 
+    /**
+     * Checks current pacman gamemode.
+     *
+     * @return true if mode is replay, false otherwise.
+     */
     public boolean isReplayMode() {
         return this.replayMode;
     }
