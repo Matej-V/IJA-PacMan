@@ -5,6 +5,7 @@ import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.game.*;
 import javafx.application.Platform;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -68,7 +69,8 @@ public class PacManController{
         DEFAULT,
         REPLAY,
         REPLAY_REVERSE,
-        PAUSE
+        PAUSE,
+        UNPAUSE
     }
 
     /**
@@ -107,12 +109,11 @@ public class PacManController{
                 case RIGHT, D -> maze.getPacMan().setDirection(Field.Direction.R);
             }
         }
-        if(gameState == GameState.DEFAULT || gameState == GameState.PAUSE){
-            switch (e.getCode()){
-                // pause game
-                case P -> {
-                    changeGameState(GameState.PAUSE);
-                }
+        if (Objects.requireNonNull(e.getCode()) == KeyCode.P) {
+            if (gameState == GameState.PAUSE) {
+                changeGameState(GameState.UNPAUSE);
+            } else {
+                changeGameState(GameState.PAUSE);
             }
         }
         switch (e.getCode()) {
@@ -707,9 +708,9 @@ public class PacManController{
      * Change current game state and starts operations according to new game state
      */
     public void changeGameState(GameState newGamestate){
-        gameState = newGamestate;
-        switch (gameState) {
+        switch (newGamestate) {
             case REPLAY -> {
+                gameState = newGamestate;
                 cancelTimersThreads();
                 endLogging();
                 setLoadedMap("log.save");
@@ -721,6 +722,7 @@ public class PacManController{
                 }
             }
             case REPLAY_REVERSE -> {
+                gameState = newGamestate;
                 cancelTimersThreads();
                 endLogging();
                 setLoadedMap("log.save");
@@ -737,13 +739,11 @@ public class PacManController{
             }
             case DEFAULT -> {
                 cancelTimersThreads();
+                gameState = newGamestate;
             }
             case PAUSE -> {
-                if (timers.size() == 0) {
-                    changeGameState(GameState.DEFAULT);
-                    startTimersThreads();
-                    view.gameBox.getChildren().remove(view.currentScene.getChildren().size() - 1);
-                } else {
+                if(gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
+                    gameState = newGamestate;
                     cancelTimersThreads();
                     StackPane pausePane = new StackPane();
                     Text text = new Text("Game paused");
@@ -751,6 +751,11 @@ public class PacManController{
                     pausePane.getChildren().add(text);
                     view.gameBox.getChildren().add(pausePane);
                 }
+            }
+            case UNPAUSE -> {
+                changeGameState(GameState.DEFAULT);
+                startTimersThreads();
+                view.gameBox.getChildren().remove(view.currentScene.getChildren().size() - 1);
             }
         }
 

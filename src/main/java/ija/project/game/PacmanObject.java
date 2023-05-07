@@ -157,6 +157,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         try {
             lock.writeLock().lock();
             move(startField);
+            setDirection(Field.Direction.U);
             this.field = this.startField;
             decreaseLives();
             notifyObservers();
