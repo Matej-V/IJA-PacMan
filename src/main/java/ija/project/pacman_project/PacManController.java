@@ -465,7 +465,7 @@ public class PacManController{
     }
 
     /**
-     * Method to clear pacam path according to his move history.
+     * Method to clear pacman path according to his move history.
      * Used for reverse replay functionality.
      */
     private void clearPacmanPath() {
