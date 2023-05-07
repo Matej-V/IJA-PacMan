@@ -2,18 +2,17 @@ package ija.project.pacman_project;
 
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -100,21 +99,48 @@ public class PacManView extends AbstractObservableView{
      */
     public void generateGame() {
         // Create Menu
-        Menu menu = new Menu("Menu");
-        MenuItem newGame = new MenuItem("New Game");
-        MenuItem pauseGame = new MenuItem("Pause Game");
+        Menu menuOptions = new Menu("Menu");
+        Menu replayOptions = new Menu("Replay");
+        Menu helpOption = new Menu("Help");
+        MenuItem newGameMenuItem = new MenuItem("New Game");
+        MenuItem pauseGameMenuItem = new MenuItem("Pause Game");
+        MenuItem replayGameMenuItem = new MenuItem("Replay Game");
+        MenuItem reverRelayGameMenuItem = new MenuItem("Replay Game(Reverse)");
+        // Tooltip button
+        MenuItem helpMenuItem = new MenuItem("Help");
 
-        // Create MenuBar
-        MenuBar menuBar = new MenuBar(menu);
-        newGame.setOnAction(e -> {
-            System.out.println("New Game starting");
+        DialogPane dialogPane = new DialogPane();
+        dialogPane.setContentText("Controls: W,S,A,D/Arrows\nP-> Pause Game\nR -> Replay Game\nB -> Backwards replay");
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Help");
+        dialog.setDialogPane(dialogPane);
+        Button closeButton = new Button("Close");
+        dialogPane.getButtonTypes().add(ButtonType.CLOSE);
+        dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
+            dialog.close();
+        });
+        helpMenuItem.setOnAction(event -> {
+            dialog.showAndWait();
+        });
+        replayGameMenuItem.setOnAction(event -> {
+            controller.changeGameState(PacManController.GameState.REPLAY);
+        });
+        reverRelayGameMenuItem.setOnAction(event -> {
+            controller.changeGameState(PacManController.GameState.REPLAY_REVERSE);
+        });
+        newGameMenuItem.setOnAction(e -> {
             controller.newGame();
         });
-        pauseGame.setOnAction(e -> {
-            System.out.println("Game paused");
+        pauseGameMenuItem.setOnAction(e -> {
             controller.changeGameState(PacManController.GameState.PAUSE);
         });
-        menu.getItems().addAll(newGame, pauseGame);
+
+
+        menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
+        replayOptions.getItems().addAll(reverRelayGameMenuItem, replayGameMenuItem);
+        helpOption.getItems().addAll(helpMenuItem);
+        MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
+
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
@@ -127,6 +153,7 @@ public class PacManView extends AbstractObservableView{
         StackPane temp = new StackPane(uiMazeBox);
         temp.setAlignment(Pos.CENTER);
         this.gameBox = temp;
+
         // Set background image
         StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
