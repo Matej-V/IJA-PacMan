@@ -20,4 +20,7 @@ public class TargetField extends PathField {
     public void setOpen() {
         notifyObservers();
     }
+    public void setClosed() {
+        notifyObservers();
+    }
 }

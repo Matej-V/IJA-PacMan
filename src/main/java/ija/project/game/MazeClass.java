@@ -2,7 +2,10 @@ package ija.project.game;
 
 import java.util.ArrayList;
 import ija.project.common.*;
+
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class representing the maze.
@@ -32,7 +35,7 @@ public class MazeClass implements Maze {
     /**
      * Collected keys in the maze.
      */
-    private List<MazeObject> oldKeys = new ArrayList<MazeObject>();
+    private Set<MazeObject> oldKeys = new LinkedHashSet<>();
     /**
      * Pacman in the maze
      */
@@ -206,7 +209,7 @@ public class MazeClass implements Maze {
      * Returns the list of collected keys.
      * @return list of keys
      */
-    public List<MazeObject> getOldKeys() {
+    public Set<MazeObject> getOldKeys() {
         return this.oldKeys;
     }
 }

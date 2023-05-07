@@ -3,6 +3,7 @@ package ija.project.common;
 import ija.project.game.GameException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface Maze {
 
@@ -98,5 +99,5 @@ public interface Maze {
      * Returns the list of collected keys.
      * @return list of keys
      */
-    List<MazeObject> getOldKeys();
+    Set<MazeObject> getOldKeys();
 }

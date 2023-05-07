@@ -225,6 +225,7 @@ public class PathField extends AbstractObservableField implements Field {
         for (MazeObject k : this.maze.getOldKeys()) {
             if (k.getField().equals(this)) {
                 this.maze.addKey(k);
+                ((KeyObject) k).returnKey();
             }
         }
     }

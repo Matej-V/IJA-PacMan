@@ -30,6 +30,11 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
         notifyObservers();
     }
 
+    public void returnKey() {
+        this.collected = false;
+        notifyObservers();
+    }
+
     @Override
     public boolean canMove(Field.Direction dir) {
         return false;

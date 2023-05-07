@@ -476,14 +476,18 @@ public class PacManController{
             throw new RuntimeException(e);
         }
         for (int i = moves.size() - 1; !(moves.get(i).equals("--- LOG")); i--) {
-            if (moves.get(i).startsWith("P")) { // collecting all the field that should be without point
+            if (moves.get(i).startsWith("P")) {
                 List<String> splitedLine = List.of(moves.get(i).split(" "));
                 List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                         .map(Integer::parseInt)
                         .toList();
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 field.point = false;
+            if (splitedLine.size() == 6 && splitedLine.get(5).equals("k")) {
+                maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
+                }
             }
+
         }
     }
 
@@ -497,6 +501,11 @@ public class PacManController{
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                 .map(Integer::parseInt)
                 .toList();
+        if(checkTarget()) {
+            ((TargetField) maze.getTarget()).setOpen();
+        } else {
+            ((TargetField) maze.getTarget()).setClosed();
+        }
         if (nextLine.startsWith("P")) {
             int score= Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
@@ -509,8 +518,8 @@ public class PacManController{
             }
 
             try {
-                maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
+                maze.getPacMan().move(field);
                 if (p) field.point = true;
                 if (k) field.setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
