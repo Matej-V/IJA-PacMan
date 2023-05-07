@@ -16,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
@@ -94,7 +96,7 @@ public class PacManView extends AbstractObservableView {
      */
     public void generateMainScreen() {
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
+                drawBackgroundImage("/ija/project/img/title.jpg"),
                 drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -160,7 +162,7 @@ public class PacManView extends AbstractObservableView {
 
         // Set background image
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
+                drawBackgroundImage("/ija/project/img/title.jpg"),
                 new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -177,7 +179,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/img/game-over.jpg"),
+                drawBackgroundImage("/ija/project/img/game-over.jpg"),
                 drawButton("PLAY AGAIN"), score);
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -194,7 +196,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
+                drawBackgroundImage("/ija/project/img/title.jpg"),
                 drawButton("PLAY AGAIN"), score);
         // add win text
         Text text = new Text("YOU WON");
@@ -216,9 +218,12 @@ public class PacManView extends AbstractObservableView {
     private ImageView drawBackgroundImage(String url) {
         ImageView backgroundImage = new ImageView();
         try {
-            backgroundImage.setImage(new Image(new FileInputStream(url)));
+            backgroundImage.setImage(new Image(
+                    Objects.requireNonNull(PacManApp.class.getResource(url)).openStream()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         backgroundImage.setX(0);
         backgroundImage.setY(0);
