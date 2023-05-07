@@ -8,7 +8,7 @@ Implementačná dokumentácia k projektu PacMan v jazyku Java 2022/2023
 
 Projekt bol implementovaný pomocou `JavaFX`.
 ## Preloženie projektu
-Skompiluje zdrojové súbory, vygeneruje programovú dokumentáciu javadoc do `/doc/javadoc`(Nepodarilo sa nám nastaviť správne javadoc, takže programová dokumentáciu je možné vygenerovať aj pomocou doxygenu) a vytvorí `jar` v priečinku `target`.
+Skompiluje zdrojové súbory, vygeneruje programovú dokumentáciu javadoc do `/doc/javadoc` a vytvorí `jar` v priečinku `target`.
 ```
 mvn compile
 ```

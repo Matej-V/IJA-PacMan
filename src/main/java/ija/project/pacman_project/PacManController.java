@@ -276,7 +276,7 @@ public class PacManController {
                 randomFile = files.get(rand.nextInt(files.size()));
             }
             // Set new map
-            setMap("/maps/" + randomFile.getName());
+            setMap("/ija/project/maps/" + randomFile.getName());
 
 //        PacManApp.class.getResource("currentMap");
 //        File folder = new File("./src/main/resources/ija/project/maps");
