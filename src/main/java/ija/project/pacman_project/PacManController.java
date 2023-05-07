@@ -664,7 +664,34 @@ public class PacManController{
      * Closes logWriter
      */
     public void endLogging(){
-        if (logWriter != null)logWriter.close();
+        if (logWriter != null) logWriter.close();
+    }
+
+
+    /**
+     * Method to set last seen state of MazeObjects like ghosts and pacman
+     */
+    public void setLastState() {
+        PacmanObject pm = logWriter.getLastPacmanState();
+        try {
+            this.maze.getPacMan().move(pm.getField());
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+
+        ListIterator<MazeObject> it = this.maze.getGhosts().listIterator();
+        while (it.hasNext()) {
+            GhostObject ghost = (GhostObject) it.next();
+            for (MazeObject ghostState  : logWriter.getLastGhostsState()) {
+                if (ghost.getId() == ((GhostObject) ghostState).getId()) {
+                    try {
+                        ghost.move(ghostState.getField());
+                    } catch (GameException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -689,6 +716,7 @@ public class PacManController{
                 endLogging();
                 setLoadedMap("log.save");
                 clearPacmanPath();
+                setLastState();
                 MazeObject mz = this.maze.getPacMan();
                 ((PacmanObject) mz).setReplayMode();
                 view.generateGame();

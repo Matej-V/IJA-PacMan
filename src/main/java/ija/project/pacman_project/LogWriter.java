@@ -10,12 +10,23 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class LogWriter extends PrintWriter implements Observable.Observer {
     /**
      * Lock for synchronization. Only one thread can write to the file at a time.
      */
     private static final Object lock = new Object();
+    /**
+     * Last seen pacman state.
+     */
+    private PacmanObject lastPacmanState;
+    /**
+     * Last seen states of all ghosts in maze.
+     */
+    private List<MazeObject> lastGhostsState = new ArrayList<>();
 
     /**
      * Creates a new LogWriter object. The file is created if it does not exist.
@@ -55,14 +66,52 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
                 print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " " + modelO.getScore()
                         + " " + modelO.getLives() + (((PacmanObject) modelO).pointCollected ? " p" : "")
                         + (((PacmanObject) modelO).keyCollected ? " k" : "") + "\n");
+                lastPacmanState = (PacmanObject) modelO;
             } else if (modelO instanceof GhostObject) {
                 print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/"
                         + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
+                updateGhostState((GhostObject) modelO);
             } else if (modelO instanceof KeyObject) {
                 print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " k" + "\n");
             }
             flush();
         }
+    }
+
+    /**
+     * Method to update last seen state of a given ghost
+     *
+     * @param gh A ghost whose state must be updated
+     */
+    private void updateGhostState(GhostObject gh) {
+        ListIterator<MazeObject> it = this.lastGhostsState.listIterator();
+        while (it.hasNext()) {
+            GhostObject ghost = (GhostObject) it.next();
+            if (ghost.getId() == gh.getId()) {
+                it.set(gh);
+                return;
+            }
+        }
+        // If there's no ghost in list yet
+        this.lastGhostsState.add(gh);
+    }
+
+    /**
+     * Returns last seen state of a pacman
+     *
+     * @return PacmanObject Last seen state of a pacman
+     */
+    public PacmanObject getLastPacmanState() {
+        return this.lastPacmanState;
+    }
+
+    /**
+     * Returns a list of last ghosts states
+     *
+     * @return List of MazeObjects
+     */
+    public List<MazeObject> getLastGhostsState() {
+        return this.lastGhostsState;
     }
 
     /**

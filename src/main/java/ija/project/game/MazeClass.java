@@ -71,7 +71,7 @@ public class MazeClass implements Maze {
     }
 
     /**
-     * Associates ghsots with the maze.
+     * Associates ghosts with the maze.
      *
      * @param ghosts ghosts to be associated with the maze
      */
