@@ -112,12 +112,12 @@ public class PacManView extends AbstractObservableView {
         MenuItem newGameMenuItem = new MenuItem("New Game");
         MenuItem pauseGameMenuItem = new MenuItem("Pause Game");
         MenuItem replayGameMenuItem = new MenuItem("Replay Game");
-        MenuItem reverRelayGameMenuItem = new MenuItem("Replay Game(Reverse)");
+        MenuItem reverRelayGameMenuItem = new MenuItem("Replay Game in Reverse Mode");
         // Tooltip button
         MenuItem helpMenuItem = new MenuItem("Help");
 
         DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText("Controls: W,S,A,D/Arrows\nP-> Pause Game\nR -> Replay Game\nB -> Backwards replay");
+        dialogPane.setContentText("Controls:\tW, A, S, D keys or Arrow keys\nP\tPause Game\nR\tReplay Game\nB\tBackwards replay");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Help");
         dialog.setDialogPane(dialogPane);
@@ -143,7 +143,7 @@ public class PacManView extends AbstractObservableView {
         });
 
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
-        replayOptions.getItems().addAll(reverRelayGameMenuItem, replayGameMenuItem);
+        replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
         helpOption.getItems().addAll(helpMenuItem);
         MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
 
