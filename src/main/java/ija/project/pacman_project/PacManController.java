@@ -23,6 +23,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief PacManController class that is used for managing game logic. It is used for generating game, starting timers and threads and handling key press events.
+ */
 public class PacManController{
     /** */
     private final PacManView view;

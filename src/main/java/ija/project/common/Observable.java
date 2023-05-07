@@ -1,5 +1,9 @@
 package ija.project.common;
 
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Interface for observable objects.
+ */
 public interface Observable {
     interface Observer {
         /**

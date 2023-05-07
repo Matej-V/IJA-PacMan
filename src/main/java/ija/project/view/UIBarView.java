@@ -12,6 +12,10 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing UI bar view, that constains lives and score of the pacman. It is displayed on the top of the screen. It is an observer of the {@link MazeObject} it represents.
+ */
 public class UIBarView extends Group implements Observable.Observer {
     private final MazeObject model;
     private Image heartImage;

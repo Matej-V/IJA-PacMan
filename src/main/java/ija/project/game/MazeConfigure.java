@@ -4,7 +4,8 @@ import ija.project.common.*;
 import java.util.ArrayList;
 
 /**
- * Class for configuring the maze.
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing maze configuration. It reads the maze from the file and creates a maze.
  */
 public class MazeConfigure {
     /**

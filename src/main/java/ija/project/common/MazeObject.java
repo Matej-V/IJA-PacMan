@@ -4,7 +4,8 @@ import ija.project.game.GameException;
 import ija.project.game.PathField;
 
 /**
- * Interface representing the maze object.
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Interface representing maze object.
  */
 public interface MazeObject extends Observable {
     /**

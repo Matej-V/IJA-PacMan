@@ -5,7 +5,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Class representing the pacman object.
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing Pacman object. Pacman is the main character of the game.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
     /**

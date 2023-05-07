@@ -2,7 +2,8 @@ package ija.project.game;
 
 
 /**
- * Class representing the target field object.
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing target field. Target field is subclass of PathField.
  */
 public class TargetField extends PathField {
 

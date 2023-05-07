@@ -7,7 +7,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the ghost. It is an observer of the ghost it represents. It is a child of {@link FieldView}.
+ */
 public class GhostObjectView extends Pane implements Observable.Observer {
     /**
      * Model of the {@link GhostObject}

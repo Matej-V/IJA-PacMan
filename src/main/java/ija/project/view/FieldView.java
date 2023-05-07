@@ -12,6 +12,10 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the field. It is an observer of the field it represents.
+ */
 public class FieldView extends Pane implements Observable.Observer {
     /**
      * Model of the {@link Field}
@@ -30,11 +34,11 @@ public class FieldView extends Pane implements Observable.Observer {
      */
     private final List<Pane> objects = new ArrayList<>();
     /**
-     * X coordinate of a field
+     * Top-left corner x coordinate of a field
      */
     double x;
     /**
-     * Y coordinate of a field
+     * Top-left corner y coordinate of a field.
      */
     double y;
     /**
