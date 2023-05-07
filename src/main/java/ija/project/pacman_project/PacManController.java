@@ -85,12 +85,13 @@ public class PacManController{
      */
     public void newGame(){
         // stop moving if any
-        cancelTimersThreads();
+        changeGameState(GameState.DEFAULT);
         generateGame();
         view.generateGame();
         startLogging();
         // start moving
-        changeGameState(GameState.DEFAULT);
+        startTimersThreads();
+
     }
 
     /**
@@ -98,36 +99,28 @@ public class PacManController{
      * Changes pacman direction based on pressed key, pauses game or replays game
      */
     public void handleKeyPress(KeyEvent e) {
-        if (gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
+        if(gameState == GameState.DEFAULT) {
             switch (e.getCode()) {
                 case UP, W -> maze.getPacMan().setDirection(Field.Direction.U);
                 case LEFT, A -> maze.getPacMan().setDirection(Field.Direction.L);
                 case DOWN, S -> maze.getPacMan().setDirection(Field.Direction.D);
                 case RIGHT, D -> maze.getPacMan().setDirection(Field.Direction.R);
+            }
+        }
+        if(gameState == GameState.DEFAULT || gameState == GameState.PAUSE){
+            switch (e.getCode()){
                 // pause game
                 case P -> {
-                    if (timers.size() == 0) {
-                        startTimersThreads();
-                        view.gameBox.getChildren().remove(view.currentScene.getChildren().size() - 1);
-                    } else {
-                        changeGameState(GameState.PAUSE);
-                        cancelTimersThreads();
-                        StackPane pausePane = new StackPane();
-                        Text text = new Text("Game paused");
-                        text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
-                        pausePane.getChildren().add(text);
-                        view.gameBox.getChildren().add(pausePane);
-                    }
-                }
-                case R -> {
-                    cancelTimersThreads();
-                    changeGameState(GameState.REPLAY);
-                }
-                case B -> {
-                    cancelTimersThreads();
-                    changeGameState(GameState.REPLAY_REVERSE);
+                    changeGameState(GameState.PAUSE);
                 }
             }
+        }
+        switch (e.getCode()) {
+            case R -> {
+                System.out.println("Changing to replay");
+                changeGameState(GameState.REPLAY);
+            }
+            case B -> changeGameState(GameState.REPLAY_REVERSE);
         }
     }
 
@@ -221,6 +214,7 @@ public class PacManController{
      * Terminates all timers and threads
      */
     private void cancelTimersThreads(){
+        System.out.println("Threads canceled");
         for (Timer t : timers)t.cancel();
         timers.clear();
         for (Thread th : threads) th.interrupt();
@@ -351,6 +345,7 @@ public class PacManController{
     public void replaySave() throws IOException, GameException {
         // Create new thread that will replay the save
         Thread replayThread = new Thread(() -> {
+            System.out.println("Staring replay thread");
             BufferedReader reader;
             try {
                 reader = new BufferedReader(new FileReader(logFile));
@@ -363,7 +358,8 @@ public class PacManController{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
             while (true) {
                 try {
-                    if ((line = reader.readLine()) == null) break;
+                    // exit while point
+                    if (((line = reader.readLine()) == null)) break;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -399,11 +395,10 @@ public class PacManController{
             }
             try {
                 reader.close();
+                System.out.println("Reader closed");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            //stop thread when while ends
-            Platform.runLater(this::cancelTimersThreads);
         });
         threads.add(replayThread);
         replayThread.start();
@@ -558,6 +553,7 @@ public class PacManController{
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
+            if(checkTarget()) ((TargetField) maze.getTarget()).setOpen();
         } else if (line.startsWith("G")) {
             List<String> splitedLine = List.of(line.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
@@ -732,7 +728,20 @@ public class PacManController{
             }
             case DEFAULT -> {
                 cancelTimersThreads();
-                startTimersThreads();
+            }
+            case PAUSE -> {
+                if (timers.size() == 0) {
+                    changeGameState(GameState.DEFAULT);
+                    startTimersThreads();
+                    view.gameBox.getChildren().remove(view.currentScene.getChildren().size() - 1);
+                } else {
+                    cancelTimersThreads();
+                    StackPane pausePane = new StackPane();
+                    Text text = new Text("Game paused");
+                    text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
+                    pausePane.getChildren().add(text);
+                    view.gameBox.getChildren().add(pausePane);
+                }
             }
         }
 

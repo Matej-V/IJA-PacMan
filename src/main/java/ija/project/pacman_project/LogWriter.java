@@ -71,8 +71,6 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
                 print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/"
                         + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
                 updateGhostState((GhostObject) modelO);
-            } else if (modelO instanceof KeyObject) {
-                print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " k" + "\n");
             }
             flush();
         }

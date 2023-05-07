@@ -101,15 +101,20 @@ public class PacManView extends AbstractObservableView{
     public void generateGame() {
         // Create Menu
         Menu menu = new Menu("Menu");
-        MenuItem restartGame = new MenuItem("Restart game");
+        MenuItem newGame = new MenuItem("New Game");
+        MenuItem pauseGame = new MenuItem("Pause Game");
 
         // Create MenuBar
         MenuBar menuBar = new MenuBar(menu);
-        menu.getItems().addAll(restartGame);
-        restartGame.setOnAction(e -> {
-            System.out.println("Restarting game");
+        newGame.setOnAction(e -> {
+            System.out.println("New Game starting");
             controller.newGame();
         });
+        pauseGame.setOnAction(e -> {
+            System.out.println("Game paused");
+            controller.changeGameState(PacManController.GameState.PAUSE);
+        });
+        menu.getItems().addAll(newGame, pauseGame);
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());

@@ -190,7 +190,7 @@ public class MazeClass implements Maze {
      * @return true if all the keys are collected, false otherwise
      */
     public boolean canComplete(){
-        return keysToCollect == 0;
+        return (keys.size() == 0);
     }
 
     /**
