@@ -16,11 +16,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing game view. Contains implementation for generating all the views in the game.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing game view. Contains implementation for generating
+ *        all the views in the game.
  */
-public class PacManView extends AbstractObservableView{
+public class PacManView extends AbstractObservableView {
     /**
      * Controller to be used for setting button actions
      */
@@ -48,13 +50,14 @@ public class PacManView extends AbstractObservableView{
      * @param width  of the screen
      * @param height of the screen
      */
-    public PacManView( double width, double height) {
+    public PacManView(double width, double height) {
         this.widthOfScreen = width;
         this.heightOfScreen = height;
     }
 
     /**
      * Sets controller that is used for setting button actions and accessing model
+     * 
      * @param controller to be set
      */
     public void setController(PacManController controller) {
@@ -63,13 +66,15 @@ public class PacManView extends AbstractObservableView{
 
     /**
      * Generates maze representation using FieldView class objects
+     * 
      * @return Group od FieldView class objects that represents maze
      */
     public Group drawMaze() {
         Group mazeGroup = new Group();
         for (int row = 0; row < controller.maze.numRows(); row++) {
             for (int column = 0; column < controller.maze.numCols(); column++) {
-                FieldView fieldView = new FieldView(controller.maze.getField(row, column), (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
+                FieldView fieldView = new FieldView(controller.maze.getField(row, column),
+                        (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -89,7 +94,9 @@ public class PacManView extends AbstractObservableView{
      * Generates Main screen that is displayed when game is started
      */
     public void generateMainScreen() {
-        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("START THE GAME"));
+        StackPane pane = new StackPane(
+                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
     }
@@ -135,12 +142,10 @@ public class PacManView extends AbstractObservableView{
             controller.changeGameState(PacManController.GameState.PAUSE);
         });
 
-
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(reverRelayGameMenuItem, replayGameMenuItem);
         helpOption.getItems().addAll(helpMenuItem);
         MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
-
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
@@ -149,13 +154,15 @@ public class PacManView extends AbstractObservableView{
         statsHolder.alignmentProperty().set(Pos.CENTER);
         statsHolder.setStyle("-fx-background-color: #FFFFFF;");
         uiMazeBox.getChildren().addAll(statsHolder, mazeHolder);
-        //Stack Pane to let us add pause screen over game screen
+        // Stack Pane to let us add pause screen over game screen
         StackPane temp = new StackPane(uiMazeBox);
         temp.setAlignment(Pos.CENTER);
         this.gameBox = temp;
 
         // Set background image
-        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), new VBox(menuBar, gameBox));
+        StackPane pane = new StackPane(
+                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
         notifyObservers();
@@ -166,11 +173,13 @@ public class PacManView extends AbstractObservableView{
      */
     public void generateEndScreen() {
         System.out.println("Generating end screen");
-        //Score
+        // Score
         Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
-        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"), drawButton("PLAY AGAIN"), score);
+        StackPane pane = new StackPane(
+                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"),
+                drawButton("PLAY AGAIN"), score);
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
         notifyObservers();
@@ -179,13 +188,15 @@ public class PacManView extends AbstractObservableView{
     /**
      * Generates screen thath player sees when game is won
      */
-    public void generateSuccessScreen(){
+    public void generateSuccessScreen() {
         System.out.println("Generating success screen");
-        //Score
+        // Score
         Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
-        StackPane pane = new StackPane(drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"), drawButton("PLAY AGAIN"), score);
+        StackPane pane = new StackPane(
+                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                drawButton("PLAY AGAIN"), score);
         // add win text
         Text text = new Text("YOU WON");
         text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
@@ -199,10 +210,11 @@ public class PacManView extends AbstractObservableView{
 
     /**
      * Method that generates background image according to given url
+     * 
      * @param url url of image
      * @return ImageView object that represents background image
      */
-    private ImageView drawBackgroundImage(String url){
+    private ImageView drawBackgroundImage(String url) {
         ImageView backgroundImage = new ImageView();
         try {
             backgroundImage.setImage(new Image(new FileInputStream(url)));
@@ -221,13 +233,15 @@ public class PacManView extends AbstractObservableView{
 
     /**
      * Method that generates button with given text
+     * 
      * @param text text that will be displayed on button
      * @return Button object
      */
-    private Button drawButton(String text){
+    private Button drawButton(String text) {
         Button button = new Button();
         button.setText(text);
-        button.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #00022A; -fx-border-radius: 20%; -fx-font-size: 16px");
+        button.setStyle(
+                "-fx-background-color: #FFFFFF; -fx-text-fill: #00022A; -fx-border-radius: 20%; -fx-font-size: 16px");
         button.setOnAction(e -> {
             System.out.println(text + " button clicked");
             controller.newGame();
@@ -235,8 +249,8 @@ public class PacManView extends AbstractObservableView{
         button.requestFocus();
         button.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                button.fire();      // Simulate button action
-                event.consume();    // Consume the event to prevent further processing
+                button.fire(); // Simulate button action
+                event.consume(); // Consume the event to prevent further processing
             }
         });
         return button;

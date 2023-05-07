@@ -4,10 +4,10 @@ import ija.project.game.KeyObject;
 import java.util.List;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Interface representing the field object.
  */
-public interface Field extends Observable{
+public interface Field extends Observable {
 
     /**
      * Direction of the field.
@@ -17,7 +17,8 @@ public interface Field extends Observable{
         L, // left
         R, // right
         U // up
-;
+        ;
+
         /**
          * Returns the opposite direction.
          * 
@@ -33,7 +34,7 @@ public interface Field extends Observable{
                 return R;
             } else if (dir == R) {
                 return L;
-            }else {
+            } else {
                 return null;
             }
         }

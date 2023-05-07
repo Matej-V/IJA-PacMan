@@ -6,8 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Abstract class representing observable field. Contains implementation for adding, removing and notifying observers.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Abstract class representing observable field. Contains implementation
+ *        for adding, removing and notifying observers.
  */
 public abstract class AbstractObservableField implements Field {
     /**
@@ -15,7 +16,8 @@ public abstract class AbstractObservableField implements Field {
      */
     private final Set<Observer> observers = new HashSet<>();
     /**
-     * These observers are notified when the field is changed and the change is logged.
+     * These observers are notified when the field is changed and the change is
+     * logged.
      */
     private final Set<Observer> logObservers = new HashSet<>();
 
@@ -33,6 +35,7 @@ public abstract class AbstractObservableField implements Field {
     public void notifyObservers() {
         this.observers.forEach((o) -> o.update(this));
     }
+
     public void addLogObserver(Observer o) {
         this.logObservers.add(o);
     }
@@ -41,5 +44,7 @@ public abstract class AbstractObservableField implements Field {
         this.logObservers.remove(o);
     }
 
-    public void notifyLogObservers(){this.logObservers.forEach((o) -> o.update(this));}
+    public void notifyLogObservers() {
+        this.logObservers.forEach((o) -> o.update(this));
+    }
 }

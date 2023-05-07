@@ -16,8 +16,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the key. It is an observer of the key it represents. It is a child of {@link FieldView}.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the key. It is an observer of the key
+ *        it represents. It is a child of {@link FieldView}.
  */
 public class KeyObjectView extends Pane implements Observable.Observer {
     /**
@@ -33,7 +34,7 @@ public class KeyObjectView extends Pane implements Observable.Observer {
      */
     FieldView parent;
 
-    public KeyObjectView(FieldView parent, MazeObject model){
+    public KeyObjectView(FieldView parent, MazeObject model) {
         this.parent = parent;
         this.model = model;
         try {
@@ -47,17 +48,18 @@ public class KeyObjectView extends Pane implements Observable.Observer {
         setTranslateY(parent.y);
         keyImageView.setFitWidth(parent.size * 0.6);
         keyImageView.setPreserveRatio(true);
-        keyImageView.setTranslateX((parent.size - keyImageView.getFitWidth())/2);
-        keyImageView.setTranslateY(parent.size*0.2);
+        keyImageView.setTranslateX((parent.size - keyImageView.getFitWidth()) / 2);
+        keyImageView.setTranslateY(parent.size * 0.2);
         getChildren().add(keyImageView);
         paint();
         model.addObserver(this);
     }
+
     /**
      * Paints a key as a rectangle and adds it to own Observable list
      */
-    private void paint(){
-        if(((KeyObject) model).collected){
+    private void paint() {
+        if (((KeyObject) model).collected) {
             setVisible(false);
         }
     }

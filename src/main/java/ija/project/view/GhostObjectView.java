@@ -8,8 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the ghost. It is an observer of the ghost it represents. It is a child of {@link FieldView}.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the ghost. It is an observer of the
+ *        ghost it represents. It is a child of {@link FieldView}.
  */
 public class GhostObjectView extends Pane implements Observable.Observer {
     /**
@@ -25,10 +26,11 @@ public class GhostObjectView extends Pane implements Observable.Observer {
      */
     private final Circle ghost;
 
-    public GhostObjectView(FieldView parent, MazeObject model){
+    public GhostObjectView(FieldView parent, MazeObject model) {
         this.parent = parent;
-        this.model = (GhostObject)  model;
-        this. ghost = new Circle(parent.x + parent.size/2, parent.y + parent.size/2,parent.size * 0.35, this.model.getColor());
+        this.model = (GhostObject) model;
+        this.ghost = new Circle(parent.x + parent.size / 2, parent.y + parent.size / 2, parent.size * 0.35,
+                this.model.getColor());
         getChildren().add(ghost);
         paint();
         model.addObserver(this);
@@ -38,14 +40,18 @@ public class GhostObjectView extends Pane implements Observable.Observer {
      * Paints a ghost as a circle and adds it to own Observable list
      */
     private void paint() {
-        if (model.isEatable()){
+        if (model.isEatable()) {
             ghost.setFill(Color.web("#051D9D"));
         }
         // create eyes of ghost
-        Circle eye1 = new Circle(parent.x + parent.size/2 - parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
-        Circle eye2 = new Circle(parent.x + parent.size/2 + parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
-        Circle eye1pupil = new Circle(parent.x + parent.size/2 - parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
-        Circle eye2pupil = new Circle(parent.x + parent.size/2 + parent.size * 0.1, parent.y + parent.size/2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
+        Circle eye1 = new Circle(parent.x + parent.size / 2 - parent.size * 0.1,
+                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
+        Circle eye2 = new Circle(parent.x + parent.size / 2 + parent.size * 0.1,
+                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
+        Circle eye1pupil = new Circle(parent.x + parent.size / 2 - parent.size * 0.1,
+                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
+        Circle eye2pupil = new Circle(parent.x + parent.size / 2 + parent.size * 0.1,
+                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
         switch (model.getDirection()) {
             case U -> {
                 eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);

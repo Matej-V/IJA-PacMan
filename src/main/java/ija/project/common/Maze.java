@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Interface representing Maze.
  */
 public interface Maze {
@@ -17,7 +17,6 @@ public interface Maze {
      * @param ghosts ghosts to be associated with the maze
      */
     void setGhosts(List<MazeObject> ghosts);
-
 
     /**
      * Associates pacman with the maze.
@@ -62,11 +61,12 @@ public interface Maze {
      * @return The number of columns in the maze
      */
     int numCols();
-    
+
     /**
-     * Moves all objects to their start positions. Calls a method for every object to move to its start field.
-     *
-     * @throws GameException Exception to handle game scenarios such as completed game or lost game.
+     * Moves all objects to their start positions. Calls a method for every object
+     * to move to its start field.
+     * @throws GameException Exception to handle game scenarios such as completed
+     *                       game or lost game.
      */
     void moveObjectsToStart() throws GameException;
 
@@ -101,6 +101,7 @@ public interface Maze {
 
     /**
      * Returns the list of collected keys.
+     * 
      * @return list of keys
      */
     Set<MazeObject> getOldKeys();

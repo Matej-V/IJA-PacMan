@@ -10,8 +10,9 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the pacman. It is an observer of the pacman it represents. It is a child of {@link FieldView}.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the pacman. It is an observer of the
+ *        pacman it represents. It is a child of {@link FieldView}.
  */
 public class PacmanObjectView extends Pane implements Observable.Observer {
     /**

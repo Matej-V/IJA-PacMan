@@ -4,8 +4,9 @@ import ija.project.common.*;
 import java.util.ArrayList;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing maze configuration. It reads the maze from the file and creates a maze.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing maze configuration. It reads the maze from the file
+ *        and creates a maze.
  */
 public class MazeConfigure {
     /**
@@ -73,18 +74,18 @@ public class MazeConfigure {
                 case '.' -> {
                     PathField pathField = new PathField(this.rowToBeProcessed, c + 1);
                     pathField.setMaze(this.maze);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1,pathField);
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, pathField);
                 }
                 case 'X', 'x' -> {
                     WallField wallField = new WallField(this.rowToBeProcessed, c + 1);
                     wallField.setMaze(this.maze);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1,wallField);
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, wallField);
                 }
                 case 'S', 's' -> {
                     PathField startField = new PathField(this.rowToBeProcessed, c + 1);
                     startField.setMaze(this.maze);
                     PacmanObject pacmanObject1 = new PacmanObject(startField);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1,startField);
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, startField);
                     try {
                         startField.put(pacmanObject1);
                     } catch (GameException e) {
@@ -107,7 +108,7 @@ public class MazeConfigure {
                 case 'T', 't' -> {
                     TargetField target = new TargetField(this.rowToBeProcessed, c + 1);
                     target.setMaze(this.maze);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, target);
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, target);
                     this.maze.target = target;
                 }
                 case 'K', 'k' -> {
@@ -120,7 +121,7 @@ public class MazeConfigure {
                         throw new RuntimeException(e);
                     }
                     this.maze.addKey(key);
-                    this.maze.fields.get(this.rowToBeProcessed).set(c+1, keyField);
+                    this.maze.fields.get(this.rowToBeProcessed).set(c + 1, keyField);
                 }
                 default -> {
                     System.err.println("Chybny vstupny prvok pola.");

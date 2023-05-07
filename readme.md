@@ -7,13 +7,17 @@ Implementačná dokumentácia k projektu PacMan v jazyku Java 2022/2023
 ## Použité technológie
 
 Projekt bol implementovaný pomocou `JavaFX`.
-
+## Preloženie projektu
+Skompiluje zdrojové súbory, vygeneruje programovú dokumentáciu javadoc do `/doc/javadoc`(Nepodarilo sa nám nastaviť správne javadoc, takže programová dokumentáciu je možné vygenerovať aj pomocou doxygenu) a vytvorí `jar` v priečinku `target`.
+```
+mvn compile
+```
 ## Spustenie projektu
 Pre spustenie projektu je potrebné mať nainštalované JavaFX. Projekt sa spúšťa z priečinku projektu pomocou príkazu:
 ```
 mvn javafx:run
 ```
-## Vygenerovanie dokumentácie
+## Vygenerovanie doxygen dokumentácie
 Pre vygenerovanie stačí spustiť v prienčinku `doc` príkaz:
 ```
 doxygen Doxyfile

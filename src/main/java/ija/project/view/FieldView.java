@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the field. It is an observer of the field it represents.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the field. It is an observer of the
+ *        field it represents.
  */
 public class FieldView extends Pane implements Observable.Observer {
     /**
@@ -77,11 +78,11 @@ public class FieldView extends Pane implements Observable.Observer {
                     Border.setFill(Color.web("#ff8484"));
                 }
 
-            }else{
+            } else {
                 Border = new Rectangle(x, y, size, size);
                 Border.setFill(Color.web("#00022A"));
             }
-        } else{
+        } else {
             Border = new Rectangle(x, y, size, size);
             Border.setFill(Color.web("#051D9D"));
             Border.setStroke(Color.WHITE);
@@ -95,9 +96,8 @@ public class FieldView extends Pane implements Observable.Observer {
         if (Food == null) {
             Food = new Circle(x + size / 2, y + size / 2, size * 0.1, Color.WHITE);
         }
-        Food.setVisible(model.hasPoint() &&  !(this.model instanceof TargetField));
+        Food.setVisible(model.hasPoint() && !(this.model instanceof TargetField));
     }
-
 
     /**
      * Updates the view of a field
@@ -112,12 +112,12 @@ public class FieldView extends Pane implements Observable.Observer {
         if (model.canMove()) {
             objects.clear();
             List<MazeObject> objectsOnField = model.get();
-            for (MazeObject o:  objectsOnField) {
-                if (o instanceof PacmanObject){
+            for (MazeObject o : objectsOnField) {
+                if (o instanceof PacmanObject) {
                     objects.add(new PacmanObjectView(this, o));
                 } else if (o instanceof GhostObject) {
                     objects.add(new GhostObjectView(this, o));
-                }else if (o instanceof KeyObject){
+                } else if (o instanceof KeyObject) {
                     this.Food.setVisible(false);
                     objects.add(new KeyObjectView(this, o));
                 }

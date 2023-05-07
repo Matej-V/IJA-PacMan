@@ -79,9 +79,19 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.2</version>
                 <configuration>
+                    <additionalJOption>-Xdoclint:none -tag throws:a:"Custom Tag Description"</additionalJOption>
                     <reportOutputDirectory>${basedir}</reportOutputDirectory>
-                    <destDir>doc</destDir>
+                    <destDir>doc/javadoc</destDir>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>javadoc</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Jar -->
             <plugin>
@@ -94,7 +104,17 @@
                             <mainClass>ija.project.pacman_project/ija.project.pacman_project.PacManApp</mainClass>
                         </manifest>
                     </archive>
+                    <finalName>MyJarName</finalName>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>javadoc</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

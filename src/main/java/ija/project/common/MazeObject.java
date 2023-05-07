@@ -4,7 +4,7 @@ import ija.project.game.GameException;
 import ija.project.game.PathField;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Interface representing maze object.
  */
 public interface MazeObject extends Observable {
@@ -22,7 +22,6 @@ public interface MazeObject extends Observable {
      * 
      * @param dir Direction in which the object should be moved.
      * @return True if the move was successful, false otherwise.
-     *
      * @throws GameException if game is lost or won
      */
     boolean move(Field.Direction dir) throws GameException;
@@ -32,18 +31,16 @@ public interface MazeObject extends Observable {
      * 
      * @param field Field in which the object should be moved.
      * @return True if the move was successful, false otherwise.
-     *
      * @throws GameException if game is lost or won.
      */
     boolean move(Field field) throws GameException;
 
     /**
      * Move the object to the start field.
-     *
      * @throws GameException if game is lost or won.
      */
     void moveToStart() throws GameException;
-    
+
     /**
      * Returns the field on which the object is located.
      * 
@@ -67,7 +64,8 @@ public interface MazeObject extends Observable {
 
     /**
      * Returns the direction of the object.
-     * {@link MazeObject#move(Field.Direction)} should be called with this return value of this method.
+     * {@link MazeObject#move(Field.Direction)} should be called with this return
+     * value of this method.
      * 
      * @return Direction of the object.
      */
@@ -75,7 +73,8 @@ public interface MazeObject extends Observable {
 
     /**
      * Sets the direction of the object in which it should move.
-     * Direction should be set before calling {@link MazeObject#move(Field.Direction)}.
+     * Direction should be set before calling
+     * {@link MazeObject#move(Field.Direction)}.
      * 
      * @param dir Direction in which object should move
      */
@@ -86,7 +85,7 @@ public interface MazeObject extends Observable {
      * 
      * @return True if the object is a pacman, false otherwise.
      */
-    default boolean isPacman(){
+    default boolean isPacman() {
         return false;
     }
 

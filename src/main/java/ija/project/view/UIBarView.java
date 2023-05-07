@@ -9,12 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-
 import java.io.IOException;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing UI bar view, that constains lives and score of the pacman. It is displayed on the top of the screen. It is an observer of the {@link MazeObject} it represents.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing UI bar view, that constains lives and score of the
+ *        pacman. It is displayed on the top of the screen. It is an observer of
+ *        the {@link MazeObject} it represents.
  */
 public class UIBarView extends Group implements Observable.Observer {
     private final MazeObject model;
@@ -41,7 +42,8 @@ public class UIBarView extends Group implements Observable.Observer {
         switch (this.model.getLives()) {
             case 1 -> hbox.getChildren().addAll(new ImageView(this.heartImage));
             case 2 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage));
-            case 3 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage), new ImageView(this.heartImage));
+            case 3 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage),
+                    new ImageView(this.heartImage));
         }
 
         Label score = new Label("SCORE: " + this.model.getScore());
@@ -51,7 +53,7 @@ public class UIBarView extends Group implements Observable.Observer {
 
     }
 
-    public void update(Observable var1){
+    public void update(Observable var1) {
         paint();
     }
 }

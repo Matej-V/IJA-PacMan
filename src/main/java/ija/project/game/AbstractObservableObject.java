@@ -6,8 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Abstract class representing observable object. Contains implementation for adding, removing and notifying observers.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Abstract class representing observable object. Contains implementation
+ *        for adding, removing and notifying observers.
  */
 public abstract class AbstractObservableObject implements MazeObject {
     /**
@@ -15,7 +16,8 @@ public abstract class AbstractObservableObject implements MazeObject {
      */
     private final Set<Observer> observers = new HashSet<>();
     /**
-     * These observers are notified when the object is changed and the change is logged.
+     * These observers are notified when the object is changed and the change is
+     * logged.
      */
     private final Set<Observer> logObservers = new HashSet<>();
 
@@ -38,7 +40,11 @@ public abstract class AbstractObservableObject implements MazeObject {
         this.logObservers.add(o);
     }
 
-    public void removeLogObserver(Observer o) {this.logObservers.remove(o);}
+    public void removeLogObserver(Observer o) {
+        this.logObservers.remove(o);
+    }
 
-    public void notifyLogObservers(){this.logObservers.forEach((o) -> o.update(this));}
+    public void notifyLogObservers() {
+        this.logObservers.forEach((o) -> o.update(this));
+    }
 }

@@ -5,8 +5,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing Pacman object. Pacman is the main character of the game.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing Pacman object. Pacman is the main character of the
+ *        game.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
     /**
@@ -30,7 +31,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     private Field.Direction direction;
     /**
-     * Lock for the pacman object, to ensure that only one thread can access move method at a time.
+     * Lock for the pacman object, to ensure that only one thread can access move
+     * method at a time.
      */
     ReadWriteLock lock = new ReentrantReadWriteLock();
     /**
@@ -90,12 +92,12 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
                 if (nextField.put(this)) {
                     this.field = nextField;
                 }
-                if(field.hasKey()){
+                if (field.hasKey()) {
                     field.getMaze().removeKey(field.getKey());
                     this.keyCollected = true;
                 }
             }
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
         notifyLogObservers();
@@ -108,41 +110,40 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      *
      * @param field Field in which the object should be moved.
      * @return True if the move was successful, false otherwise.
-     *
      * @throws GameException if game is lost or won.
      */
     @Override
     public boolean move(Field field) throws GameException {
         try {
             lock.writeLock().lock();
-            if(field.canMove()){
+            if (field.canMove()) {
 
-                //set direction accroding to the field position and current position
-                if(this.field.getRow() == field.getRow()){
-                    if(this.field.getCol() < field.getCol()){
+                // set direction accroding to the field position and current position
+                if (this.field.getRow() == field.getRow()) {
+                    if (this.field.getCol() < field.getCol()) {
                         setDirection(Field.Direction.R);
-                    }else{
+                    } else {
                         setDirection(Field.Direction.L);
                     }
-                }else{
-                    if(this.field.getRow() < field.getRow()){
+                } else {
+                    if (this.field.getRow() < field.getRow()) {
                         setDirection(Field.Direction.D);
-                    }else{
+                    } else {
                         setDirection(Field.Direction.U);
                     }
                 }
 
                 this.field.remove(this);
-                if (((PathField)field).put(this)) {
+                if (((PathField) field).put(this)) {
                     this.field = field;
                 }
-                if(this.field.hasKey()){
+                if (this.field.hasKey()) {
                     this.field.getMaze().removeKey(this.field.getKey());
                 }
-            }else {
+            } else {
                 return false;
             }
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
         notifyLogObservers();
@@ -151,7 +152,6 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Moves the pacman to the start position.
-     *
      * @throws GameException if game is lost or won.
      */
     public void moveToStart() throws GameException {
@@ -163,7 +163,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
             decreaseLives();
             notifyObservers();
             notifyLogObservers();
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
     }
@@ -188,6 +188,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Returns score in current game.
+     * 
      * @return Score of the pacman in the game.
      */
     public int getScore() {
@@ -196,7 +197,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Returns the direction of the object.
-     * {@link MazeObject#move(Field.Direction)} should be called with this return value of this method.
+     * {@link MazeObject#move(Field.Direction)} should be called with this return
+     * value of this method.
      *
      * @return Direction of the object.
      */
@@ -207,7 +209,8 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Sets the direction of the object in which it should move.
-     * Direction should be set before calling {@link MazeObject#move(Field.Direction)}.
+     * Direction should be set before calling
+     * {@link MazeObject#move(Field.Direction)}.
      *
      * @param dir Direction in which object should move.
      */
@@ -242,7 +245,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      *
      * @param lives Saved lives.
      */
-    public void setLives(int lives){
+    public void setLives(int lives) {
         this.lives = lives;
         notifyObservers();
     }
@@ -252,7 +255,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      *
      * @param score Saved score.
      */
-    public void setScore(int score){
+    public void setScore(int score) {
         this.score = score;
         notifyObservers();
     }
@@ -261,7 +264,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      * Updates score of the pacman in the game.
      *
      */
-    public void updateScore(){
+    public void updateScore() {
         this.score++;
         /* Notification for UI view update */
         notifyObservers();
@@ -273,9 +276,9 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
      */
     public void decreaseLives() throws GameException {
         this.lives--;
-        System.out.println("Lives: "+ lives);
+        System.out.println("Lives: " + lives);
         /* Notification for UI view update */
-        if(lives == 0){
+        if (lives == 0) {
             throw new GameException(GameException.TypeOfException.LostGame);
         }
         notifyObservers();

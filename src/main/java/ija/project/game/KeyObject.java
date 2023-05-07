@@ -4,8 +4,9 @@ import ija.project.common.Field;
 import ija.project.common.MazeObject;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing key object. Key is placed on the field and can be collected by pacman.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing key object. Key is placed on the field and can be
+ *        collected by pacman.
  */
 public class KeyObject extends AbstractObservableObject implements MazeObject {
     /**
@@ -19,9 +20,10 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
 
     /**
      * Constructor for KeyObject.
+     * 
      * @param field field in which the object is located
      */
-    public KeyObject(PathField field){
+    public KeyObject(PathField field) {
         this.field = field;
         this.collected = false;
     }
@@ -29,7 +31,7 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
     /**
      * Sets collected flag to true and notifies observers.
      */
-    public void collectKey(){
+    public void collectKey() {
         this.collected = true;
         notifyObservers();
     }
@@ -50,7 +52,7 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
     }
 
     @Override
-    public boolean move(Field field){
+    public boolean move(Field field) {
         return false;
     }
 
@@ -65,6 +67,7 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
 
     /**
      * Return field in which the key is located.
+     * 
      * @return
      */
     @Override

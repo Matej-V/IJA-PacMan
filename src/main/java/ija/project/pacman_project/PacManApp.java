@@ -8,7 +8,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Main class representing JavaFX application.
  */
 public class PacManApp extends Application implements Observable.Observer {
@@ -30,7 +30,7 @@ public class PacManApp extends Application implements Observable.Observer {
         double width = Screen.getPrimary().getVisualBounds().getWidth();
         double height = Screen.getPrimary().getVisualBounds().getHeight();
         // Generate view
-        view =  new PacManView(width, height);
+        view = new PacManView(width, height);
         // Generate controller
         controller = new PacManController(view);
         // Set controller for view so maze can be accessed
@@ -54,6 +54,7 @@ public class PacManApp extends Application implements Observable.Observer {
         stage.setOnCloseRequest(controller::handleClose);
         scene.setOnKeyPressed(controller::handleKeyPress);
     }
+
     public static void main(String[] args) {
         launch();
     }
@@ -66,10 +67,10 @@ public class PacManApp extends Application implements Observable.Observer {
     /**
      * Updates the scene in the stage
      */
-    public void privateUpdate(){
-        Scene newScene = new Scene(view.currentScene, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+    public void privateUpdate() {
+        Scene newScene = new Scene(view.currentScene, Screen.getPrimary().getVisualBounds().getWidth(),
+                Screen.getPrimary().getVisualBounds().getHeight());
         newScene.setOnKeyPressed(controller::handleKeyPress);
         stage.setScene(newScene);
     }
 }
-        

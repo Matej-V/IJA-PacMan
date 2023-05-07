@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Class representing maze. Maze is a 2D array of fields.
  */
 public class MazeClass implements Maze {
@@ -88,7 +88,7 @@ public class MazeClass implements Maze {
      *
      * @param pacMan pacman to be associated with the maze
      */
-    public void setPacMan(MazeObject pacMan){
+    public void setPacMan(MazeObject pacMan) {
         this.PacMan = pacMan;
     }
 
@@ -122,10 +122,9 @@ public class MazeClass implements Maze {
      *
      * @return Pacman in the maze
      */
-    public MazeObject getPacMan(){
+    public MazeObject getPacMan() {
         return this.PacMan;
     }
-
 
     /**
      * Returns number of rows in the maze.
@@ -148,9 +147,10 @@ public class MazeClass implements Maze {
     }
 
     /**
-     * Moves all objects to their start positions. Calls a method for every object to move to its start field.
-     *
-     * @throws GameException Exception to handle game scenarios such as completed game or lost game.
+     * Moves all objects to their start positions. Calls a method for every object
+     * to move to its start field.
+     * @throws GameException Exception to handle game scenarios such as completed
+     *                       game or lost game.
      */
     @Override
     public void moveObjectsToStart() throws GameException {
@@ -168,7 +168,7 @@ public class MazeClass implements Maze {
      * @return true if key was added to maze, otherwise false
      */
     public boolean addKey(MazeObject key) {
-        if(key != null) {
+        if (key != null) {
             this.keysToCollect++;
             this.keys.add(key);
             return true;
@@ -181,8 +181,8 @@ public class MazeClass implements Maze {
      *
      * @param key Key to remove from the maze
      */
-    public void removeKey(MazeObject key){
-        ((KeyObject)key).collectKey();
+    public void removeKey(MazeObject key) {
+        ((KeyObject) key).collectKey();
         this.keysToCollect--;
         this.keys.remove(key);
         this.oldKeys.add(key);
@@ -193,7 +193,7 @@ public class MazeClass implements Maze {
      *
      * @return true if all the keys are collected, false otherwise
      */
-    public boolean canComplete(){
+    public boolean canComplete() {
         return (keys.size() == 0);
     }
 
@@ -208,10 +208,10 @@ public class MazeClass implements Maze {
 
     /**
      * Returns the list of collected keys.
+     * 
      * @return list of keys
      */
     public Set<MazeObject> getOldKeys() {
         return this.oldKeys;
     }
 }
-

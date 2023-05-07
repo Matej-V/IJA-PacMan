@@ -10,8 +10,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing ghost object. Ghosts are moving on the field and can be eaten by pacman.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing ghost object. Ghosts are moving on the field and
+ *        can be eaten by pacman.
  */
 public class GhostObject extends AbstractObservableObject implements MazeObject {
     /**
@@ -39,25 +40,29 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      */
     private boolean isEatable = false;
     /**
-     * Lock for the ghost object, to ensure that only one thread can access move method at a time.
+     * Lock for the ghost object, to ensure that only one thread can access move
+     * method at a time.
      */
     ReadWriteLock lock = new ReentrantReadWriteLock();
     /**
-     * List of colors for ghosts. If there are more ghosts than colors, the colors are reused. 
+     * List of colors for ghosts. If there are more ghosts than colors, the colors
+     * are reused.
      */
-    public static List<Color> colors = new ArrayList<>(){{
-        add(Color.GREENYELLOW);
-        add(Color.HONEYDEW);
-        add(Color.HOTPINK);
-        add(Color.LIGHTBLUE);
-        add(Color.LEMONCHIFFON);
-     }};
+    public static List<Color> colors = new ArrayList<>() {
+        {
+            add(Color.GREENYELLOW);
+            add(Color.HONEYDEW);
+            add(Color.HOTPINK);
+            add(Color.LIGHTBLUE);
+            add(Color.LEMONCHIFFON);
+        }
+    };
 
     /**
      * Constructor for GhostObject.
      *
      * @param field field on which the object is located
-     * @param id ID of the ghost
+     * @param id    ID of the ghost
      */
     public GhostObject(PathField field, int id) {
         this.id = id;
@@ -85,7 +90,6 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      *
      * @param dir Direction in which the object should be moved.
      * @return True if the move was successful, false otherwise.
-     *
      * @throws GameException if game is lost or won
      */
     @Override
@@ -102,7 +106,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
                     this.field = nextField;
                 }
             }
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
         notifyLogObservers();
@@ -114,22 +118,21 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      *
      * @param field Field to which the object should be moved.
      * @return True if the move was successful, false otherwise.
-     *
      * @throws GameException if game is lost or won
      */
     @Override
     public boolean move(Field field) throws GameException {
         try {
             lock.writeLock().lock();
-            if(field.canMove()){
+            if (field.canMove()) {
                 this.field.remove(this);
-                if (((PathField)field).put(this)) {
+                if (((PathField) field).put(this)) {
                     this.field = field;
                 }
-            }else{
+            } else {
                 return false;
             }
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
         return true;
@@ -147,7 +150,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
             this.field = this.startField;
             notifyObservers();
             notifyLogObservers();
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
     }
@@ -177,9 +180,9 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
         throw new UnsupportedOperationException("Unsupported operation.");
     }
 
-
     /**
-     * Returns the direction of the ghost. {@link GhostObject#move(Field.Direction)} should be called with this return value of this method.
+     * Returns the direction of the ghost. {@link GhostObject#move(Field.Direction)}
+     * should be called with this return value of this method.
      * 
      * @return Direction of the object.
      */
@@ -189,7 +192,8 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
     }
 
     /**
-     * Sets the direction of the ghost in which it should move. Direction should be set before calling {@link GhostObject#move(Field.Direction)}.
+     * Sets the direction of the ghost in which it should move. Direction should be
+     * set before calling {@link GhostObject#move(Field.Direction)}.
      * 
      * @param dir Direction in which object should move
      */
@@ -223,7 +227,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      * 
      * @param eatable New eatable state of the ghost.
      */
-    public void setEatable(boolean eatable){
+    public void setEatable(boolean eatable) {
         isEatable = eatable;
     }
 
@@ -232,7 +236,7 @@ public class GhostObject extends AbstractObservableObject implements MazeObject 
      * 
      * @return True if ghost is eatable, false otherwise.
      */
-    public boolean isEatable(){
+    public boolean isEatable() {
         return isEatable;
     }
 

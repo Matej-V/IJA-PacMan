@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing path field. Path field is a field that can be passed through. It can contain objects.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing path field. Path field is a field that can be
+ *        passed through. It can contain objects.
  */
 public class PathField extends AbstractObservableField implements Field {
     /**
@@ -78,7 +79,7 @@ public class PathField extends AbstractObservableField implements Field {
      * @throws Exception if the field is WallField exception
      *                   UnsupportedOperationException is thrown.
      */
-    public boolean put(MazeObject object) throws GameException{
+    public boolean put(MazeObject object) throws GameException {
         if (object instanceof PacmanObject) {
             ((PacmanObject) object).pointCollected = false;
             if (this.point) {

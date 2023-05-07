@@ -4,7 +4,7 @@ import ija.project.common.*;
 import java.util.List;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  * @brief Class representing wall field.
  */
 public class WallField extends AbstractObservableField implements Field {
@@ -62,7 +62,8 @@ public class WallField extends AbstractObservableField implements Field {
      * Puts the object on the field.
      *
      * @param object object to be put on the field.
-     * @throws UnsupportedOperationException since it is impossible to place any object on the wall field.
+     * @throws UnsupportedOperationException since it is impossible to place any
+     *                                       object on the wall field.
      */
     public boolean put(MazeObject object) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Error");
@@ -108,7 +109,6 @@ public class WallField extends AbstractObservableField implements Field {
     public boolean canMove() {
         return false;
     }
-
 
     /**
      * Returns the maze to which the field belongs.
@@ -183,6 +183,5 @@ public class WallField extends AbstractObservableField implements Field {
         }
         return false;
     }
-
 
 }

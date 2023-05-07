@@ -24,10 +24,12 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief PacManController class that is used for managing game logic. It is used for generating game, starting timers and threads and handling key press events.
+ * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief PacManController class that is used for managing game logic. It is
+ *        used for generating game, starting timers and threads and handling key
+ *        press events.
  */
-public class PacManController{
+public class PacManController {
     /** */
     private final PacManView view;
     /**
@@ -66,10 +68,11 @@ public class PacManController{
      * Current game state
      */
     public GameState gameState;
+
     /**
      * Game state enum
      */
-    enum GameState{
+    enum GameState {
         DEFAULT,
         REPLAY,
         REPLAY_REVERSE,
@@ -82,14 +85,15 @@ public class PacManController{
      * 
      * @param view PacManView object that is used for generating game views
      */
-    public PacManController(PacManView view){
+    public PacManController(PacManView view) {
         this.view = view;
     }
 
     /**
-     * Generates new game, loads map, generates maze model, starts all timer, threads and logging
+     * Generates new game, loads map, generates maze model, starts all timer,
+     * threads and logging
      */
-    public void newGame(){
+    public void newGame() {
         // stop moving if any
         changeGameState(GameState.DEFAULT);
         generateGame();
@@ -105,7 +109,7 @@ public class PacManController{
      * Changes pacman direction based on pressed key, pauses game or replays game
      */
     public void handleKeyPress(KeyEvent e) {
-        if(gameState == GameState.DEFAULT) {
+        if (gameState == GameState.DEFAULT) {
             switch (e.getCode()) {
                 case UP, W -> maze.getPacMan().setDirection(Field.Direction.U);
                 case LEFT, A -> maze.getPacMan().setDirection(Field.Direction.L);
@@ -138,14 +142,14 @@ public class PacManController{
                 try {
                     Thread.sleep(10000);
                     // Set ghost to be eatable
-                    for(MazeObject ghost : maze.getGhosts()){
-                        ((GhostObject)ghost).setEatable(true);
+                    for (MazeObject ghost : maze.getGhosts()) {
+                        ((GhostObject) ghost).setEatable(true);
                     }
                     // Wait for eatableDuration seconds
                     Thread.sleep(5000);
                     // Set ghost to be uneatable
-                    for(MazeObject ghost : maze.getGhosts()){
-                        ((GhostObject)ghost).setEatable(false);
+                    for (MazeObject ghost : maze.getGhosts()) {
+                        ((GhostObject) ghost).setEatable(false);
                     }
                     // Wait for interval seconds
                     Thread.sleep(10000);
@@ -189,24 +193,24 @@ public class PacManController{
         };
 
         /* Speed in field per second */
-        timer.schedule(ghostsTask, 0, (long)(1000.0 / ghostsSpeed));
-        timer.schedule(pacManTask, 0, (long)(1000.0 / pacManSpeed));
+        timer.schedule(ghostsTask, 0, (long) (1000.0 / ghostsSpeed));
+        timer.schedule(pacManTask, 0, (long) (1000.0 / pacManSpeed));
     }
 
     /**
      * Handle game event (win, lose, unexpected exception)
      */
-    private void handleGameEvent(GameException e){
+    private void handleGameEvent(GameException e) {
         cancelTimersThreads();
-        if (e.type == GameException.TypeOfException.CompletedGame){
+        if (e.type == GameException.TypeOfException.CompletedGame) {
             System.out.println("Completed");
             view.generateSuccessScreen();
             endLogging();
-        }else if (e.type == GameException.TypeOfException.LostGame){
+        } else if (e.type == GameException.TypeOfException.LostGame) {
             System.out.println("Lost");
             view.generateEndScreen();
             endLogging();
-        }else{
+        } else {
             cancelTimersThreads();
             endLogging();
             System.out.println("Unexpected Exception");
@@ -218,18 +222,20 @@ public class PacManController{
     /**
      * Terminates all timers and threads
      */
-    private void cancelTimersThreads(){
+    private void cancelTimersThreads() {
         System.out.println("Threads canceled");
-        for (Timer t : timers)t.cancel();
+        for (Timer t : timers)
+            t.cancel();
         timers.clear();
-        for (Thread th : threads) th.interrupt();
+        for (Thread th : threads)
+            th.interrupt();
         threads.clear();
     }
 
     /**
      * Start all timers and threads
      */
-    private void startTimersThreads(){
+    private void startTimersThreads() {
         setMoveTimer();
         setEatableThread();
     }
@@ -237,12 +243,11 @@ public class PacManController{
     /**
      * Handle window close event
      */
-    public void handleClose(WindowEvent windowEvent){
+    public void handleClose(WindowEvent windowEvent) {
         cancelTimersThreads();
         endLogging();
         Platform.exit();
     }
-
 
     public void generateGame() {
         chooseRandomMap();
@@ -266,6 +271,7 @@ public class PacManController{
 
     /**
      * Method for setting map of the game
+     * 
      * @param map chosen map
      */
     public void setMap(String map) {
@@ -273,7 +279,7 @@ public class PacManController{
         this.loadFile(PacManApp.class.getResource(currentMap));
     }
 
-    public void setLoadedMap(String map){
+    public void setLoadedMap(String map) {
         this.currentMap = map;
         File file = new File(map);
         URI uri = file.toURI();
@@ -339,12 +345,12 @@ public class PacManController{
         maze.getPacMan().move(maze.getPacMan().getDirection());
         checkCollision();
         checkWin();
-        if (checkTarget()) ((TargetField) maze.getTarget()).setOpen();
+        if (checkTarget())
+            ((TargetField) maze.getTarget()).setOpen();
     }
 
     /**
      * Method for MazeObjects controll on a separate thread
-     * 
      * @throws GameException, IOException
      */
     public void replaySave() throws IOException, GameException {
@@ -364,7 +370,8 @@ public class PacManController{
             while (true) {
                 try {
                     // exit while point
-                    if (((line = reader.readLine()) == null)) break;
+                    if (((line = reader.readLine()) == null))
+                        break;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -382,7 +389,8 @@ public class PacManController{
                         Duration duration = Duration.between(lastTimestamp, timestamp);
                         String nextLine;
                         try {
-                            if((nextLine = reader.readLine()) == null) break;
+                            if ((nextLine = reader.readLine()) == null)
+                                break;
 
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -412,13 +420,12 @@ public class PacManController{
 
     /**
      * Method for MazeObjects controll on a separate thread
-     *
      * @throws GameException, IOException
      */
     public void replaySaveReverse() throws IOException, GameException {
         Thread reverseReplayThread = new Thread(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 List<String> moves = null;
                 try {
                     moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
@@ -488,8 +495,8 @@ public class PacManController{
                         .toList();
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 field.point = false;
-            if (splitedLine.size() == 6 && splitedLine.get(5).equals("k")) {
-                maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
+                if (splitedLine.size() == 6 && splitedLine.get(5).equals("k")) {
+                    maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
                 }
             }
 
@@ -506,13 +513,13 @@ public class PacManController{
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                 .map(Integer::parseInt)
                 .toList();
-        if(checkTarget()) {
+        if (checkTarget()) {
             ((TargetField) maze.getTarget()).setOpen();
         } else {
             ((TargetField) maze.getTarget()).setClosed();
         }
         if (nextLine.startsWith("P")) {
-            int score= Integer.parseInt(splitedLine.get(2));
+            int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
             boolean p = false;
             boolean k = false;
@@ -525,8 +532,10 @@ public class PacManController{
             try {
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 maze.getPacMan().move(field);
-                if (p) field.point = true;
-                if (k) field.setKey();
+                if (p)
+                    field.point = true;
+                if (k)
+                    field.setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
             } catch (GameException e) {
@@ -551,13 +560,13 @@ public class PacManController{
      * 
      * @param line line from log file with information about move
      */
-    private void playOneMove(String line){
+    private void playOneMove(String line) {
         if (line.startsWith("P")) {
             List<String> splitedLine = List.of(line.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                     .map(Integer::parseInt)
                     .toList();
-            int score= Integer.parseInt(splitedLine.get(2));
+            int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
 
             try {
@@ -567,7 +576,8 @@ public class PacManController{
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
-            if(checkTarget()) ((TargetField) maze.getTarget()).setOpen();
+            if (checkTarget())
+                ((TargetField) maze.getTarget()).setOpen();
         } else if (line.startsWith("G")) {
             List<String> splitedLine = List.of(line.split(" "));
             List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
@@ -578,7 +588,8 @@ public class PacManController{
             ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
             try {
-                maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1))).move(maze.getField(coords.get(0), coords.get(1)));
+                maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)))
+                        .move(maze.getField(coords.get(0), coords.get(1)));
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
@@ -593,17 +604,19 @@ public class PacManController{
     }
 
     /**
-     * Checks if Pacman and Ghosts are on the same field. If so, checks if Ghost is eatable. If yes, Ghost is moved to start. If not, Pacman and Ghosts are moved to start.
+     * Checks if Pacman and Ghosts are on the same field. If so, checks if Ghost is
+     * eatable. If yes, Ghost is moved to start. If not, Pacman and Ghosts are moved
+     * to start.
      * @throws GameException pacman looses all of lives
      */
-    private void checkCollision() throws GameException{
+    private void checkCollision() throws GameException {
         for (MazeObject mazeObject : maze.getGhosts()) {
             GhostObject ghost = (GhostObject) mazeObject;
             if (ghost.getField().equals(maze.getPacMan().getField())) {
-                if(ghost.isEatable()){
-                    ((PacmanObject) maze.getPacMan()).setScore(maze.getPacMan().getScore()+100);
+                if (ghost.isEatable()) {
+                    ((PacmanObject) maze.getPacMan()).setScore(maze.getPacMan().getScore() + 100);
                     ghost.moveToStart();
-                }else{
+                } else {
                     maze.moveObjectsToStart();
                 }
             }
@@ -611,12 +624,13 @@ public class PacManController{
     }
 
     /**
-     * Checks if Pacman is on TargetField and all keys are colledted. If so, throws CompletedGame exception.
+     * Checks if Pacman is on TargetField and all keys are colledted. If so, throws
+     * CompletedGame exception.
      * @throws GameException when pacman completes game
      */
-    private void checkWin() throws GameException{
-        if(maze.getPacMan().getField() instanceof TargetField){
-            if(checkTarget()){
+    private void checkWin() throws GameException {
+        if (maze.getPacMan().getField() instanceof TargetField) {
+            if (checkTarget()) {
                 throw new GameException(GameException.TypeOfException.CompletedGame);
             }
         }
@@ -628,18 +642,20 @@ public class PacManController{
 
     /**
      * Chooses direction to move in for a ghost
+     * 
      * @param ghost Ghost which direction will be set
      */
     public void chaseAlgorithm(MazeObject ghost) {
         Field.Direction dir = ghost.getDirection();
-        //create list of available directions
+        // create list of available directions
         List<Field.Direction> availableDirections = new CopyOnWriteArrayList<>();
         for (Field.Direction d : Field.Direction.values()) {
             if (ghost.canMove(d)) {
                 availableDirections.add(d);
             }
         }
-        // if you can't continue in the same direction, choose random direction, try not to go back, if the only option is to go back, go back
+        // if you can't continue in the same direction, choose random direction, try not
+        // to go back, if the only option is to go back, go back
         if (!availableDirections.contains(dir)) {
             availableDirections.remove(dir.opposite(dir));
             if (availableDirections.size() == 0) {
@@ -648,9 +664,9 @@ public class PacManController{
                 Random rand = new Random();
                 dir = availableDirections.get(rand.nextInt(availableDirections.size()));
             }
-        }
-        else {
-            // if you can continue in the same direction, choose random direction with 30% chance, but try not to go back
+        } else {
+            // if you can continue in the same direction, choose random direction with 30%
+            // chance, but try not to go back
             availableDirections.remove(dir.opposite(dir));
             Random rand = new Random();
             if (rand.nextInt(10) < 3) {
@@ -660,12 +676,11 @@ public class PacManController{
         ghost.setDirection(dir);
     }
 
-
     /**
      * Generates new game for player. Total score is set to 0.
      */
 
-    public void startLogging(){
+    public void startLogging() {
         logFile = new File("log.save");
         try {
             logWriter = new LogWriter(logFile, maze);
@@ -677,10 +692,10 @@ public class PacManController{
     /**
      * Closes logWriter
      */
-    public void endLogging(){
-        if (logWriter != null) logWriter.close();
+    public void endLogging() {
+        if (logWriter != null)
+            logWriter.close();
     }
-
 
     /**
      * Method to set last seen state of MazeObjects like ghosts and pacman
@@ -696,7 +711,7 @@ public class PacManController{
         ListIterator<MazeObject> it = this.maze.getGhosts().listIterator();
         while (it.hasNext()) {
             GhostObject ghost = (GhostObject) it.next();
-            for (MazeObject ghostState  : logWriter.getLastGhostsState()) {
+            for (MazeObject ghostState : logWriter.getLastGhostsState()) {
                 if (ghost.getId() == ((GhostObject) ghostState).getId()) {
                     try {
                         ghost.move(ghostState.getField());
@@ -711,7 +726,7 @@ public class PacManController{
     /**
      * Change current game state and starts operations according to new game state
      */
-    public void changeGameState(GameState newGamestate){
+    public void changeGameState(GameState newGamestate) {
         switch (newGamestate) {
             case REPLAY -> {
                 gameState = newGamestate;
@@ -746,7 +761,7 @@ public class PacManController{
                 gameState = newGamestate;
             }
             case PAUSE -> {
-                if(gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
+                if (gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
                     gameState = newGamestate;
                     cancelTimersThreads();
                     StackPane pausePane = new StackPane();
