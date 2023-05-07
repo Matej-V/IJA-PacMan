@@ -4,8 +4,8 @@ import ija.project.game.KeyObject;
 import java.util.List;
 
 /**
+ * Interface representing the field object.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Interface representing the field object.
  */
 public interface Field extends Observable {
 

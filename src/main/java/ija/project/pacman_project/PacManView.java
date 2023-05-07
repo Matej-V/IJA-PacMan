@@ -18,9 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
+ * Class representing game view. Contains implementation for generating all the views in the game.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing game view. Contains implementation for generating
- *        all the views in the game.
  */
 public class PacManView extends AbstractObservableView {
     /**
@@ -95,7 +94,7 @@ public class PacManView extends AbstractObservableView {
      */
     public void generateMainScreen() {
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
                 drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -161,7 +160,7 @@ public class PacManView extends AbstractObservableView {
 
         // Set background image
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
                 new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -178,7 +177,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/game-over.jpg"),
+                drawBackgroundImage("./src/main/resources/ija/project/img/game-over.jpg"),
                 drawButton("PLAY AGAIN"), score);
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -195,7 +194,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
         StackPane pane = new StackPane(
-                drawBackgroundImage("./src/main/resources/ija/project/pacman_project/img/title.jpg"),
+                drawBackgroundImage("./src/main/resources/ija/project/img/title.jpg"),
                 drawButton("PLAY AGAIN"), score);
         // add win text
         Text text = new Text("YOU WON");

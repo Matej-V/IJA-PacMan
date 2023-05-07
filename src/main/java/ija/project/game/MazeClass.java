@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Class representing maze. Maze is a 2D array of fields.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing maze. Maze is a 2D array of fields.
  */
 public class MazeClass implements Maze {
     /**
@@ -149,6 +149,7 @@ public class MazeClass implements Maze {
     /**
      * Moves all objects to their start positions. Calls a method for every object
      * to move to its start field.
+     * 
      * @throws GameException Exception to handle game scenarios such as completed
      *                       game or lost game.
      */

@@ -4,8 +4,8 @@ import ija.project.common.*;
 import java.util.List;
 
 /**
+ * Class representing wall field.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing wall field.
  */
 public class WallField extends AbstractObservableField implements Field {
     /**

@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class representing the view of the field. It is an observer of the field it represents.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the field. It is an observer of the
- *        field it represents.
  */
 public class FieldView extends Pane implements Observable.Observer {
     /**

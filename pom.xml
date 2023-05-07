@@ -41,6 +41,11 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
@@ -61,7 +66,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ija.project.pacman_project/ija.project.pacman_project.PacManApp
+                            <mainClass>ija.project/ija.project.pacman_project.PacManApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
@@ -101,10 +106,10 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>ija.project.pacman_project/ija.project.pacman_project.PacManApp</mainClass>
+                            <mainClass>ija.project.pacman_project</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>MyJarName</finalName>
+                    <finalName>PacManApp</finalName>
                 </configuration>
                 <executions>
                     <execution>

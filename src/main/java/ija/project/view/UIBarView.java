@@ -12,10 +12,8 @@ import javafx.scene.layout.HBox;
 import java.io.IOException;
 
 /**
+ * Class representing UI bar view, that constains lives and score of the pacman. It is displayed at the top of the screen. It is an observer of the {@link MazeObject} it represents.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing UI bar view, that constains lives and score of the
- *        pacman. It is displayed on the top of the screen. It is an observer of
- *        the {@link MazeObject} it represents.
  */
 public class UIBarView extends Group implements Observable.Observer {
     private final MazeObject model;
@@ -24,10 +22,9 @@ public class UIBarView extends Group implements Observable.Observer {
 
     public UIBarView(MazeObject model) {
         this.model = model;
-
         try {
-            this.heartImage = new Image(PacManApp.class.getResource("img/heart.png").openStream());
-            this.deathImage = new Image(PacManApp.class.getResource("img/death.png").openStream());
+            this.heartImage = new Image(PacManApp.class.getResource("/ija/project/img/heart.png").openStream());
+            this.deathImage = new Image(PacManApp.class.getResource("/ija/project/img/death.png").openStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

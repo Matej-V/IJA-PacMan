@@ -16,9 +16,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
+ * Class representing the view of the key. It is an observer of the key it represents. It is a child of {@link FieldView}.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing the view of the key. It is an observer of the key
- *        it represents. It is a child of {@link FieldView}.
  */
 public class KeyObjectView extends Pane implements Observable.Observer {
     /**
@@ -38,7 +37,8 @@ public class KeyObjectView extends Pane implements Observable.Observer {
         this.parent = parent;
         this.model = model;
         try {
-            this.key = new Image(Objects.requireNonNull(PacManApp.class.getResource("img/key.png")).openStream());
+            this.key = new Image(
+                    Objects.requireNonNull(PacManApp.class.getResource("/ija/project/img/key.png")).openStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

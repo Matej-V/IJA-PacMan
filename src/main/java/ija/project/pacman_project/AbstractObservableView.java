@@ -7,9 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Abstract class representing observable view. Contains implementation for adding, removing and notifying observers.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Abstract class representing observable view. Contains implementation
- *        for adding, removing and notifying observers.
  */
 public abstract class AbstractObservableView implements Observable {
     /**

@@ -4,9 +4,8 @@ import ija.project.common.Field;
 import ija.project.common.MazeObject;
 
 /**
+ * Class representing key object. Key is placed on the field and can be collected by pacman.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing key object. Key is placed on the field and can be
- *        collected by pacman.
  */
 public class KeyObject extends AbstractObservableObject implements MazeObject {
     /**

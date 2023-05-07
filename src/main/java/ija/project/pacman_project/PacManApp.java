@@ -8,8 +8,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
+ * Main class representing JavaFX application.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Main class representing JavaFX application.
  */
 public class PacManApp extends Application implements Observable.Observer {
     /**

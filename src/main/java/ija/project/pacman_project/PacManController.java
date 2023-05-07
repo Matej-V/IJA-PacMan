@@ -14,9 +14,12 @@ import javafx.stage.WindowEvent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,10 +27,8 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * PacManController class that is used for managing game logic. It is used for generating game, starting timers and threads and handling key press events.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief PacManController class that is used for managing game logic. It is
- *        used for generating game, starting timers and threads and handling key
- *        press events.
  */
 public class PacManController {
     /** */
@@ -254,19 +255,36 @@ public class PacManController {
     }
 
     public void chooseRandomMap() {
-        File folder = new File("./src/main/resources/ija/project/pacman_project/maps");
-        File[] listOfFiles;
-        listOfFiles = folder.listFiles();
-        assert listOfFiles != null;
-        List<File> files = Arrays.asList(listOfFiles);
-        Random rand = new Random();
-        // Get random file from list if same as current map, get another one
-        File randomFile = files.get(rand.nextInt(files.size()));
-        while (randomFile.getName().equals(currentMap)) {
-            randomFile = files.get(rand.nextInt(files.size()));
+        Module module = PacManApp.class.getModule();
+        URL folderURL  = PacManApp.class.getResource("/ija/project/maps");
+        Path folderPath = null;
+        try {
+            folderPath = Paths.get(folderURL.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        // Set new map
-        setMap("maps/" + randomFile.getName());
+        try {
+            File[] listOfFiles = Files.list(folderPath)
+                    .map(Path::toFile)
+                    .toArray(File[]::new);
+            assert listOfFiles != null;
+            List<File> files = Arrays.asList(listOfFiles);
+            Random rand = new Random();
+            // Get random file from list if same as current map, get another one
+            File randomFile = files.get(rand.nextInt(files.size()));
+            while (randomFile.getName().equals(currentMap)) {
+                randomFile = files.get(rand.nextInt(files.size()));
+            }
+            // Set new map
+            setMap("/maps/" + randomFile.getName());
+
+//        PacManApp.class.getResource("currentMap");
+//        File folder = new File("./src/main/resources/ija/project/maps");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     /**

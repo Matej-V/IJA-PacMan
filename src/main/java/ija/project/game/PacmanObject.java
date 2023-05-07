@@ -5,9 +5,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
+ * Class representing Pacman object. Pacman is the main character of the game.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Class representing Pacman object. Pacman is the main character of the
- *        game.
  */
 public class PacmanObject extends AbstractObservableObject implements MazeObject {
     /**
@@ -152,6 +151,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
 
     /**
      * Moves the pacman to the start position.
+     * 
      * @throws GameException if game is lost or won.
      */
     public void moveToStart() throws GameException {

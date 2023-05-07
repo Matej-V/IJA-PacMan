@@ -4,8 +4,8 @@ import ija.project.game.GameException;
 import ija.project.game.PathField;
 
 /**
+ * Interface representing maze object.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Interface representing maze object.
  */
 public interface MazeObject extends Observable {
     /**
@@ -37,6 +37,7 @@ public interface MazeObject extends Observable {
 
     /**
      * Move the object to the start field.
+     * 
      * @throws GameException if game is lost or won.
      */
     void moveToStart() throws GameException;

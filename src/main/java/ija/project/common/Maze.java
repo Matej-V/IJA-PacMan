@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Interface representing Maze.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
- * @brief Interface representing Maze.
  */
 public interface Maze {
 
@@ -65,6 +65,7 @@ public interface Maze {
     /**
      * Moves all objects to their start positions. Calls a method for every object
      * to move to its start field.
+     * 
      * @throws GameException Exception to handle game scenarios such as completed
      *                       game or lost game.
      */
