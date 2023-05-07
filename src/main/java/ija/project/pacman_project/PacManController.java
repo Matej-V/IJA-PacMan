@@ -340,6 +340,7 @@ public class PacManController{
         maze.getPacMan().move(maze.getPacMan().getDirection());
         checkCollision();
         checkWin();
+        if (checkTarget()) ((TargetField) maze.getTarget()).setOpen();
     }
 
     /**
@@ -605,12 +606,15 @@ public class PacManController{
      */
     private void checkWin() throws GameException{
         if(maze.getPacMan().getField() instanceof TargetField){
-            if(maze.canComplete()){
+            if(checkTarget()){
                 throw new GameException(GameException.TypeOfException.CompletedGame);
             }
         }
     }
 
+    private boolean checkTarget() {
+        return maze.canComplete();
+    }
 
     /**
      * Chooses direction to move in for a ghost

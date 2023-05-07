@@ -88,6 +88,13 @@ public interface Maze {
     boolean canComplete();
 
     /**
+     * Returns target field in the maze
+     *
+     * @return Field target
+     */
+    Field getTarget();
+
+    /**
      * Returns the list of collected keys.
      * @return list of keys
      */

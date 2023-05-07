@@ -163,8 +163,9 @@ public class MazeClass implements Maze {
      * @param key Key to add to the maze
      * @return true if key was added to maze, otherwise false
      */
-    public boolean addKey(MazeObject key){
+    public boolean addKey(MazeObject key) {
         if(key != null) {
+            this.keysToCollect++;
             this.keys.add(key);
             return true;
         }
@@ -178,6 +179,7 @@ public class MazeClass implements Maze {
      */
     public void removeKey(MazeObject key){
         ((KeyObject)key).collectKey();
+        this.keysToCollect--;
         this.keys.remove(key);
         this.oldKeys.add(key);
     }
@@ -191,6 +193,14 @@ public class MazeClass implements Maze {
         return keysToCollect == 0;
     }
 
+    /**
+     * Returns target field in the maze
+     *
+     * @return Field target
+     */
+    public Field getTarget() {
+        return this.target;
+    }
 
     /**
      * Returns the list of collected keys.

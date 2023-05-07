@@ -16,4 +16,8 @@ public class TargetField extends PathField {
         super(row, col);
         point = false;
     }
+
+    public void setOpen() {
+        notifyObservers();
+    }
 }

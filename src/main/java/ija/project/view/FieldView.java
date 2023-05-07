@@ -67,7 +67,12 @@ public class FieldView extends Pane implements Observable.Observer {
         if (model.canMove()) {
             if (model instanceof TargetField) {
                 Border = new Rectangle(x, y, size, size);
-                Border.setFill(Color.web("#ff8484"));
+                if (model.getMaze().canComplete()) {
+                    Border.setFill(Color.web("#84ff9f"));
+                } else {
+                    Border.setFill(Color.web("#ff8484"));
+                }
+
             }else{
                 Border = new Rectangle(x, y, size, size);
                 Border.setFill(Color.web("#00022A"));
@@ -86,7 +91,7 @@ public class FieldView extends Pane implements Observable.Observer {
         if (Food == null) {
             Food = new Circle(x + size / 2, y + size / 2, size * 0.1, Color.WHITE);
         }
-        Food.setVisible(model.hasPoint() &&  !(this.model  instanceof TargetField));
+        Food.setVisible(model.hasPoint() &&  !(this.model instanceof TargetField));
     }
 
 

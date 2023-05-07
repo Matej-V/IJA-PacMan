@@ -115,6 +115,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         try {
             lock.writeLock().lock();
             if(field.canMove()){
+
                 //set direction accroding to the field position and current position
                 if(this.field.getRow() == field.getRow()){
                     if(this.field.getCol() < field.getCol()){
