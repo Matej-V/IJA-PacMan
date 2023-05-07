@@ -4,6 +4,10 @@ import ija.project.game.GameException;
 
 import java.util.List;
 
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Interface representing Maze.
+ */
 public interface Maze {
 
     /**

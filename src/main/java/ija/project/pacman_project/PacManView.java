@@ -16,9 +16,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 /**
- * PacManView class is responsible for generating all the views in the game
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing game view. Contains implementation for generating all the views in the game.
  */
 public class PacManView extends AbstractObservableView{
     /**

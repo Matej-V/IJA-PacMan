@@ -5,7 +5,8 @@ import ija.project.common.*;
 import java.util.List;
 
 /**
- * Class representing the maze.
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing maze. Maze is a 2D array of fields.
  */
 public class MazeClass implements Maze {
     /**

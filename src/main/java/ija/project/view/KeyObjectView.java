@@ -3,15 +3,27 @@ package ija.project.view;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.game.KeyObject;
+import ija.project.pacman_project.PacManApp;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
+import java.util.Objects;
+
+/**
+ * @authors Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
+ * @brief Class representing the view of the key. It is an observer of the key it represents. It is a child of {@link FieldView}.
+ */
 public class KeyObjectView extends Pane implements Observable.Observer {
     /**
-     * Rectangle representing key
+     * Image representing key
      */
-    Rectangle key;
+    Image key;
     /**
      * Model of the {@link MazeObject}
      */
@@ -24,9 +36,20 @@ public class KeyObjectView extends Pane implements Observable.Observer {
     public KeyObjectView(FieldView parent, MazeObject model){
         this.parent = parent;
         this.model = model;
-        key = new Rectangle(parent.x + parent.size * 0.3, parent.y + parent.size * 0.3, parent.size * 0.4, parent.size * 0.4);
-        key.setFill(Color.YELLOW);
-        getChildren().add(key);
+        try {
+            this.key = new Image(Objects.requireNonNull(PacManApp.class.getResource("img/key.png")).openStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ImageView keyImageView = new ImageView(this.key);
+        getChildren().add(new Rectangle(parent.size, parent.size, Color.TRANSPARENT));
+        setTranslateX(parent.x);
+        setTranslateY(parent.y);
+        keyImageView.setFitWidth(parent.size * 0.6);
+        keyImageView.setPreserveRatio(true);
+        keyImageView.setTranslateX((parent.size - keyImageView.getFitWidth())/2);
+        keyImageView.setTranslateY(parent.size*0.2);
+        getChildren().add(keyImageView);
         paint();
         model.addObserver(this);
     }
