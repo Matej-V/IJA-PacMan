@@ -27,10 +27,6 @@ public class FieldView extends Pane implements Observable.Observer {
      */
     private Circle Food;
     /**
-     * Rectangle representing field
-     */
-    private Rectangle Border;
-    /**
      * List of objects on a field
      */
     private final List<Pane> objects = new ArrayList<>();
@@ -130,4 +126,9 @@ public class FieldView extends Pane implements Observable.Observer {
         }
         getChildren().addAll(objects);
     }
+
+    public Field getModel(){
+        return this.model;
+    }
+
 }

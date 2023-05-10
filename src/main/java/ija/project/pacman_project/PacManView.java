@@ -78,7 +78,9 @@ public class PacManView extends AbstractObservableView {
             for (int column = 0; column < controller.maze.numCols(); column++) {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column),
                         (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
-                //if(row == 4 && column == 5) fieldView.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                fieldView.setOnMouseClicked(event -> {
+                    controller.movePacmanOnClick(fieldView);
+                });
                 mazeGroup.getChildren().add(fieldView);
             }
         }

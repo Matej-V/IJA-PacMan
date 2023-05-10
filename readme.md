@@ -26,7 +26,7 @@ doxygen Doxyfile
 
 ## Úvod
 
-Projekt PacMan je hra pre jedného hráča implementovaná v jazyku Java s použitím `JavaFX`. Hráč ovláda postavu Pacmana pomocou šípiek alebo kláves W,S,A,D a jeho cieľom je zozbierať všetky kľúče v bludisku a získať čo najviac bodov. Duchovia sa pohybujú po bludisku a Pacman sa im snaži vyhýbať. Duchovia sa čas od času sa stanú "eatable", čo znamená, že ich Pacman môže zjesť a dostane 100 bodov navyše. Ak hráča trikrát chytia, prehráva hru. Po dokončení hry sa zobrazí konečné skóre a hráč má možnosť začať novú hru. Implemetovali sme tiež možnosť prehrania poslednej hry pomocou klávesy R a spätného prehrania pomocou klávesy B. Hra umožňuje prerušenie pomocou klávesy P.
+Projekt PacMan je hra pre jedného hráča implementovaná v jazyku Java s použitím `JavaFX`. Hráč ovláda postavu Pacmana pomocou šípiek, kláves W,S,A,D a myšou(kliknutím na políčko) a jeho cieľom je zozbierať všetky kľúče v bludisku a získať čo najviac bodov. Duchovia sa pohybujú po bludisku a Pacman sa im snaži vyhýbať. Duchovia sa čas od času sa stanú "eatable", čo znamená, že ich Pacman môže zjesť a dostane 100 bodov navyše. Ak hráča trikrát chytia, prehráva hru. Po dokončení hry sa zobrazí konečné skóre a hráč má možnosť začať novú hru. Implemetovali sme tiež možnosť prehrania poslednej hry pomocou klávesy R a spätného prehrania pomocou klávesy B. Hra umožňuje prerušenie pomocou klávesy P.
 
 ## Použité návrhové vzory
 Pri implementácii projektu sme použili návrhový vzor MVC a návrhový vzor Observer. Návrhový vzor MVC sme použili na oddelenie grafického rozhrania od logiky hry a modelu. Návrhový vzor Observer sme použili na zabezpečenie komunikácie medzi modelom a grafickým rozhraním.

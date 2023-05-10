@@ -31,6 +31,12 @@ public class PathField extends AbstractObservableField implements Field {
      */
     public boolean point;
 
+    PathField previous;
+
+    public float g;
+    public float h;
+    public float f;
+
     /**
      * Constructor.
      *
@@ -229,5 +235,36 @@ public class PathField extends AbstractObservableField implements Field {
                 ((KeyObject) k).returnKey();
             }
         }
+    }
+
+    /**
+     * Sets a total cost of the field. Used for A* algorithm.
+     * @param f total cost of the field
+     */
+    public void setF(Float f){
+        this.f = f;
+    }
+    /**
+     * Returns a total cost of the field. Used for A* algorithm.
+     * @return total cost of the field
+     */
+    public float getF(){
+        return f;
+    }
+
+    /**
+     * Sets a previous field.
+     * @param previous previous field
+     */
+    public void setPrevious(PathField previous) {
+        this.previous = previous;
+    }
+
+    /**
+     * Returns a previous field.
+     * @return previous field
+     */
+    public PathField getPrevious() {
+        return previous;
     }
 }

@@ -4,6 +4,7 @@ import ija.project.common.Field;
 import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.game.*;
+import ija.project.view.FieldView;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -14,12 +15,9 @@ import javafx.stage.WindowEvent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -69,7 +67,10 @@ public class PacManController {
      * Current game state
      */
     public GameState gameState;
-
+    /**
+     * Path of pacman set on click to the maze
+     */
+    List<Field.Direction> pacmanPath;
     /**
      * Game state enum
      */
@@ -112,10 +113,22 @@ public class PacManController {
     public void handleKeyPress(KeyEvent e) {
         if (gameState == GameState.DEFAULT) {
             switch (e.getCode()) {
-                case UP, W -> maze.getPacMan().setDirection(Field.Direction.U);
-                case LEFT, A -> maze.getPacMan().setDirection(Field.Direction.L);
-                case DOWN, S -> maze.getPacMan().setDirection(Field.Direction.D);
-                case RIGHT, D -> maze.getPacMan().setDirection(Field.Direction.R);
+                case UP, W -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.U);
+                }
+                case DOWN, S -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.D);
+                }
+                case LEFT, A -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.L);
+                }
+                case RIGHT, D -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.R);
+                }
             }
         }
         if (Objects.requireNonNull(e.getCode()) == KeyCode.P) {
@@ -355,11 +368,15 @@ public class PacManController {
      * @throws GameException when pacman loses or wins game
      */
     public void movePacman() throws GameException {
+        if(pacmanPath != null && !pacmanPath.isEmpty()){
+            maze.getPacMan().setDirection(pacmanPath.remove(0));
+        }
         maze.getPacMan().move(maze.getPacMan().getDirection());
         checkCollision();
-        checkWin();
+            checkWin();
         if (checkTarget())
             ((TargetField) maze.getTarget()).setOpen();
+        
     }
 
     /**
@@ -689,6 +706,9 @@ public class PacManController {
         ghost.setDirection(dir);
     }
 
+
+
+
     /**
      * Generates new game for player. Total score is set to 0.
      */
@@ -791,5 +811,98 @@ public class PacManController {
             }
         }
 
+    }
+
+    /**
+     * Sets pacmanPath on click to the maze. Uses A* algorithm to find the best path. This method is called by FieldView class.
+     */
+    public void movePacmanOnClick(FieldView fieldView){
+        if(gameState == GameState.DEFAULT){
+            Field field = fieldView.getModel();
+            if(field instanceof PathField){
+                if(pacmanPath != null)pacmanPath.clear();
+                pacmanPath = findPath(maze.getPacMan().getField(), field);
+            }
+        }
+
+    }
+
+    /**
+     * Finds path from pacmanPosition to destField using A* algorithm. Returns list of directions to move in to get to destField. Uses pythagorean theorem to calculate distance between fields as heuristic. Takes Walls into account.
+     * @param pacmanPosition
+     * @param destField
+     * @return
+     */
+    public List<Field.Direction> findPath(Field pacmanPosition, Field destField){
+        List<Field.Direction> path = new ArrayList<>();
+        List<PathField> openList = new ArrayList<>();
+        List<PathField> closedList = new ArrayList<>();
+        PathField currentField = (PathField)pacmanPosition;
+        openList.add(currentField);
+        Float g = 0f;
+        Float h = (float) Math.sqrt(Math.pow(pacmanPosition.getRow() - destField.getCol(), 2) + Math.pow(pacmanPosition.getRow() - destField.getCol(), 2));
+        Float f = g + h;
+        // Reset fields
+        for(int row = 0; row < maze.numRows(); row++){
+            for(int col = 0; col < maze.numCols(); col++){
+                if(maze.getField(row, col).canMove()){
+                    PathField pathField = (PathField)maze.getField(row, col);
+                    pathField.setF(0f);
+                    pathField.setPrevious(null);
+                }
+                
+            }
+        }
+
+        while(!openList.isEmpty()){
+            currentField = openList.get(0);
+            for(PathField field : openList){
+                if(field.getF() < currentField.getF()){
+                    currentField = field;
+                }
+            }
+            openList.remove(currentField);
+            closedList.add(currentField);
+            if(currentField == destField){
+                break;
+            }
+            for(Field.Direction dir : Field.Direction.values()){
+                if(currentField.nextField(dir).canMove()){
+                    PathField neighbour = (PathField)currentField.nextField(dir);
+                    if(!closedList.contains(neighbour)){
+                        Float tempG = g + 1;
+                        Float tempH = (float) Math.sqrt(Math.pow(neighbour.getRow() - destField.getCol(), 2) + Math.pow(neighbour.getRow() - destField.getCol(), 2));
+                        Float tempF = tempG + tempH;
+                        if(openList.contains(neighbour)){
+                            if(tempF < neighbour.getF()){
+                                neighbour.setF(tempF);
+                                neighbour.setPrevious(currentField);
+                            }
+                        }else{
+                            neighbour.setF(tempF);
+                            neighbour.setPrevious(currentField);
+                            openList.add(neighbour);
+                        }
+                    }
+                }
+            }
+        }
+        // Recreate path
+        while(currentField.getPrevious() != null){
+            Field.Direction dir;
+            if(currentField.getPrevious().getRow() < currentField.getRow()){
+                dir = Field.Direction.D;
+            }else if(currentField.getPrevious().getRow() > currentField.getRow()){
+                dir = Field.Direction.U;
+            }else if(currentField.getPrevious().getCol() < currentField.getCol()){
+                dir = Field.Direction.R;
+            }else{
+                dir = Field.Direction.L;
+            }
+            path.add(0, dir);
+            currentField = currentField.getPrevious();
+        }
+        System.out.println(path);
+        return path;
     }
 }
