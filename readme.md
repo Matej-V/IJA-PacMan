@@ -6,7 +6,7 @@ Implementačná dokumentácia k projektu PacMan v jazyku Java 2022/2023
 - **Alina Vinogradova** - xvinog00
 ## Použité technológie
 
-Projekt bol implementovaný pomocou `JavaFX` a mave
+Projekt bol implementovaný pomocou `JavaFX` a využíva zostavovací systém `Maven`.
 ## Preloženie projektu
 Skompiluje zdrojové súbory, vygeneruje programovú dokumentáciu javadoc do `/doc/javadoc` a vytvorí `jar` v priečinku `target`.
 ```
