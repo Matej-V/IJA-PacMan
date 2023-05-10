@@ -241,7 +241,7 @@ public class PathField extends AbstractObservableField implements Field {
      * Sets a total cost of the field. Used for A* algorithm.
      * @param f total cost of the field
      */
-    public void setF(Float f){
+    public void setF(float f){
         this.f = f;
     }
     /**

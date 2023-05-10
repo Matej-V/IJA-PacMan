@@ -814,9 +814,9 @@ public class PacManController {
     }
 
     /**
-     * Sets pacmanPath on click to the maze. Uses A* algorithm to find the best path. This method is called by FieldView class.
+     * Sets path for pacman.
      */
-    public void movePacmanOnClick(FieldView fieldView){
+    public void setPacmanPathOnClick(FieldView fieldView){
         if(gameState == GameState.DEFAULT){
             Field field = fieldView.getModel();
             if(field instanceof PathField){
@@ -828,10 +828,10 @@ public class PacManController {
     }
 
     /**
-     * Finds path from pacmanPosition to destField using A* algorithm. Returns list of directions to move in to get to destField. Uses pythagorean theorem to calculate distance between fields as heuristic. Takes Walls into account.
-     * @param pacmanPosition
-     * @param destField
-     * @return
+     * Finds path from pacmanPosition to destField using A* algorithm. Returns list of directions to move in to get to destField. Uses pythagorean theorem to calculate distance between fields as heuristic.
+     * @param pacmanPosition Location of pacman
+     * @param destField Destination field
+     * @return Path to the destination field
      */
     public List<Field.Direction> findPath(Field pacmanPosition, Field destField){
         List<Field.Direction> path = new ArrayList<>();
@@ -839,9 +839,9 @@ public class PacManController {
         List<PathField> closedList = new ArrayList<>();
         PathField currentField = (PathField)pacmanPosition;
         openList.add(currentField);
-        Float g = 0f;
-        Float h = (float) Math.sqrt(Math.pow(pacmanPosition.getRow() - destField.getCol(), 2) + Math.pow(pacmanPosition.getRow() - destField.getCol(), 2));
-        Float f = g + h;
+        float g = 0f;
+        float h = (float) Math.sqrt(Math.pow(pacmanPosition.getRow() - destField.getCol(), 2) + Math.pow(pacmanPosition.getRow() - destField.getCol(), 2));
+        float f = g + h;
         // Reset fields
         for(int row = 0; row < maze.numRows(); row++){
             for(int col = 0; col < maze.numCols(); col++){
@@ -853,7 +853,7 @@ public class PacManController {
                 
             }
         }
-
+        // A*
         while(!openList.isEmpty()){
             currentField = openList.get(0);
             for(PathField field : openList){
@@ -870,9 +870,9 @@ public class PacManController {
                 if(currentField.nextField(dir).canMove()){
                     PathField neighbour = (PathField)currentField.nextField(dir);
                     if(!closedList.contains(neighbour)){
-                        Float tempG = g + 1;
-                        Float tempH = (float) Math.sqrt(Math.pow(neighbour.getRow() - destField.getCol(), 2) + Math.pow(neighbour.getRow() - destField.getCol(), 2));
-                        Float tempF = tempG + tempH;
+                        float tempG = g + 1;
+                        float tempH = (float) Math.sqrt(Math.pow(neighbour.getRow() - destField.getRow(), 2) + Math.pow(neighbour.getCol() - destField.getCol(), 2));
+                        float tempF = tempG + tempH;
                         if(openList.contains(neighbour)){
                             if(tempF < neighbour.getF()){
                                 neighbour.setF(tempF);

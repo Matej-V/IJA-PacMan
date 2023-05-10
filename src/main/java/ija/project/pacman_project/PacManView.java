@@ -3,7 +3,6 @@ package ija.project.pacman_project;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -13,13 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
@@ -79,7 +72,7 @@ public class PacManView extends AbstractObservableView {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column),
                         (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
                 fieldView.setOnMouseClicked(event -> {
-                    controller.movePacmanOnClick(fieldView);
+                    controller.setPacmanPathOnClick(fieldView);
                 });
                 mazeGroup.getChildren().add(fieldView);
             }
