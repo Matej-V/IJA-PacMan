@@ -25,7 +25,7 @@ public class PacmanObjectView extends Pane implements Observable.Observer {
 
     public PacmanObjectView(FieldView parent, MazeObject model) {
         this.model = model;
-        this.mouth = new Arc(parent.x + parent.size / 2, parent.y + parent.size / 2, parent.size * 0.35,
+        this.mouth = new Arc(parent.size / 2, parent.size / 2, parent.size * 0.35,
                 parent.size * 0.35, 30, 300);
         mouth.setType(ArcType.ROUND);
         mouth.setFill(Color.web("f0d000"));

@@ -36,16 +36,9 @@ public class KeyObjectView extends Pane implements Observable.Observer {
     public KeyObjectView(FieldView parent, MazeObject model) {
         this.parent = parent;
         this.model = model;
-        try {
-            this.key = new Image(
-                    Objects.requireNonNull(PacManApp.class.getResource("/ija/project/img/key.png")).openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.key = new Image("file:lib/key.png");
         ImageView keyImageView = new ImageView(this.key);
         getChildren().add(new Rectangle(parent.size, parent.size, Color.TRANSPARENT));
-        setTranslateX(parent.x);
-        setTranslateY(parent.y);
         keyImageView.setFitWidth(parent.size * 0.6);
         keyImageView.setPreserveRatio(true);
         keyImageView.setTranslateX((parent.size - keyImageView.getFitWidth()) / 2);
@@ -56,7 +49,7 @@ public class KeyObjectView extends Pane implements Observable.Observer {
     }
 
     /**
-     * Paints a key as a rectangle and adds it to own Observable list
+     * Sets the visibility of the view according to the model.
      */
     private void paint() {
         if (((KeyObject) model).collected) {

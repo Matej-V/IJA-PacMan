@@ -28,7 +28,7 @@ public class GhostObjectView extends Pane implements Observable.Observer {
     public GhostObjectView(FieldView parent, MazeObject model) {
         this.parent = parent;
         this.model = (GhostObject) model;
-        this.ghost = new Circle(parent.x + parent.size / 2, parent.y + parent.size / 2, parent.size * 0.35,
+        this.ghost = new Circle(parent.size / 2, parent.size / 2, parent.size * 0.35,
                 this.model.getColor());
         getChildren().add(ghost);
         paint();
@@ -43,54 +43,54 @@ public class GhostObjectView extends Pane implements Observable.Observer {
             ghost.setFill(Color.web("#051D9D"));
         }
         // create eyes of ghost
-        Circle eye1 = new Circle(parent.x + parent.size / 2 - parent.size * 0.1,
-                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
-        Circle eye2 = new Circle(parent.x + parent.size / 2 + parent.size * 0.1,
-                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
-        Circle eye1pupil = new Circle(parent.x + parent.size / 2 - parent.size * 0.1,
-                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
-        Circle eye2pupil = new Circle(parent.x + parent.size / 2 + parent.size * 0.1,
-                parent.y + parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
+        Circle eye1 = new Circle(parent.size / 2 - parent.size * 0.1,
+                parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
+        Circle eye2 = new Circle(parent.size / 2 + parent.size * 0.1,
+                parent.size / 2 - parent.size * 0.1, parent.size * 0.1, Color.WHITE);
+        Circle eye1pupil = new Circle(parent.size / 2 - parent.size * 0.1,
+                parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
+        Circle eye2pupil = new Circle(parent.size / 2 + parent.size * 0.1,
+                parent.size / 2 - parent.size * 0.1, parent.size * 0.05, Color.BLACK);
         switch (model.getDirection()) {
             case U -> {
-                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1.setCenterX(parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterY(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye2.setCenterX(parent.size / 2 + parent.size * 0.1);
+                eye2.setCenterY(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.size / 2 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
             }
             case D -> {
-                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1.setCenterX(parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterY(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye2.setCenterX(parent.size / 2 + parent.size * 0.1);
+                eye2.setCenterY(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1pupil.setCenterX(parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye2pupil.setCenterX(parent.size / 2 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
             }
             case L -> {
-                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterX(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye2.setCenterX(parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
+                eye2.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.size / 2 - parent.size * 0.1 - parent.size * 0.1);
+                eye1pupil.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.size / 2 + parent.size * 0.1 - parent.size * 0.1);
+                eye2pupil.setCenterY(parent.size / 2 - parent.size * 0.1);
             }
             case R -> {
-                eye1.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye2.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
-                eye2.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye1pupil.setCenterX(parent.x + parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
-                eye1pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
-                eye2pupil.setCenterX(parent.x + parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
-                eye2pupil.setCenterY(parent.y + parent.size / 2 - parent.size * 0.1);
+                eye1.setCenterX(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye2.setCenterX(parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
+                eye2.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye1pupil.setCenterX(parent.size / 2 - parent.size * 0.1 + parent.size * 0.1);
+                eye1pupil.setCenterY(parent.size / 2 - parent.size * 0.1);
+                eye2pupil.setCenterX(parent.size / 2 + parent.size * 0.1 + parent.size * 0.1);
+                eye2pupil.setCenterY(parent.size / 2 - parent.size * 0.1);
             }
         }
         // add eyes to ghost

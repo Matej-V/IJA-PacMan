@@ -22,13 +22,8 @@ public class UIBarView extends Group implements Observable.Observer {
 
     public UIBarView(MazeObject model) {
         this.model = model;
-        try {
-            this.heartImage = new Image(PacManApp.class.getResource("/ija/project/img/heart.png").openStream());
-            this.deathImage = new Image(PacManApp.class.getResource("/ija/project/img/death.png").openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        this.heartImage = new Image("file:lib/heart.png");
+        this.deathImage = new Image("file:lib/death.png");
         paint();
         model.addObserver(this);
     }

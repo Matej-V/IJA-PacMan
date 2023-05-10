@@ -106,7 +106,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>ija.project.pacman_project</mainClass>
+                            <mainClass>ija.project.pacman_project.PacMapApp</mainClass>
                         </manifest>
                     </archive>
                     <finalName>PacManApp</finalName>

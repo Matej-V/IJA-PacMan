@@ -4,7 +4,8 @@ import ija.project.common.Field;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.game.*;
-import javafx.scene.layout.Pane;
+import javafx.geometry.Insets;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -49,6 +50,12 @@ public class FieldView extends Pane implements Observable.Observer {
     public FieldView(Field model, double cellSize, int row, int col) {
         x = col * cellSize;
         y = row * cellSize;
+        setMinWidth(cellSize);
+        setMinHeight(cellSize);
+        setLayoutY(0);
+        setLayoutX(0);
+        setTranslateX(x);
+        setTranslateY(y);
         size = cellSize;
         this.model = model;
         privateUpdate();
@@ -67,24 +74,22 @@ public class FieldView extends Pane implements Observable.Observer {
      * Generates a border of a field. This border is rectangle with a color
      * depending on the field type.
      */
-    public void generateBorder() {
+    public void generateFieldBackground() {
         if (model.canMove()) {
             if (model instanceof TargetField) {
-                Border = new Rectangle(x, y, size, size);
                 if (model.getMaze().canComplete()) {
-                    Border.setFill(Color.web("#84ff9f"));
+                    setBackground(new Background(new BackgroundFill(Color.web("#84ff9f"), CornerRadii.EMPTY, Insets.EMPTY)));
                 } else {
-                    Border.setFill(Color.web("#ff8484"));
+                    setBackground(new Background(new BackgroundFill(Color.web("#ff8484"), CornerRadii.EMPTY, Insets.EMPTY)));
                 }
 
             } else {
-                Border = new Rectangle(x, y, size, size);
-                Border.setFill(Color.web("#00022A"));
+                setBackground(new Background(new BackgroundFill(Color.web("#00022A"), CornerRadii.EMPTY, Insets.EMPTY)));
             }
         } else {
-            Border = new Rectangle(x, y, size, size);
-            Border.setFill(Color.web("#051D9D"));
-            Border.setStroke(Color.WHITE);
+            setBackground(new Background(new BackgroundFill(Color.web("#051D9D"), CornerRadii.EMPTY, Insets.EMPTY)));
+            setBorder(new Border(new BorderStroke(Color.WHITE,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
     }
 
@@ -93,7 +98,7 @@ public class FieldView extends Pane implements Observable.Observer {
      */
     public void generateFood() {
         if (Food == null) {
-            Food = new Circle(x + size / 2, y + size / 2, size * 0.1, Color.WHITE);
+            Food = new Circle(size / 2, size / 2, size * 0.1, Color.WHITE);
         }
         Food.setVisible(model.hasPoint() && !(this.model instanceof TargetField));
     }
@@ -105,9 +110,9 @@ public class FieldView extends Pane implements Observable.Observer {
      * GhostObjectView.
      */
     private void privateUpdate() {
-        generateBorder();
+        generateFieldBackground();
         generateFood();
-        getChildren().setAll(Border, Food);
+        getChildren().setAll(Food);
         if (model.canMove()) {
             objects.clear();
             List<MazeObject> objectsOnField = model.get();

@@ -255,18 +255,9 @@ public class PacManController {
     }
 
     public void chooseRandomMap() {
-        Module module = PacManApp.class.getModule();
-        URL folderURL  = PacManApp.class.getResource("/ija/project/maps");
-        Path folderPath = null;
+        File folder = new File("data");
         try {
-            folderPath = Paths.get(folderURL.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            File[] listOfFiles = Files.list(folderPath)
-                    .map(Path::toFile)
-                    .toArray(File[]::new);
+            File[] listOfFiles = folder.listFiles();
             assert listOfFiles != null;
             List<File> files = Arrays.asList(listOfFiles);
             Random rand = new Random();
@@ -276,15 +267,11 @@ public class PacManController {
                 randomFile = files.get(rand.nextInt(files.size()));
             }
             // Set new map
-            setMap("/ija/project/maps/" + randomFile.getName());
+            setMap("data/" + randomFile.getName());
 
-//        PacManApp.class.getResource("currentMap");
-//        File folder = new File("./src/main/resources/ija/project/maps");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     /**
@@ -294,7 +281,15 @@ public class PacManController {
      */
     public void setMap(String map) {
         this.currentMap = map;
-        this.loadFile(PacManApp.class.getResource(currentMap));
+        File file = new File(map);
+        URI uri = file.toURI();
+        URL url;
+        try {
+            url = uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        this.loadFile(url);
     }
 
     public void setLoadedMap(String map) {

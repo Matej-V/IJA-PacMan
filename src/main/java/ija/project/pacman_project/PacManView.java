@@ -3,6 +3,7 @@ package ija.project.pacman_project;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -12,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.io.FileInputStream;
@@ -76,6 +78,7 @@ public class PacManView extends AbstractObservableView {
             for (int column = 0; column < controller.maze.numCols(); column++) {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column),
                         (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
+                //if(row == 4 && column == 5) fieldView.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -96,7 +99,7 @@ public class PacManView extends AbstractObservableView {
      */
     public void generateMainScreen() {
         StackPane pane = new StackPane(
-                drawBackgroundImage("/ija/project/img/title.jpg"),
+                drawBackgroundImage("file:lib/title.jpg"),
                 drawButton("START THE GAME"));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -162,7 +165,7 @@ public class PacManView extends AbstractObservableView {
 
         // Set background image
         StackPane pane = new StackPane(
-                drawBackgroundImage("/ija/project/img/title.jpg"),
+                drawBackgroundImage("file:lib/title.jpg"),
                 new VBox(menuBar, gameBox));
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -179,7 +182,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-100);
         StackPane pane = new StackPane(
-                drawBackgroundImage("/ija/project/img/game-over.jpg"),
+                drawBackgroundImage("file:lib/game-over.jpg"),
                 drawButton("PLAY AGAIN"), score);
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -196,7 +199,7 @@ public class PacManView extends AbstractObservableView {
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
         StackPane pane = new StackPane(
-                drawBackgroundImage("/ija/project/img/title.jpg"),
+                drawBackgroundImage("file:lib/title.jpg"),
                 drawButton("PLAY AGAIN"), score);
         // add win text
         Text text = new Text("YOU WON");
@@ -217,14 +220,7 @@ public class PacManView extends AbstractObservableView {
      */
     private ImageView drawBackgroundImage(String url) {
         ImageView backgroundImage = new ImageView();
-        try {
-            backgroundImage.setImage(new Image(
-                    Objects.requireNonNull(PacManApp.class.getResource(url)).openStream()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        backgroundImage.setImage(new Image(url));
         backgroundImage.setX(0);
         backgroundImage.setY(0);
         backgroundImage.setFitWidth(widthOfScreen);
