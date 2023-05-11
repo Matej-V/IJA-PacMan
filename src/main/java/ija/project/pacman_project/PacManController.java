@@ -944,18 +944,11 @@ public class PacManController {
                 BombObject bomb = new BombObject(bombLocationField, logWriter);
                 List<Field>fieldsToChange = new ArrayList<>();
                 Platform.runLater(() -> {
-                    for(Field.Direction dir : Field.Direction.values()){
-                        Field neighbouField = maze.getPacMan().getField().nextField(dir);
-                        if(!neighbouField.canMove()){
-                            fieldsToChange.add(neighbouField);
-                        }
-                    }
                     try {
                         bombLocationField.put(bomb);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    //bombLocationField.notifyObservers();
                 });
                 for(int i = 0; i < 3; i++){
                     try {
@@ -968,7 +961,8 @@ public class PacManController {
                     });
                 }
                 Platform.runLater(()->{
-                    for (Field field: fieldsToChange){
+                    for (Field.Direction dir : Field.Direction.values()){
+                        Field field = bombLocationField.nextField(dir);
                         if(field.getRow() != 0 && field.getCol() != 0 && field.getRow() != maze.numRows() - 1 &&  field.getCol() != maze.numCols() - 1){
                             Field newField = new PathField(field.getRow(), field.getCol());
                             maze.swapFields(field, newField);
