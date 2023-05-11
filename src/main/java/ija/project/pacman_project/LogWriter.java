@@ -1,5 +1,6 @@
 package ija.project.pacman_project;
 
+import ija.project.common.Field;
 import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
@@ -30,7 +31,7 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
     /**
      * Last seen states of all ghosts in maze.
      */
-    private List<MazeObject> lastGhostsState = new ArrayList<>();
+    private final List<MazeObject> lastGhostsState = new ArrayList<>();
 
     /**
      * Creates a new LogWriter object. The file is created if it does not exist.
@@ -47,6 +48,11 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
         for (MazeObject o : maze.getGhosts()) {
             o.addLogObserver(this);
         }
+        for(int row = 0; row < maze.numRows(); row++){
+            for(int col = 0; col < maze.numCols(); col++){
+                maze.getField(row, col).addLogObserver(this);
+            }
+        }
     }
 
     @Override
@@ -56,25 +62,33 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
 
     /**
      * Writes the update to the file. This method is synchronized.
-     * 
+     * Pacman log: P row/col score lives availableBombs [p] [k]
+     * Ghost log: G<id> row/col isEatable
+     * Field log: F row/col - indicates that the field was swapped
      * @param var1 Observable object that was updated
      */
     private void privateUpdate(Observable var1) {
         synchronized (lock) {
-            MazeObject modelO = (MazeObject) var1;
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
             String timestamp = formatter.format(now);
             print("# " + timestamp + "\n");
-            if (modelO instanceof PacmanObject) {
-                print("P " + modelO.getField().getRow() + "/" + modelO.getField().getCol() + " " + modelO.getScore()
-                        + " " + modelO.getLives() + (((PacmanObject) modelO).pointCollected ? " p" : "")
-                        + (((PacmanObject) modelO).keyCollected ? " k" : "") + "\n");
-                lastPacmanState = (PacmanObject) modelO;
-            } else if (modelO instanceof GhostObject) {
-                print("G" + ((GhostObject) modelO).getId() + " " + modelO.getField().getRow() + "/"
-                        + modelO.getField().getCol() + " " + ((GhostObject) modelO).isEatable() + "\n");
-                updateGhostState((GhostObject) modelO);
+            if (var1 instanceof MazeObject modelObject){
+                if (modelObject instanceof PacmanObject) {
+                    PacmanObject pacman = ((PacmanObject) modelObject);
+                    print("P " + modelObject.getField().getRow() + "/" + modelObject.getField().getCol() + " " + modelObject.getScore()
+                            + " " + modelObject.getLives() + " " + pacman.getAvailableBombs() + (pacman.pointCollected ? " p" : "")
+                            + (pacman.keyCollected ? " k" : "") + "\n");
+                    lastPacmanState = (PacmanObject) modelObject;
+                } else if (modelObject instanceof GhostObject) {
+                    print("G" + ((GhostObject) modelObject).getId() + " " + modelObject.getField().getRow() + "/"
+                            + modelObject.getField().getCol() + " " + ((GhostObject) modelObject).isEatable() + "\n");
+                    updateGhostState((GhostObject) modelObject);
+                } else if( modelObject instanceof BombObject){
+                    print("B " + modelObject.getField().getRow() + "/" + modelObject.getField().getCol() + " " + ((BombObject) modelObject).getTimeToDetonation() + "\n");
+                }
+            }else if(var1 instanceof Field modelField){
+                print("F " + modelField.getRow() + "/" + modelField.getCol() + "\n");
             }
             flush();
         }
@@ -155,7 +169,7 @@ public class LogWriter extends PrintWriter implements Observable.Observer {
         // Saving start positions of objects in the maze
         print("# " + timestamp + "\n");
         print("P " + maze.getPacMan().getStartField().getRow() + "/" + maze.getPacMan().getStartField().getCol()
-                + " 0 3\n");
+                + " 0 3 3\n");
         for (MazeObject gh : maze.getGhosts()) {
             print("# " + timestamp + "\n");
             print("G" + ((GhostObject) gh).getId() + " " + gh.getStartField().getRow() + "/"

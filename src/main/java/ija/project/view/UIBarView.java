@@ -2,6 +2,7 @@ package ija.project.view;
 
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
+import ija.project.game.PacmanObject;
 import ija.project.pacman_project.PacManApp;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -16,32 +17,48 @@ import java.io.IOException;
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
 public class UIBarView extends Group implements Observable.Observer {
+    /**
+     * Model of the {@link MazeObject}
+     */
     private final MazeObject model;
+    /**
+     * Image of the heart
+     */
     private Image heartImage;
-    private Image deathImage;
+    /**
+     * Image of the bomb
+     */
+    private Image bombImage;
 
     public UIBarView(MazeObject model) {
         this.model = model;
         this.heartImage = new Image("file:lib/heart.png");
-        this.deathImage = new Image("file:lib/death.png");
+        this.bombImage = new Image("file:lib/bomb.png");
         paint();
         model.addObserver(this);
     }
 
     public void paint() {
         getChildren().clear();
-        HBox hbox = new HBox(2);
-        switch (this.model.getLives()) {
-            case 1 -> hbox.getChildren().addAll(new ImageView(this.heartImage));
-            case 2 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage));
-            case 3 -> hbox.getChildren().addAll(new ImageView(this.heartImage), new ImageView(this.heartImage),
-                    new ImageView(this.heartImage));
+        HBox hboxLives = new HBox(2);
+        for (int i = 0; i < model.getLives(); i++){
+            ImageView heartView = new ImageView(heartImage);
+            heartView.setPreserveRatio(true);
+            heartView.setFitHeight(40);
+            hboxLives.getChildren().add(heartView);
         }
+        HBox hboxBombs = new HBox(2);
+        for (int i = 0; i < ((PacmanObject)model).getAvailableBombs(); i++){
+            ImageView bombView = new ImageView(bombImage);
+            bombView.setPreserveRatio(true);
+            bombView.setFitHeight(40);
+            hboxLives.getChildren().add(bombView);
 
+        }
         Label score = new Label("SCORE: " + this.model.getScore());
         score.setTranslateX(400);
         score.setStyle("-fx-text-fill: #00022A; -fx-font-size: 20px; -fx-font-weight: bold ");
-        getChildren().addAll(hbox, score);
+        getChildren().addAll(hboxLives, hboxBombs, score);
 
     }
 

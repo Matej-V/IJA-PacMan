@@ -3,6 +3,7 @@ package ija.project.game;
 import ija.project.common.Field;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,5 +46,13 @@ public abstract class AbstractObservableField implements Field {
 
     public void notifyLogObservers() {
         this.logObservers.forEach((o) -> o.update(this));
+    }
+
+    public List<Observer> getObservers() {
+        return List.copyOf(this.observers);
+    }
+
+    public List<Observer> getLogObservers() {
+        return List.copyOf(this.logObservers);
     }
 }

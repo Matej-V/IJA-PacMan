@@ -21,7 +21,7 @@ public class FieldView extends Pane implements Observable.Observer {
     /**
      * Model of the {@link Field}
      */
-    private final Field model;
+    private Field model;
     /**
      * Represents food on a field
      */
@@ -71,6 +71,7 @@ public class FieldView extends Pane implements Observable.Observer {
      * depending on the field type.
      */
     public void generateFieldBackground() {
+        setBorder(null);
         if (model.canMove()) {
             if (model instanceof TargetField) {
                 if (model.getMaze().canComplete()) {
@@ -120,6 +121,8 @@ public class FieldView extends Pane implements Observable.Observer {
                 } else if (o instanceof KeyObject) {
                     this.Food.setVisible(false);
                     objects.add(new KeyObjectView(this, o));
+                }else if(o instanceof BombObject){
+                    objects.add(new BombObjectView(this, o));
                 }
             }
 
@@ -129,6 +132,11 @@ public class FieldView extends Pane implements Observable.Observer {
 
     public Field getModel(){
         return this.model;
+    }
+
+    public void setModel(Field newModel){
+        this.model = newModel;
+        privateUpdate();
     }
 
 }

@@ -89,6 +89,7 @@ public class PacManController {
      */
     public PacManController(PacManView view) {
         this.view = view;
+        this.pacmanPath = new ArrayList<>();
     }
 
     /**
@@ -129,6 +130,9 @@ public class PacManController {
                     pacmanPath.clear();
                     maze.getPacMan().setDirection(Field.Direction.R);
                 }
+                case E ->{
+                    setBomb();
+                }
             }
         }
         if (Objects.requireNonNull(e.getCode()) == KeyCode.P) {
@@ -140,7 +144,6 @@ public class PacManController {
         }
         switch (e.getCode()) {
             case R -> {
-                System.out.println("Changing to replay");
                 changeGameState(GameState.REPLAY);
             }
             case B -> changeGameState(GameState.REPLAY_REVERSE);
@@ -430,7 +433,6 @@ public class PacManController {
                         } catch (InterruptedException e) {
                             break;
                         }
-
                         Platform.runLater(() -> playOneMove(nextLine));
                     }
                     lastTimestamp = timestamp;
@@ -467,16 +469,16 @@ public class PacManController {
                 String currentMove = null;
                 LocalDateTime lastTimestamp = null;
                 for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                    // TODO docasne sa preskakuju riadky s F-zmena pola(WallField - PathField) a B-log bomby, lebo vznika oneskorenie
+                    // TODO Lepsie by bolo najprv nastavit zaciatocne pozicie ghostov a pacmana pred prehravanim, teraz sa
+                    //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fielu, pacman a ghosti sa nezobrazia
+                    if(moves.get(i).startsWith("F") || moves.get(i).startsWith("B")){
+                        continue;
+                    }
                     String line = moves.get(i);
                     if (i == end) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                playOneMoveReverse(line);
-                            }
-                        });
+                        Platform.runLater(() -> playOneMoveReverse(line));
                     }
-
                     if (line.startsWith("#")) {
                         LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
                         if (lastTimestamp != null) {
@@ -487,12 +489,7 @@ public class PacManController {
                                 break;
                             }
                             String move = currentMove;
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    playOneMoveReverse(move);
-                                }
-                            });
+                            Platform.runLater(() -> playOneMoveReverse(move));
                         }
                         lastTimestamp = timestamp;
                     } else {
@@ -525,7 +522,7 @@ public class PacManController {
                         .toList();
                 PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
                 field.point = false;
-                if (splitedLine.size() == 6 && splitedLine.get(5).equals("k")) {
+                if (splitedLine.size() == 7 && splitedLine.get(6).equals("k")) {
                     maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
                 }
             }
@@ -551,12 +548,13 @@ public class PacManController {
         if (nextLine.startsWith("P")) {
             int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
+            int bombs = Integer.parseInt(splitedLine.get(4));
             boolean p = false;
             boolean k = false;
-            if (splitedLine.size() == 5) {
-                p = splitedLine.get(4).contains("p");
-            } else if (splitedLine.size() == 6) {
-                k = splitedLine.get(5).contains("k");
+            if (splitedLine.size() == 6) {
+                p = splitedLine.get(5).contains("p");
+            } else if (splitedLine.size() == 7) {
+                k = splitedLine.get(6).contains("k");
             }
 
             try {
@@ -568,6 +566,7 @@ public class PacManController {
                     field.setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
+                ((PacmanObject) maze.getPacMan()).setBombCount(bombs);
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
@@ -591,29 +590,29 @@ public class PacManController {
      * @param line line from log file with information about move
      */
     private void playOneMove(String line) {
+        List<String> splitedLine = List.of(line.split(" "));
+        if(splitedLine.isEmpty()) {
+
+        }
+        List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
+                .map(Integer::parseInt)
+                .toList();
         if (line.startsWith("P")) {
-            List<String> splitedLine = List.of(line.split(" "));
-            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
-                    .map(Integer::parseInt)
-                    .toList();
             int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
+            int bombs = Integer.parseInt(splitedLine.get(4));
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
+                ((PacmanObject) maze.getPacMan()).setBombCount(bombs);
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
             if (checkTarget())
                 ((TargetField) maze.getTarget()).setOpen();
         } else if (line.startsWith("G")) {
-            List<String> splitedLine = List.of(line.split(" "));
-            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
-                    .map(Integer::parseInt)
-                    .toList();
-
             GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
             ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
@@ -623,13 +622,33 @@ public class PacManController {
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
+        } else if(line.startsWith("B")){
+            Field field = maze.getField(coords.get(0), coords.get(1));
+            BombObject bomb = null;
+            // 3 here is initial timer for bomb
+            if(Integer.parseInt(splitedLine.get(2)) == 3) {
+                bomb = new BombObject(field, logWriter);
+                bomb.setTimer(Integer.parseInt(splitedLine.get(2)));
+                try {
+                    field.put(bomb);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }else{
+                for (MazeObject object : field.get()) {
+                    if (object instanceof BombObject) {
+                        bomb = (BombObject) object;
+                        break;
+                    }
+                }
+                if(bomb != null) bomb.setTimer(Integer.parseInt(splitedLine.get(2)));
+            }
+        }else if(line.startsWith("F")){
+            Field newField = new PathField(coords.get(0), coords.get(1));
+            maze.swapFields(maze.getField(coords.get(0), coords.get(1)), newField);
         } else {
             System.err.println("Unexpected line format in saved file");
-            try {
-                throw new GameException(GameException.TypeOfException.Other);
-            } catch (GameException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException();
         }
     }
 
@@ -712,7 +731,6 @@ public class PacManController {
     /**
      * Generates new game for player. Total score is set to 0.
      */
-
     public void startLogging() {
         logFile = new File("log.save");
         try {
@@ -905,4 +923,54 @@ public class PacManController {
         System.out.println(path);
         return path;
     }
+
+    /**
+     * Sets bomb on the field and explodes it after 3 seconds. Explosion destroys walls that connect to the field where the bomb is. Task is run in a new thread.
+     */
+    public void setBomb(){
+        if(((PacmanObject)maze.getPacMan()).getAvailableBombs() > 0){
+            ((PacmanObject)maze.getPacMan()).setBombCount(((PacmanObject) maze.getPacMan()).getAvailableBombs() - 1);
+            new Thread(()->{
+                Field bombLocationField = maze.getPacMan().getField();
+                BombObject bomb = new BombObject(bombLocationField, logWriter);
+                List<Field>fieldsToChange = new ArrayList<>();
+                Platform.runLater(() -> {
+                    for(Field.Direction dir : Field.Direction.values()){
+                        Field neighbouField = maze.getPacMan().getField().nextField(dir);
+                        if(!neighbouField.canMove()){
+                            fieldsToChange.add(neighbouField);
+                        }
+                    }
+                    try {
+                        bombLocationField.put(bomb);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    //bombLocationField.notifyObservers();
+                });
+                for(int i = 0; i < 3; i++){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Platform.runLater(()->{
+                        bomb.setTimer(bomb.getTimeToDetonation() - 1);
+                    });
+                }
+                Platform.runLater(()->{
+                    for (Field field: fieldsToChange){
+                        if(field.getRow() != 0 && field.getCol() != 0 && field.getRow() != maze.numRows() - 1 &&  field.getCol() != maze.numCols() - 1){
+                            Field newField = new PathField(field.getRow(), field.getCol());
+                            maze.swapFields(field, newField);
+                        }
+                    }
+                });
+            }).start();
+        }
+
+    }
+
+
+
 }

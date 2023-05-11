@@ -48,6 +48,11 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     private boolean replayMode;
 
     /**
+     * Number of bombs available to the pacman.
+     */
+    private int availableBombCount;
+
+    /**
      * Constructor for PacmanObject.
      * 
      * @param field Field on which the object is located.
@@ -58,6 +63,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         this.lives = 3;
         this.score = 0;
         this.direction = Field.Direction.U;
+        setBombCount(3);
     }
 
     /**
@@ -300,4 +306,26 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     public boolean isReplayMode() {
         return this.replayMode;
     }
+
+    /**
+     * Returns number of available bombs.
+     * @return number of available bombs for the parman.
+     */
+    public int getAvailableBombs() {
+        return availableBombCount;
+    }
+
+    /**
+     * Sets the number of available bombs for pacman. If negative number is passed, number of available bombs is set to 0.
+     * @param bombCount Number of available bombs.
+     */
+    public void setBombCount(int bombCount) {
+        if (bombCount < 0) {
+            this.availableBombCount = 0;
+        }else{
+            this.availableBombCount = bombCount;
+        }
+        notifyObservers();
+    }
+
 }

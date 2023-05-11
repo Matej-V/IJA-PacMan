@@ -1,5 +1,7 @@
 package ija.project.common;
 
+import java.util.List;
+
 /**
  * Interface for observable objects.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
@@ -52,5 +54,19 @@ public interface Observable {
      * Notifies all observers of the observable object. Used only for logging.
      */
     void notifyLogObservers();
+
+    /**
+     * Returns list of observers of the observable object.
+     * 
+     * @return List of observers.
+     */
+    List<Observer> getObservers();
+
+    /**
+     * Returns list of logging observers of the observable object.
+     *
+     * @return List of logging observers.
+     */
+    List<Observer> getLogObservers();
 
 }

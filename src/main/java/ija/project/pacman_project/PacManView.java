@@ -116,7 +116,7 @@ public class PacManView extends AbstractObservableView {
         MenuItem helpMenuItem = new MenuItem("Help");
 
         DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText("Controls:\tW, A, S, D keys or Arrow keys\nP\tPause Game\nR\tReplay Game\nB\tBackwards replay");
+        dialogPane.setContentText("Controls:\tW, A, S, D keys or Arrow keys\nP\tPause Game\nR\tReplay Game\nB\tBackwards replay\nE\tPlace bomb");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Help");
         dialog.setDialogPane(dialogPane);
@@ -143,13 +143,14 @@ public class PacManView extends AbstractObservableView {
 
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
-        helpOption.getItems().addAll(helpMenuItem);
+        helpOption.getItems().addAll();
         MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
         mazeHolder.alignmentProperty().set(Pos.CENTER);
         HBox statsHolder = new HBox(drawUI());
+        statsHolder.setMaxHeight(60);
         statsHolder.alignmentProperty().set(Pos.CENTER);
         statsHolder.setStyle("-fx-background-color: #FFFFFF;");
         uiMazeBox.getChildren().addAll(statsHolder, mazeHolder);
