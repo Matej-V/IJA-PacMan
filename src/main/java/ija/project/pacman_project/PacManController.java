@@ -470,8 +470,8 @@ public class PacManController {
                 LocalDateTime lastTimestamp = null;
                 for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
                     // TODO docasne sa preskakuju riadky s F-zmena pola(WallField - PathField) a B-log bomby, lebo vznika oneskorenie
-                    // TODO Lepsie by bolo najprv nastavit zaciatocne pozicie ghostov a pacmana pred prehravanim, teraz sa
-                    //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fielu, pacman a ghosti sa nezobrazia
+                    // TODO Lepsie by bolo najprv nastavit cely maze do stavu ako na konci pred prehravanim, teraz sa
+                    //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fieldu, pacman a ghosti sa nezobrazia
                     if(moves.get(i).startsWith("F") || moves.get(i).startsWith("B")){
                         continue;
                     }
@@ -520,8 +520,10 @@ public class PacManController {
                 List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                         .map(Integer::parseInt)
                         .toList();
-                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
-                field.point = false;
+                Field field = maze.getField(coords.get(0), coords.get(1));
+                if(field.canMove()){
+                    ((PathField) field).point = false;
+                }
                 if (splitedLine.size() == 7 && splitedLine.get(6).equals("k")) {
                     maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
                 }
@@ -558,12 +560,19 @@ public class PacManController {
             }
 
             try {
-                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
+                // TODO changed this just to it does not throw exception, now only field that pacman moves into are changed,
+                //  it should be done differently.
+                Field field = maze.getField(coords.get(0), coords.get(1));
+                if(!field.canMove()){
+                    PathField newField = new PathField(coords.get(0), coords.get(1));
+                    maze.swapFields(field, newField);
+                    field = newField;
+                }
                 maze.getPacMan().move(field);
                 if (p)
-                    field.point = true;
+                    ((PathField)field).point = true;
                 if (k)
-                    field.setKey();
+                    ((PathField)field).setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
                 ((PacmanObject) maze.getPacMan()).setBombCount(bombs);
