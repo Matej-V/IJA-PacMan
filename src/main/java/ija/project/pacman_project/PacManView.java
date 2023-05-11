@@ -1,5 +1,6 @@
 package ija.project.pacman_project;
 
+import ija.project.game.AbstractObservable;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
@@ -18,7 +19,7 @@ import javafx.scene.text.Text;
  * Class representing game view. Contains implementation for generating all the views in the game.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class PacManView extends AbstractObservableView {
+public class PacManView extends AbstractObservable {
     /**
      * Controller to be used for setting button actions
      */

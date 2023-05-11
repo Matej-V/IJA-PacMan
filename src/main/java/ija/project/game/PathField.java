@@ -9,7 +9,7 @@ import java.util.List;
  * Class representing path field. Path field is a field that can be passed through. It can contain objects.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class PathField extends AbstractObservableField implements Field {
+public class PathField extends AbstractObservable implements Field {
     /**
      * Row of the field.
      */

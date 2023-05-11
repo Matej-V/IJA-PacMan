@@ -7,7 +7,7 @@ import ija.project.common.MazeObject;
  * Class representing the bomb in the maze.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class BombObject extends AbstractObservableObject implements MazeObject {
+public class BombObject extends AbstractObservable implements MazeObject {
     /**
      * Field to which the object belongs to
      */
