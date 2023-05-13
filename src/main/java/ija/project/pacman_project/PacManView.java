@@ -6,6 +6,7 @@ import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
@@ -13,7 +14,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+import java.util.Objects;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
@@ -126,7 +132,9 @@ public class PacManView extends AbstractObservable {
         dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
             dialog.close();
         });
+
         helpMenuItem.setOnAction(event -> {
+            System.out.println("aaaaaaa");
             dialog.showAndWait();
         });
         replayGameMenuItem.setOnAction(event -> {
@@ -144,7 +152,7 @@ public class PacManView extends AbstractObservable {
 
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
-        helpOption.getItems().addAll();
+        helpOption.getItems().addAll(helpMenuItem);
         MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
 
         VBox uiMazeBox = new VBox();
@@ -201,8 +209,47 @@ public class PacManView extends AbstractObservable {
         // add win text
         Text text = new Text("YOU WON");
         text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
-        text.setTranslateY(-150);
-        pane.getChildren().add(text);
+        text.setTranslateY(-250);
+
+        TextField textField = new TextField();
+
+        HBox hb = new HBox();
+        hb.setTranslateY(-150);
+        textField.setPrefSize(120, 40);
+        textField.setPromptText("Your name");
+        textField.setStyle("-fx-font-size: 20px;");
+        Button save = drawButton("SAVE");
+        save.setOnAction(e -> {
+            if (!textField.getText().isEmpty()) {
+                controller.setCurrentUser(textField.getText());
+                System.out.println(controller.getCurrentUser());
+                controller.writeToLeaderboard();
+                save.setDisable(true);
+            }
+
+        });
+        Button leaderboardButton = drawButton("Open Leaderboard");
+        leaderboardButton.setTranslateY(-100);
+        leaderboardButton.setOnAction(e -> {
+            controller.readLeaderBoard();
+            controller.updateLeaders();
+
+            Scene leaders = new Scene(new Label("A"), 200, 200);
+            Stage newWindow = new Stage();
+            newWindow.setTitle("Leaderboard");
+            newWindow.setScene(leaders);
+            newWindow.show();
+
+            System.out.println(controller.getLeaders());
+
+        });
+        hb.getChildren().addAll(textField, save);
+        textField.getParent().requestFocus();
+        hb.setSpacing(10);
+        hb.setAlignment(Pos.CENTER);
+
+        pane.getChildren().addAll(text, hb, leaderboardButton);
+
         // Load button
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
@@ -243,6 +290,7 @@ public class PacManView extends AbstractObservable {
             System.out.println(text + " button clicked");
             controller.newGame();
         });
+
         button.requestFocus();
         button.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {

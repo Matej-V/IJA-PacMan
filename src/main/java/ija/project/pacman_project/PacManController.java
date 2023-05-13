@@ -72,6 +72,14 @@ public class PacManController {
      */
     List<Field.Direction> pacmanPath;
     /**
+     * String for current username
+     */
+    private String currentUser;
+    /**
+     * String to store leaderboard file
+     */
+    private List<String> leaders;
+    /**
      * Game state enum
      */
     enum GameState {
@@ -90,6 +98,7 @@ public class PacManController {
     public PacManController(PacManView view) {
         this.view = view;
         this.pacmanPath = new ArrayList<>();
+        this.leaders = new ArrayList<>();
     }
 
     /**
@@ -974,6 +983,85 @@ public class PacManController {
 
     }
 
+    public void setCurrentUser(String str) {
+        this.currentUser = str;
+    }
 
+    public String getCurrentUser() {
+        return this.currentUser;
+    }
+
+    public void writeToLeaderboard() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt", true))) {
+            bw.write(this.getCurrentUser() + ":" + this.maze.getPacMan().getScore());
+            bw.newLine();
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
+
+    public int getUserScore(String user) {
+        int maxSeenScore = 0;
+        Iterator<String> it = this.leaders.iterator();
+        while (it.hasNext()) {
+            String line = it.next();
+            String[] record = line.split(":");
+            if (record[0].equals(user)) {
+                int currentScore = Integer.parseInt(record[1]);
+                if (currentScore < maxSeenScore) {
+                    it.remove();
+                } else {
+                    maxSeenScore = currentScore;
+                }
+            }
+        }
+
+        return maxSeenScore;
+    }
+
+    public void readLeaderBoard() {
+        try (BufferedReader br = new BufferedReader(new FileReader("lib/leaders.txt"))) {
+            String line;
+            while (true) {
+                // exit while point
+                if (((line = br.readLine()) == null))
+                    break;
+                this.leaders.add(line);
+            }
+
+            Collections.sort(this.leaders, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    int score1 = Integer.parseInt(o1.split(":")[1]);
+                    int score2 = Integer.parseInt(o2.split(":")[1]);
+                    return Integer.compare(score2, score1);
+                }
+            });
+
+            for (String str : this.leaders) {
+                getUserScore(str.split(":")[0]);
+            }
+
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
+
+    public void updateLeaders() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt"))) {
+            ListIterator<String> it = this.leaders.listIterator();
+            while (it.hasNext()) {
+                bw.write(it.next());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
+
+
+    public List<String> getLeaders() {
+        return this.leaders;
+    }
 
 }
