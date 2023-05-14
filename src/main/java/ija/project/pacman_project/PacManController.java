@@ -1019,12 +1019,29 @@ public class PacManController {
         return maxSeenScore;
     }
 
+    private void rewriteUniqueNames(String name) {
+        int maxSeenScore = 0;
+        Iterator<String> it = this.leaders.iterator();
+        while (it.hasNext()) {
+            String[] record = it.next().split(":");
+            if (record[0].equals(name)) {
+                int current = Integer.parseInt(record[1]);
+                if (current < maxSeenScore) {
+                    it.remove();
+                } else {
+                    maxSeenScore = current;
+                }
+            }
+        }
+    }
+
     public void readLeaderBoard() {
         try (BufferedReader br = new BufferedReader(new FileReader("lib/leaders.txt"))) {
             String line;
             while (true) {
                 // exit while point
-                if (((line = br.readLine()) == null))
+                line = br.readLine();
+                if (line == null || line.isEmpty())
                     break;
                 this.leaders.add(line);
             }
@@ -1045,7 +1062,7 @@ public class PacManController {
     }
 
     public void updateLeaders() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt", false))) {
             ListIterator<String> it = this.leaders.listIterator();
             while (it.hasNext()) {
                 bw.write(it.next());
@@ -1060,5 +1077,4 @@ public class PacManController {
     public List<String> getLeaders() {
         return this.leaders;
     }
-
 }

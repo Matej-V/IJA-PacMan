@@ -119,11 +119,13 @@ public class PacManView extends AbstractObservable {
         // Create Menu
         Menu menuOptions = new Menu("Menu");
         Menu replayOptions = new Menu("Replay");
+        Menu leadersOption = new Menu("Leaderboard");
         Menu helpOption = new Menu("Help");
         MenuItem newGameMenuItem = new MenuItem("New Game");
         MenuItem pauseGameMenuItem = new MenuItem("Pause Game");
         MenuItem replayGameMenuItem = new MenuItem("Replay Game");
         MenuItem reverRelayGameMenuItem = new MenuItem("Replay Game in Reverse Mode");
+        MenuItem leadersMenuItem = new MenuItem("Show Leaderboard");
         // Tooltip button
         MenuItem helpMenuItem = new MenuItem("Help");
 
@@ -139,7 +141,6 @@ public class PacManView extends AbstractObservable {
         });
 
         helpMenuItem.setOnAction(event -> {
-            System.out.println("aaaaaaa");
             dialog.showAndWait();
         });
         replayGameMenuItem.setOnAction(event -> {
@@ -155,10 +156,16 @@ public class PacManView extends AbstractObservable {
             controller.changeGameState(PacManController.GameState.PAUSE);
         });
 
+        leadersMenuItem.setOnAction(e -> {
+            this.drawLeaderBoard();
+        });
+
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
+        leadersOption.getItems().add(leadersMenuItem);
         helpOption.getItems().addAll(helpMenuItem);
-        MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
+
+        MenuBar menuBar = new MenuBar(menuOptions, replayOptions, leadersOption, helpOption);
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
@@ -233,28 +240,11 @@ public class PacManView extends AbstractObservable {
             }
 
         });
+
         Button leaderboardButton = drawButton("Open Leaderboard");
         leaderboardButton.setTranslateY(-100);
         leaderboardButton.setOnAction(e -> {
-            controller.readLeaderBoard();
-            controller.updateLeaders();
-
-            String[] l = controller.getLeaders().stream().limit(3).collect(Collectors.toList()).toArray(new String[3]);
-
-            VBox vb = new VBox();
-            vb.setAlignment(Pos.CENTER);
-
-            for (String str : l) {
-                if (str != null) {
-                    vb.getChildren().add(new Label(str.split(":")[0] + " → " + str.split(":")[1]));
-                }
-            }
-
-            Scene leaders = new Scene(vb, 200, 200);
-            Stage newWindow = new Stage();
-            newWindow.setTitle("Leaderboard");
-            newWindow.setScene(leaders);
-            newWindow.show();
+            this.drawLeaderBoard();
         });
         hb.getChildren().addAll(textField, save);
         textField.getParent().requestFocus();
@@ -267,6 +257,37 @@ public class PacManView extends AbstractObservable {
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
         notifyObservers();
+    }
+
+    private void drawLeaderBoard() {
+        controller.readLeaderBoard();
+        System.out.println(controller.getLeaders());
+        controller.updateLeaders();
+
+        String[] l = controller.getLeaders().stream().limit(3).collect(Collectors.toList()).toArray(new String[3]);
+
+        VBox vb = new VBox();
+        vb.setAlignment(Pos.CENTER);
+
+        for (String str : l) {
+            if (str != null) {
+                vb.getChildren().add(new Label(str.split(":")[0] + " → " + str.split(":")[1]));
+            }
+        }
+
+        DialogPane lead = new DialogPane();
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Leaders");
+        dialog.setDialogPane(lead);
+        Button closeButton = new Button("Close");
+        lead.getButtonTypes().add(ButtonType.CLOSE);
+        lead.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
+            dialog.close();
+        });
+
+        lead.getChildren().add(vb);
+        dialog.showAndWait();
     }
 
     /**
