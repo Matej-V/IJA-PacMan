@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
@@ -19,7 +20,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
@@ -234,14 +239,22 @@ public class PacManView extends AbstractObservable {
             controller.readLeaderBoard();
             controller.updateLeaders();
 
-            Scene leaders = new Scene(new Label("A"), 200, 200);
+            String[] l = controller.getLeaders().stream().limit(3).collect(Collectors.toList()).toArray(new String[3]);
+
+            VBox vb = new VBox();
+            vb.setAlignment(Pos.CENTER);
+
+            for (String str : l) {
+                if (str != null) {
+                    vb.getChildren().add(new Label(str.split(":")[0] + " → " + str.split(":")[1]));
+                }
+            }
+
+            Scene leaders = new Scene(vb, 200, 200);
             Stage newWindow = new Stage();
             newWindow.setTitle("Leaderboard");
             newWindow.setScene(leaders);
             newWindow.show();
-
-            System.out.println(controller.getLeaders());
-
         });
         hb.getChildren().addAll(textField, save);
         textField.getParent().requestFocus();
