@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Class for logging the game. Writes maze to the file when created and pacman and it logs the state of the objects when notified.
+ * Class for logging the game. Writes maze to the file when created and pacman, and it logs the state of the objects when notified.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
 public class LogWriter extends PrintWriter implements Observable.Observer {

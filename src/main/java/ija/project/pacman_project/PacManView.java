@@ -6,25 +6,15 @@ import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
@@ -83,9 +73,7 @@ public class PacManView extends AbstractObservable {
             for (int column = 0; column < controller.maze.numCols(); column++) {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column),
                         (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
-                fieldView.setOnMouseClicked(event -> {
-                    controller.setPacmanPathOnClick(fieldView);
-                });
+                fieldView.setOnMouseClicked(event -> controller.setPacmanPathOnClick(fieldView));
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -93,8 +81,8 @@ public class PacManView extends AbstractObservable {
     }
 
     /**
-     * 
-     * @return Score and healt bar representation
+     * Draws score, lives and bombs count of player
+     * @return Score and health bar representation
      */
     public Group drawUI() {
         UIBarView UIBar = new UIBarView(controller.maze.getPacMan());
@@ -136,36 +124,20 @@ public class PacManView extends AbstractObservable {
         dialog.setDialogPane(dialogPane);
         Button closeButton = new Button("Close");
         dialogPane.getButtonTypes().add(ButtonType.CLOSE);
-        dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
-            dialog.close();
-        });
+        dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> dialog.close());
+        helpMenuItem.setOnAction(event -> dialog.showAndWait());
+        replayGameMenuItem.setOnAction(event -> controller.changeGameState(PacManController.GameState.REPLAY));
+        reverRelayGameMenuItem.setOnAction(event -> controller.changeGameState(PacManController.GameState.REPLAY_REVERSE));
+        newGameMenuItem.setOnAction(e -> controller.newGame());
+        pauseGameMenuItem.setOnAction(e -> controller.changeGameState(PacManController.GameState.PAUSE));
 
-        helpMenuItem.setOnAction(event -> {
-            dialog.showAndWait();
-        });
-        replayGameMenuItem.setOnAction(event -> {
-            controller.changeGameState(PacManController.GameState.REPLAY);
-        });
-        reverRelayGameMenuItem.setOnAction(event -> {
-            controller.changeGameState(PacManController.GameState.REPLAY_REVERSE);
-        });
-        newGameMenuItem.setOnAction(e -> {
-            controller.newGame();
-        });
-        pauseGameMenuItem.setOnAction(e -> {
-            controller.changeGameState(PacManController.GameState.PAUSE);
-        });
-
-        leadersMenuItem.setOnAction(e -> {
-            this.drawLeaderBoard();
-        });
+        leadersMenuItem.setOnAction(e -> this.drawLeaderBoard());
 
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
         leadersOption.getItems().add(leadersMenuItem);
         helpOption.getItems().addAll(helpMenuItem);
-
-        MenuBar menuBar = new MenuBar(menuOptions, replayOptions, leadersOption, helpOption);
+        MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
 
         VBox uiMazeBox = new VBox();
         HBox mazeHolder = new HBox(drawMaze());
@@ -215,9 +187,7 @@ public class PacManView extends AbstractObservable {
         Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
-        StackPane pane = new StackPane(
-                drawBackgroundImage("file:lib/title.jpg"),
-                drawButton("PLAY AGAIN"), score);
+        StackPane pane = new StackPane();
         // add win text
         Text text = new Text("YOU WON");
         text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
@@ -234,47 +204,42 @@ public class PacManView extends AbstractObservable {
         save.setOnAction(e -> {
             if (!textField.getText().isEmpty()) {
                 controller.setCurrentUser(textField.getText());
-                System.out.println(controller.getCurrentUser());
                 controller.writeToLeaderboard();
                 save.setDisable(true);
             }
 
         });
-
         Button leaderboardButton = drawButton("Open Leaderboard");
         leaderboardButton.setTranslateY(-100);
-        leaderboardButton.setOnAction(e -> {
-            this.drawLeaderBoard();
-        });
+        leaderboardButton.setOnAction(e -> this.drawLeaderBoard());
         hb.getChildren().addAll(textField, save);
         textField.getParent().requestFocus();
         hb.setSpacing(10);
         hb.setAlignment(Pos.CENTER);
 
-        pane.getChildren().addAll(text, hb, leaderboardButton);
-
+        pane.getChildren().addAll(drawBackgroundImage("file:lib/title.jpg"), text, hb, leaderboardButton,
+                drawButton("PLAY AGAIN"), score);
         // Load button
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
         notifyObservers();
     }
 
+    /**
+     * Generates leaderboard as a dialog
+     */
     private void drawLeaderBoard() {
-        controller.readLeaderBoard();
-        System.out.println(controller.getLeaders());
-        controller.updateLeaders();
-
-        String[] l = controller.getLeaders().stream().limit(3).collect(Collectors.toList()).toArray(new String[3]);
-
         VBox vb = new VBox();
         vb.setAlignment(Pos.CENTER);
-
-        for (String str : l) {
-            if (str != null) {
-                vb.getChildren().add(new Label(str.split(":")[0] + " → " + str.split(":")[1]));
-            }
+        vb.getChildren().add(new Label("Leaderboard:"));
+        vb.getChildren().add(new Label("Name → Score"));
+        vb.setPrefWidth(200);
+        //write first 3 players
+        int entries = Math.min(3, controller.getLeaders().size());
+        for (Map.Entry<String, Integer> entry : controller.leaders.entrySet()) {
+            if (entries-- == 0)break;
+            vb.getChildren().add(new Label(entry.getKey() + " → " + entry.getValue()));
         }
-
         DialogPane lead = new DialogPane();
 
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -282,11 +247,9 @@ public class PacManView extends AbstractObservable {
         dialog.setDialogPane(lead);
         Button closeButton = new Button("Close");
         lead.getButtonTypes().add(ButtonType.CLOSE);
-        lead.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
-            dialog.close();
-        });
+        lead.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> dialog.close());
 
-        lead.getChildren().add(vb);
+        lead.setContent(vb);
         dialog.showAndWait();
     }
 

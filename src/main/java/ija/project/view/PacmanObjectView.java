@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 
+import java.util.Objects;
+
 /**
  * Class representing the view of the pacman. It is an observer of thepacman it represents. It is a child of {@link FieldView}.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
@@ -44,8 +46,7 @@ public class PacmanObjectView extends Pane implements Observable.Observer {
         Field.Direction dir = ((PacmanObject) model).isReplayMode()
                 ? model.getDirection().opposite(model.getDirection())
                 : model.getDirection();
-
-        switch (dir) {
+        switch (Objects.requireNonNull(dir)) {
             case U -> mouth.setStartAngle(120);
             case D -> mouth.setStartAngle(300);
             case L -> mouth.setStartAngle(210);

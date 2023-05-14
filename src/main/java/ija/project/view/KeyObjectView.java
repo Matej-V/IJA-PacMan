@@ -3,17 +3,11 @@ package ija.project.view;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.game.KeyObject;
-import ija.project.pacman_project.PacManApp;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Class representing the view of the key. It is an observer of the key it represents. It is a child of {@link FieldView}.

@@ -320,11 +320,7 @@ public class PacmanObject extends AbstractObservable implements MazeObject {
      * @param bombCount Number of available bombs.
      */
     public void setBombCount(int bombCount) {
-        if (bombCount < 0) {
-            this.availableBombCount = 0;
-        }else{
-            this.availableBombCount = bombCount;
-        }
+        this.availableBombCount = Math.max(bombCount, 0);
         notifyObservers();
     }
 

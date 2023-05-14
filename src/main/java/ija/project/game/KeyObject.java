@@ -65,9 +65,9 @@ public class KeyObject extends AbstractObservable implements MazeObject {
     }
 
     /**
-     * Return field in which the key is located.
+     * Returns field in which the key is located.
      * 
-     * @return
+     * @return Field object in which the key is located.
      */
     @Override
     public Field getField() {

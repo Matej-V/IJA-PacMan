@@ -3,14 +3,11 @@ package ija.project.view;
 import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 import ija.project.game.PacmanObject;
-import ija.project.pacman_project.PacManApp;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
-import java.io.IOException;
 
 /**
  * Class representing UI bar view, that constains lives and score of the pacman. It is displayed at the top of the screen. It is an observer of the {@link MazeObject} it represents.

@@ -1,8 +1,5 @@
 package ija.project.game;
 
-import ija.project.common.Field;
-import ija.project.common.Maze;
-import ija.project.common.MazeObject;
 import ija.project.common.Observable;
 
 import java.util.HashSet;

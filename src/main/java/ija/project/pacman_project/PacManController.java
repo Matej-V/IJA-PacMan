@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * PacManController class that is used for managing game logic. It is used for generating game, starting timers and threads and handling key press events.
@@ -78,7 +79,7 @@ public class PacManController {
     /**
      * String to store leaderboard file
      */
-    private List<String> leaders;
+    Map<String, Integer> leaders;
     /**
      * Game state enum
      */
@@ -92,13 +93,13 @@ public class PacManController {
 
     /**
      * PacManController constructor
-     * 
+     *
      * @param view PacManView object that is used for generating game views
      */
     public PacManController(PacManView view) {
         this.view = view;
         this.pacmanPath = new ArrayList<>();
-        this.leaders = new ArrayList<>();
+        this.leaders = new Hashtable<>();
     }
 
     /**
@@ -139,22 +140,14 @@ public class PacManController {
                     pacmanPath.clear();
                     maze.getPacMan().setDirection(Field.Direction.R);
                 }
-                case E ->{
-                    setBomb();
-                }
+                case E -> setBomb();
             }
         }
         if (Objects.requireNonNull(e.getCode()) == KeyCode.P) {
-            if (gameState == GameState.PAUSE) {
-                changeGameState(GameState.UNPAUSE);
-            } else {
-                changeGameState(GameState.PAUSE);
-            }
+            changeGameState(GameState.PAUSE);
         }
         switch (e.getCode()) {
-            case R -> {
-                changeGameState(GameState.REPLAY);
-            }
+            case R -> changeGameState(GameState.REPLAY);
             case B -> changeGameState(GameState.REPLAY_REVERSE);
         }
     }
@@ -301,7 +294,7 @@ public class PacManController {
 
     /**
      * Method for setting map of the game
-     * 
+     *
      * @param map chosen map
      */
     public void setMap(String map) {
@@ -385,10 +378,10 @@ public class PacManController {
         }
         maze.getPacMan().move(maze.getPacMan().getDirection());
         checkCollision();
-            checkWin();
+        checkWin();
         if (checkTarget())
             ((TargetField) maze.getTarget()).setOpen();
-        
+
     }
 
     /**
@@ -464,46 +457,47 @@ public class PacManController {
      * @throws GameException, IOException
      */
     public void replaySaveReverse() throws IOException, GameException {
-        Thread reverseReplayThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<String> moves = null;
-                try {
-                    moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        Thread reverseReplayThread = new Thread(() -> {
+            List<String> moves;
+            try {
+                moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+            int end = moves.size() - 1;
+            String currentMove = null;
+            LocalDateTime lastTimestamp = null;
+            for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                // TODO docasne sa preskakuju riadky s F-zmena pola(WallField - PathField) a B-log bomby, lebo vznika oneskorenie
+                // TODO Lepsie by bolo najprv nastavit cely maze do stavu ako na konci pred prehravanim, teraz sa
+                //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fieldu, pacman a ghosti sa nezobrazia
+                if(moves.get(i).startsWith("F") || moves.get(i).startsWith("B")){
+                    continue;
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-                int end = moves.size() - 1;
-                String currentMove = null;
-                LocalDateTime lastTimestamp = null;
-                for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
-                    // TODO docasne sa preskakuju riadky s F-zmena pola(WallField - PathField) a B-log bomby, lebo vznika oneskorenie
-                    // TODO Lepsie by bolo najprv nastavit cely maze do stavu ako na konci pred prehravanim, teraz sa
-                    //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fieldu, pacman a ghosti sa nezobrazia
-                    if(moves.get(i).startsWith("F") || moves.get(i).startsWith("B")){
-                        continue;
-                    }
-                    String line = moves.get(i);
-                    if (i == end) {
-                        Platform.runLater(() -> playOneMoveReverse(line));
-                    }
-                    if (line.startsWith("#")) {
-                        LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
-                        if (lastTimestamp != null) {
-                            Duration duration = Duration.between(timestamp, lastTimestamp);
-                            try {
-                                Thread.sleep(duration.toMillis());
-                            } catch (InterruptedException e) {
-                                break;
-                            }
-                            String move = currentMove;
-                            Platform.runLater(() -> playOneMoveReverse(move));
+                String line = moves.get(i);
+                if (i == end) {
+                    Platform.runLater(() -> playOneMoveReverse(line));
+                }
+                if (line.startsWith("#")) {
+                    LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
+                    if (lastTimestamp != null) {
+                        Duration duration = Duration.between(timestamp, lastTimestamp);
+                        try {
+                            Thread.sleep(duration.toMillis());
+                        } catch (InterruptedException e) {
+                            break;
                         }
-                        lastTimestamp = timestamp;
-                    } else {
-                        currentMove = line;
+                        String move = currentMove;
+                        Platform.runLater(() -> {
+                            if (move != null) {
+                                playOneMoveReverse(move);
+                            }
+                        });
                     }
+                    lastTimestamp = timestamp;
+                } else {
+                    currentMove = line;
                 }
             }
         });
@@ -604,13 +598,13 @@ public class PacManController {
 
     /**
      * Function to replay one move according to line from log file
-     * 
+     *
      * @param line line from log file with information about move
      */
     private void playOneMove(String line) {
         List<String> splitedLine = List.of(line.split(" "));
         if(splitedLine.isEmpty()) {
-
+            return;
         }
         List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                 .map(Integer::parseInt)
@@ -709,7 +703,7 @@ public class PacManController {
 
     /**
      * Chooses direction to move in for a ghost
-     * 
+     *
      * @param ghost Ghost which direction will be set
      */
     public void chaseAlgorithm(MazeObject ghost) {
@@ -777,9 +771,8 @@ public class PacManController {
             throw new RuntimeException(e);
         }
 
-        ListIterator<MazeObject> it = this.maze.getGhosts().listIterator();
-        while (it.hasNext()) {
-            GhostObject ghost = (GhostObject) it.next();
+        for (MazeObject mazeObject : this.maze.getGhosts()) {
+            GhostObject ghost = (GhostObject) mazeObject;
             for (MazeObject ghostState : logWriter.getLastGhostsState()) {
                 if (ghost.getId() == ((GhostObject) ghostState).getId()) {
                     try {
@@ -830,7 +823,9 @@ public class PacManController {
                 gameState = newGamestate;
             }
             case PAUSE -> {
-                if (gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
+                if (gameState == GameState.PAUSE) {
+                    changeGameState(GameState.UNPAUSE);
+                }else if (gameState == GameState.DEFAULT) {
                     gameState = newGamestate;
                     cancelTimersThreads();
                     StackPane pausePane = new StackPane();
@@ -876,8 +871,6 @@ public class PacManController {
         PathField currentField = (PathField)pacmanPosition;
         openList.add(currentField);
         float g = 0f;
-        float h = (float) Math.sqrt(Math.pow(pacmanPosition.getRow() - destField.getCol(), 2) + Math.pow(pacmanPosition.getRow() - destField.getCol(), 2));
-        float f = g + h;
         // Reset fields
         for(int row = 0; row < maze.numRows(); row++){
             for(int col = 0; col < maze.numCols(); col++){
@@ -886,7 +879,7 @@ public class PacManController {
                     pathField.setF(0f);
                     pathField.setPrevious(null);
                 }
-                
+
             }
         }
         // A*
@@ -951,7 +944,6 @@ public class PacManController {
             new Thread(()->{
                 Field bombLocationField = maze.getPacMan().getField();
                 BombObject bomb = new BombObject(bombLocationField, logWriter);
-                List<Field>fieldsToChange = new ArrayList<>();
                 Platform.runLater(() -> {
                     try {
                         bombLocationField.put(bomb);
@@ -965,13 +957,12 @@ public class PacManController {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    Platform.runLater(()->{
-                        bomb.setTimer(bomb.getTimeToDetonation() - 1);
-                    });
+                    Platform.runLater(()-> bomb.setTimer(bomb.getTimeToDetonation() - 1));
                 }
                 Platform.runLater(()->{
                     for (Field.Direction dir : Field.Direction.values()){
                         Field field = bombLocationField.nextField(dir);
+                        if(field.canMove()) continue;
                         if(field.getRow() != 0 && field.getCol() != 0 && field.getRow() != maze.numRows() - 1 &&  field.getCol() != maze.numCols() - 1){
                             Field newField = new PathField(field.getRow(), field.getCol());
                             maze.swapFields(field, newField);
@@ -983,89 +974,60 @@ public class PacManController {
 
     }
 
-    public void setCurrentUser(String str) {
-        this.currentUser = str;
+    /**
+     * Sets the current user to the given username.
+     * @param userName Username
+     */
+    public void setCurrentUser(String userName) {
+        currentUser = userName;
     }
 
+    /**
+     * Returns the username of the current user.
+     * @return Username of the current user
+     */
     public String getCurrentUser() {
-        return this.currentUser;
+        return currentUser;
     }
 
-    public void writeToLeaderboard() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt", true))) {
-            bw.write(this.getCurrentUser() + ":" + this.maze.getPacMan().getScore());
-            bw.newLine();
-        } catch (IOException e) {
-            System.err.format("IOException: %s%n", e);
-        }
-    }
-
+    /**
+     * Returns the score of the given user.
+     * @param user Username
+     * @return Score of the user
+     */
     public int getUserScore(String user) {
-        int maxSeenScore = 0;
-        Iterator<String> it = this.leaders.iterator();
-        while (it.hasNext()) {
-            String line = it.next();
-            String[] record = line.split(":");
-            if (record[0].equals(user)) {
-                int currentScore = Integer.parseInt(record[1]);
-                if (currentScore < maxSeenScore) {
-                    it.remove();
-                } else {
-                    maxSeenScore = currentScore;
-                }
-            }
-        }
-
-        return maxSeenScore;
+        return this.leaders.get(user);
     }
 
-    private void rewriteUniqueNames(String name) {
-        int maxSeenScore = 0;
-        Iterator<String> it = this.leaders.iterator();
-        while (it.hasNext()) {
-            String[] record = it.next().split(":");
-            if (record[0].equals(name)) {
-                int current = Integer.parseInt(record[1]);
-                if (current < maxSeenScore) {
-                    it.remove();
-                } else {
-                    maxSeenScore = current;
-                }
-            }
-        }
+    /**
+     * Reeturns current leaderboard as a map of usernames and scores.
+     * @return Map of usernames and scores
+     */
+    public Map<String, Integer> getLeaders() {
+        loadLeadersFromFile();
+        return this.leaders;
     }
 
-    public void readLeaderBoard() {
-        try (BufferedReader br = new BufferedReader(new FileReader("lib/leaders.txt"))) {
-            String line;
-            while (true) {
-                // exit while point
-                line = br.readLine();
-                if (line == null || line.isEmpty())
-                    break;
-                this.leaders.add(line);
+    /**
+     * Adds the current user to the leaderboard if they are not already on it, or updates their score if they are.
+     */
+    public void writeToLeaderboard() {
+        loadLeadersFromFile();
+        if(leaders.containsKey(currentUser)) {
+            if(getUserScore(currentUser) < maze.getPacMan().getScore()) {
+                leaders.put(currentUser, maze.getPacMan().getScore());
             }
-
-            Collections.sort(this.leaders, (o1, o2) -> {
-                int score1 = Integer.parseInt(o1.split(":")[1]);
-                int score2 = Integer.parseInt(o2.split(":")[1]);
-                return Integer.compare(score2, score1);
-            });
-
-            for (String str : this.leaders) {
-                getUserScore(str.split(":")[0]);
-            }
-
-        } catch (IOException e) {
-            System.err.format("IOException: %s%n", e);
+        } else {
+            leaders.put(currentUser,maze.getPacMan().getScore());
         }
-    }
-
-    public void updateLeaders() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt", false))) {
-            ListIterator<String> it = this.leaders.listIterator();
-            while (it.hasNext()) {
-                bw.write(it.next());
+        // Sort the leaders
+        leaders = leaders.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt"))) {
+            for (Map.Entry<String, Integer> entry : this.leaders.entrySet()) {
+                bw.write(entry.getKey() + ":" + entry.getValue());
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -1073,8 +1035,20 @@ public class PacManController {
         }
     }
 
-
-    public List<String> getLeaders() {
-        return this.leaders;
+    /**
+     * Loads current leaders from file to leaders map.
+     */
+    public void loadLeadersFromFile(){
+        leaders.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader("lib/leaders.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                leaders.put(line.split(":")[0], Integer.valueOf(line.split(":")[1]));
+            }
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
     }
+
+
 }
