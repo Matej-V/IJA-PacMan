@@ -4,6 +4,7 @@ import ija.project.common.Field;
 import ija.project.common.Maze;
 import ija.project.common.MazeObject;
 import ija.project.game.*;
+import ija.project.view.FieldView;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -14,17 +15,15 @@ import javafx.stage.WindowEvent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * PacManController class that is used for managing game logic. It is used for generating game, starting timers and threads and handling key press events.
@@ -69,7 +68,18 @@ public class PacManController {
      * Current game state
      */
     public GameState gameState;
-
+    /**
+     * Path of pacman set on click to the maze
+     */
+    List<Field.Direction> pacmanPath;
+    /**
+     * String for current username
+     */
+    private String currentUser;
+    /**
+     * String to store leaderboard file
+     */
+    Map<String, Integer> leaders;
     /**
      * Game state enum
      */
@@ -83,11 +93,13 @@ public class PacManController {
 
     /**
      * PacManController constructor
-     * 
+     *
      * @param view PacManView object that is used for generating game views
      */
     public PacManController(PacManView view) {
         this.view = view;
+        this.pacmanPath = new ArrayList<>();
+        this.leaders = new Hashtable<>();
     }
 
     /**
@@ -112,24 +124,30 @@ public class PacManController {
     public void handleKeyPress(KeyEvent e) {
         if (gameState == GameState.DEFAULT) {
             switch (e.getCode()) {
-                case UP, W -> maze.getPacMan().setDirection(Field.Direction.U);
-                case LEFT, A -> maze.getPacMan().setDirection(Field.Direction.L);
-                case DOWN, S -> maze.getPacMan().setDirection(Field.Direction.D);
-                case RIGHT, D -> maze.getPacMan().setDirection(Field.Direction.R);
+                case UP, W -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.U);
+                }
+                case DOWN, S -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.D);
+                }
+                case LEFT, A -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.L);
+                }
+                case RIGHT, D -> {
+                    pacmanPath.clear();
+                    maze.getPacMan().setDirection(Field.Direction.R);
+                }
+                case E -> setBomb();
             }
         }
         if (Objects.requireNonNull(e.getCode()) == KeyCode.P) {
-            if (gameState == GameState.PAUSE) {
-                changeGameState(GameState.UNPAUSE);
-            } else {
-                changeGameState(GameState.PAUSE);
-            }
+            changeGameState(GameState.PAUSE);
         }
         switch (e.getCode()) {
-            case R -> {
-                System.out.println("Changing to replay");
-                changeGameState(GameState.REPLAY);
-            }
+            case R -> changeGameState(GameState.REPLAY);
             case B -> changeGameState(GameState.REPLAY_REVERSE);
         }
     }
@@ -276,7 +294,7 @@ public class PacManController {
 
     /**
      * Method for setting map of the game
-     * 
+     *
      * @param map chosen map
      */
     public void setMap(String map) {
@@ -355,11 +373,15 @@ public class PacManController {
      * @throws GameException when pacman loses or wins game
      */
     public void movePacman() throws GameException {
+        if(pacmanPath != null && !pacmanPath.isEmpty()){
+            maze.getPacMan().setDirection(pacmanPath.remove(0));
+        }
         maze.getPacMan().move(maze.getPacMan().getDirection());
         checkCollision();
         checkWin();
         if (checkTarget())
             ((TargetField) maze.getTarget()).setOpen();
+
     }
 
     /**
@@ -413,7 +435,6 @@ public class PacManController {
                         } catch (InterruptedException e) {
                             break;
                         }
-
                         Platform.runLater(() -> playOneMove(nextLine));
                     }
                     lastTimestamp = timestamp;
@@ -436,51 +457,47 @@ public class PacManController {
      * @throws GameException, IOException
      */
     public void replaySaveReverse() throws IOException, GameException {
-        Thread reverseReplayThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<String> moves = null;
-                try {
-                    moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        Thread reverseReplayThread = new Thread(() -> {
+            List<String> moves;
+            try {
+                moves = Files.readAllLines(logFile.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+            int end = moves.size() - 1;
+            String currentMove = null;
+            LocalDateTime lastTimestamp = null;
+            for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
+                // TODO docasne sa preskakuju riadky s F-zmena pola(WallField - PathField) a B-log bomby, lebo vznika oneskorenie
+                // TODO Lepsie by bolo najprv nastavit cely maze do stavu ako na konci pred prehravanim, teraz sa
+                //  spoliehas na to, ze tam nic ine nie je. Lebo teraz ak bude na konci log z bomby alebo fieldu, pacman a ghosti sa nezobrazia
+                if(moves.get(i).startsWith("F") || moves.get(i).startsWith("B")){
+                    continue;
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-                int end = moves.size() - 1;
-                String currentMove = null;
-                LocalDateTime lastTimestamp = null;
-                for (int i = end; !(moves.get(i).equals("--- LOG")); i--) {
-                    String line = moves.get(i);
-                    if (i == end) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                playOneMoveReverse(line);
+                String line = moves.get(i);
+                if (i == end) {
+                    Platform.runLater(() -> playOneMoveReverse(line));
+                }
+                if (line.startsWith("#")) {
+                    LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
+                    if (lastTimestamp != null) {
+                        Duration duration = Duration.between(timestamp, lastTimestamp);
+                        try {
+                            Thread.sleep(duration.toMillis());
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                        String move = currentMove;
+                        Platform.runLater(() -> {
+                            if (move != null) {
+                                playOneMoveReverse(move);
                             }
                         });
                     }
-
-                    if (line.startsWith("#")) {
-                        LocalDateTime timestamp = LocalDateTime.parse(line.split("\\s+")[1], formatter);
-                        if (lastTimestamp != null) {
-                            Duration duration = Duration.between(timestamp, lastTimestamp);
-                            try {
-                                Thread.sleep(duration.toMillis());
-                            } catch (InterruptedException e) {
-                                break;
-                            }
-                            String move = currentMove;
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    playOneMoveReverse(move);
-                                }
-                            });
-                        }
-                        lastTimestamp = timestamp;
-                    } else {
-                        currentMove = line;
-                    }
+                    lastTimestamp = timestamp;
+                } else {
+                    currentMove = line;
                 }
             }
         });
@@ -506,9 +523,11 @@ public class PacManController {
                 List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
                         .map(Integer::parseInt)
                         .toList();
-                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
-                field.point = false;
-                if (splitedLine.size() == 6 && splitedLine.get(5).equals("k")) {
+                Field field = maze.getField(coords.get(0), coords.get(1));
+                if(field.canMove()){
+                    ((PathField) field).point = false;
+                }
+                if (splitedLine.size() == 7 && splitedLine.get(6).equals("k")) {
                     maze.removeKey(maze.getField(coords.get(0), coords.get(1)).getKey());
                 }
             }
@@ -534,23 +553,32 @@ public class PacManController {
         if (nextLine.startsWith("P")) {
             int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
+            int bombs = Integer.parseInt(splitedLine.get(4));
             boolean p = false;
             boolean k = false;
-            if (splitedLine.size() == 5) {
-                p = splitedLine.get(4).contains("p");
-            } else if (splitedLine.size() == 6) {
-                k = splitedLine.get(5).contains("k");
+            if (splitedLine.size() == 6) {
+                p = splitedLine.get(5).contains("p");
+            } else if (splitedLine.size() == 7) {
+                k = splitedLine.get(6).contains("k");
             }
 
             try {
-                PathField field = (PathField) maze.getField(coords.get(0), coords.get(1));
+                // TODO changed this just to it does not throw exception, now only field that pacman moves into are changed,
+                //  it should be done differently.
+                Field field = maze.getField(coords.get(0), coords.get(1));
+                if(!field.canMove()){
+                    PathField newField = new PathField(coords.get(0), coords.get(1));
+                    maze.swapFields(field, newField);
+                    field = newField;
+                }
                 maze.getPacMan().move(field);
                 if (p)
-                    field.point = true;
+                    ((PathField)field).point = true;
                 if (k)
-                    field.setKey();
+                    ((PathField)field).setKey();
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
+                ((PacmanObject) maze.getPacMan()).setBombCount(bombs);
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
@@ -570,33 +598,33 @@ public class PacManController {
 
     /**
      * Function to replay one move according to line from log file
-     * 
+     *
      * @param line line from log file with information about move
      */
     private void playOneMove(String line) {
+        List<String> splitedLine = List.of(line.split(" "));
+        if(splitedLine.isEmpty()) {
+            return;
+        }
+        List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
+                .map(Integer::parseInt)
+                .toList();
         if (line.startsWith("P")) {
-            List<String> splitedLine = List.of(line.split(" "));
-            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
-                    .map(Integer::parseInt)
-                    .toList();
             int score = Integer.parseInt(splitedLine.get(2));
             int lives = Integer.parseInt(splitedLine.get(3));
+            int bombs = Integer.parseInt(splitedLine.get(4));
 
             try {
                 maze.getPacMan().move(maze.getField(coords.get(0), coords.get(1)));
                 ((PacmanObject) maze.getPacMan()).setScore(score);
                 ((PacmanObject) maze.getPacMan()).setLives(lives);
+                ((PacmanObject) maze.getPacMan()).setBombCount(bombs);
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
             if (checkTarget())
                 ((TargetField) maze.getTarget()).setOpen();
         } else if (line.startsWith("G")) {
-            List<String> splitedLine = List.of(line.split(" "));
-            List<Integer> coords = Arrays.stream(splitedLine.get(1).split("/"))
-                    .map(Integer::parseInt)
-                    .toList();
-
             GhostObject ghost = (GhostObject) maze.getGhosts().get(Integer.parseInt(splitedLine.get(0).substring(1)));
             ghost.setEatable(Boolean.parseBoolean(splitedLine.get(2)));
 
@@ -606,13 +634,33 @@ public class PacManController {
             } catch (GameException e) {
                 throw new RuntimeException(e);
             }
+        } else if(line.startsWith("B")){
+            Field field = maze.getField(coords.get(0), coords.get(1));
+            BombObject bomb = null;
+            // 3 here is initial timer for bomb
+            if(Integer.parseInt(splitedLine.get(2)) == 3) {
+                bomb = new BombObject(field, logWriter);
+                bomb.setTimer(Integer.parseInt(splitedLine.get(2)));
+                try {
+                    field.put(bomb);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }else{
+                for (MazeObject object : field.get()) {
+                    if (object instanceof BombObject) {
+                        bomb = (BombObject) object;
+                        break;
+                    }
+                }
+                if(bomb != null) bomb.setTimer(Integer.parseInt(splitedLine.get(2)));
+            }
+        }else if(line.startsWith("F")){
+            Field newField = new PathField(coords.get(0), coords.get(1));
+            maze.swapFields(maze.getField(coords.get(0), coords.get(1)), newField);
         } else {
             System.err.println("Unexpected line format in saved file");
-            try {
-                throw new GameException(GameException.TypeOfException.Other);
-            } catch (GameException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException();
         }
     }
 
@@ -655,7 +703,7 @@ public class PacManController {
 
     /**
      * Chooses direction to move in for a ghost
-     * 
+     *
      * @param ghost Ghost which direction will be set
      */
     public void chaseAlgorithm(MazeObject ghost) {
@@ -689,10 +737,12 @@ public class PacManController {
         ghost.setDirection(dir);
     }
 
+
+
+
     /**
      * Generates new game for player. Total score is set to 0.
      */
-
     public void startLogging() {
         logFile = new File("log.save");
         try {
@@ -721,9 +771,8 @@ public class PacManController {
             throw new RuntimeException(e);
         }
 
-        ListIterator<MazeObject> it = this.maze.getGhosts().listIterator();
-        while (it.hasNext()) {
-            GhostObject ghost = (GhostObject) it.next();
+        for (MazeObject mazeObject : this.maze.getGhosts()) {
+            GhostObject ghost = (GhostObject) mazeObject;
             for (MazeObject ghostState : logWriter.getLastGhostsState()) {
                 if (ghost.getId() == ((GhostObject) ghostState).getId()) {
                     try {
@@ -774,7 +823,9 @@ public class PacManController {
                 gameState = newGamestate;
             }
             case PAUSE -> {
-                if (gameState == GameState.DEFAULT || gameState == GameState.PAUSE) {
+                if (gameState == GameState.PAUSE) {
+                    changeGameState(GameState.UNPAUSE);
+                }else if (gameState == GameState.DEFAULT) {
                     gameState = newGamestate;
                     cancelTimersThreads();
                     StackPane pausePane = new StackPane();
@@ -792,4 +843,212 @@ public class PacManController {
         }
 
     }
+
+    /**
+     * Sets path for pacman.
+     */
+    public void setPacmanPathOnClick(FieldView fieldView){
+        if(gameState == GameState.DEFAULT){
+            Field field = fieldView.getModel();
+            if(field instanceof PathField){
+                if(pacmanPath != null)pacmanPath.clear();
+                pacmanPath = findPath(maze.getPacMan().getField(), field);
+            }
+        }
+
+    }
+
+    /**
+     * Finds path from pacmanPosition to destField using A* algorithm. Returns list of directions to move in to get to destField. Uses pythagorean theorem to calculate distance between fields as heuristic.
+     * @param pacmanPosition Location of pacman
+     * @param destField Destination field
+     * @return Path to the destination field
+     */
+    public List<Field.Direction> findPath(Field pacmanPosition, Field destField){
+        List<Field.Direction> path = new ArrayList<>();
+        List<PathField> openList = new ArrayList<>();
+        List<PathField> closedList = new ArrayList<>();
+        PathField currentField = (PathField)pacmanPosition;
+        openList.add(currentField);
+        float g = 0f;
+        // Reset fields
+        for(int row = 0; row < maze.numRows(); row++){
+            for(int col = 0; col < maze.numCols(); col++){
+                if(maze.getField(row, col).canMove()){
+                    PathField pathField = (PathField)maze.getField(row, col);
+                    pathField.setF(0f);
+                    pathField.setPrevious(null);
+                }
+
+            }
+        }
+        // A*
+        while(!openList.isEmpty()){
+            currentField = openList.get(0);
+            for(PathField field : openList){
+                if(field.getF() < currentField.getF()){
+                    currentField = field;
+                }
+            }
+            openList.remove(currentField);
+            closedList.add(currentField);
+            if(currentField == destField){
+                break;
+            }
+            for(Field.Direction dir : Field.Direction.values()){
+                if(currentField.nextField(dir).canMove()){
+                    PathField neighbour = (PathField)currentField.nextField(dir);
+                    if(!closedList.contains(neighbour)){
+                        float tempG = g + 1;
+                        float tempH = (float) Math.sqrt(Math.pow(neighbour.getRow() - destField.getRow(), 2) + Math.pow(neighbour.getCol() - destField.getCol(), 2));
+                        float tempF = tempG + tempH;
+                        if(openList.contains(neighbour)){
+                            if(tempF < neighbour.getF()){
+                                neighbour.setF(tempF);
+                                neighbour.setPrevious(currentField);
+                            }
+                        }else{
+                            neighbour.setF(tempF);
+                            neighbour.setPrevious(currentField);
+                            openList.add(neighbour);
+                        }
+                    }
+                }
+            }
+        }
+        // Recreate path
+        while(currentField.getPrevious() != null){
+            Field.Direction dir;
+            if(currentField.getPrevious().getRow() < currentField.getRow()){
+                dir = Field.Direction.D;
+            }else if(currentField.getPrevious().getRow() > currentField.getRow()){
+                dir = Field.Direction.U;
+            }else if(currentField.getPrevious().getCol() < currentField.getCol()){
+                dir = Field.Direction.R;
+            }else{
+                dir = Field.Direction.L;
+            }
+            path.add(0, dir);
+            currentField = currentField.getPrevious();
+        }
+        System.out.println(path);
+        return path;
+    }
+
+    /**
+     * Sets bomb on the field and explodes it after 3 seconds. Explosion destroys walls that connect to the field where the bomb is. Task is run in a new thread.
+     */
+    public void setBomb(){
+        if(((PacmanObject)maze.getPacMan()).getAvailableBombs() > 0){
+            ((PacmanObject)maze.getPacMan()).setBombCount(((PacmanObject) maze.getPacMan()).getAvailableBombs() - 1);
+            new Thread(()->{
+                Field bombLocationField = maze.getPacMan().getField();
+                BombObject bomb = new BombObject(bombLocationField, logWriter);
+                Platform.runLater(() -> {
+                    try {
+                        bombLocationField.put(bomb);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                for(int i = 0; i < 3; i++){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Platform.runLater(()-> bomb.setTimer(bomb.getTimeToDetonation() - 1));
+                }
+                Platform.runLater(()->{
+                    for (Field.Direction dir : Field.Direction.values()){
+                        Field field = bombLocationField.nextField(dir);
+                        if(field.canMove()) continue;
+                        if(field.getRow() != 0 && field.getCol() != 0 && field.getRow() != maze.numRows() - 1 &&  field.getCol() != maze.numCols() - 1){
+                            Field newField = new PathField(field.getRow(), field.getCol());
+                            maze.swapFields(field, newField);
+                        }
+                    }
+                });
+            }).start();
+        }
+
+    }
+
+    /**
+     * Sets the current user to the given username.
+     * @param userName Username
+     */
+    public void setCurrentUser(String userName) {
+        currentUser = userName;
+    }
+
+    /**
+     * Returns the username of the current user.
+     * @return Username of the current user
+     */
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * Returns the score of the given user.
+     * @param user Username
+     * @return Score of the user
+     */
+    public int getUserScore(String user) {
+        return this.leaders.get(user);
+    }
+
+    /**
+     * Reeturns current leaderboard as a map of usernames and scores.
+     * @return Map of usernames and scores
+     */
+    public Map<String, Integer> getLeaders() {
+        loadLeadersFromFile();
+        return this.leaders;
+    }
+
+    /**
+     * Adds the current user to the leaderboard if they are not already on it, or updates their score if they are.
+     */
+    public void writeToLeaderboard() {
+        loadLeadersFromFile();
+        if(leaders.containsKey(currentUser)) {
+            if(getUserScore(currentUser) < maze.getPacMan().getScore()) {
+                leaders.put(currentUser, maze.getPacMan().getScore());
+            }
+        } else {
+            leaders.put(currentUser,maze.getPacMan().getScore());
+        }
+        // Sort the leaders
+        leaders = leaders.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("lib/leaders.txt"))) {
+            for (Map.Entry<String, Integer> entry : this.leaders.entrySet()) {
+                bw.write(entry.getKey() + ":" + entry.getValue());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
+
+    /**
+     * Loads current leaders from file to leaders map.
+     */
+    public void loadLeadersFromFile(){
+        leaders.clear();
+        try (BufferedReader br = new BufferedReader(new FileReader("lib/leaders.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                leaders.put(line.split(":")[0], Integer.valueOf(line.split(":")[1]));
+            }
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
+
+
 }

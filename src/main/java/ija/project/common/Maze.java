@@ -35,6 +35,13 @@ public interface Maze {
     Field getField(int row, int col);
 
     /**
+     * Swaps old field in maze for new.
+     * @param oldF field to replace
+     * @param newF new field
+     */
+    void swapFields(Field oldF, Field newF);
+
+    /**
      * Returns a list of ghosts in the maze.
      *
      * @return List of ghosts

@@ -7,7 +7,7 @@ import java.util.List;
  * Class representing wall field.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class WallField extends AbstractObservableField implements Field {
+public class WallField extends AbstractObservable implements Field {
     /**
      * Row of the field.
      */

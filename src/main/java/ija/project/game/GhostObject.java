@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Class representing ghost object. Ghosts are moving on the field and can be eaten by pacman.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class GhostObject extends AbstractObservableObject implements MazeObject {
+public class GhostObject extends AbstractObservable implements MazeObject {
     /**
      * Current field in which the ghost is located.
      */

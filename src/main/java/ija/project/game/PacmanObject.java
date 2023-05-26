@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Class representing Pacman object. Pacman is the main character of the game.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class PacmanObject extends AbstractObservableObject implements MazeObject {
+public class PacmanObject extends AbstractObservable implements MazeObject {
     /**
      * Current field where Pacman is located.
      */
@@ -48,6 +48,11 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     private boolean replayMode;
 
     /**
+     * Number of bombs available to the pacman.
+     */
+    private int availableBombCount;
+
+    /**
      * Constructor for PacmanObject.
      * 
      * @param field Field on which the object is located.
@@ -58,6 +63,7 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
         this.lives = 3;
         this.score = 0;
         this.direction = Field.Direction.U;
+        setBombCount(3);
     }
 
     /**
@@ -300,4 +306,22 @@ public class PacmanObject extends AbstractObservableObject implements MazeObject
     public boolean isReplayMode() {
         return this.replayMode;
     }
+
+    /**
+     * Returns number of available bombs.
+     * @return number of available bombs for the parman.
+     */
+    public int getAvailableBombs() {
+        return availableBombCount;
+    }
+
+    /**
+     * Sets the number of available bombs for pacman. If negative number is passed, number of available bombs is set to 0.
+     * @param bombCount Number of available bombs.
+     */
+    public void setBombCount(int bombCount) {
+        this.availableBombCount = Math.max(bombCount, 0);
+        notifyObservers();
+    }
+
 }

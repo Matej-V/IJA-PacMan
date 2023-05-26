@@ -7,7 +7,7 @@ import ija.project.common.MazeObject;
  * Class representing key object. Key is placed on the field and can be collected by pacman.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class KeyObject extends AbstractObservableObject implements MazeObject {
+public class KeyObject extends AbstractObservable implements MazeObject {
     /**
      * Current field on which the object is placed.
      */
@@ -57,7 +57,7 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
 
     @Override
     public boolean isPacman() {
-        return super.isPacman();
+        return false;
     }
 
     public PathField getStartField() {
@@ -65,9 +65,9 @@ public class KeyObject extends AbstractObservableObject implements MazeObject {
     }
 
     /**
-     * Return field in which the key is located.
+     * Returns field in which the key is located.
      * 
-     * @return
+     * @return Field object in which the key is located.
      */
     @Override
     public Field getField() {

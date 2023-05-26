@@ -1,9 +1,9 @@
 package ija.project.pacman_project;
 
+import ija.project.game.AbstractObservable;
 import ija.project.view.FieldView;
 import ija.project.view.UIBarView;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -13,19 +13,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Class representing game view. Contains implementation for generating all the views in the game.
  * @author Matej Vadovič(xvadov01), Alina Vinogradova(xvinog00)
  */
-public class PacManView extends AbstractObservableView {
+public class PacManView extends AbstractObservable {
     /**
      * Controller to be used for setting button actions
      */
@@ -78,7 +73,7 @@ public class PacManView extends AbstractObservableView {
             for (int column = 0; column < controller.maze.numCols(); column++) {
                 FieldView fieldView = new FieldView(controller.maze.getField(row, column),
                         (Math.min(widthOfScreen, heightOfScreen) - 100) / controller.maze.numCols(), row, column);
-                //if(row == 4 && column == 5) fieldView.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                fieldView.setOnMouseClicked(event -> controller.setPacmanPathOnClick(fieldView));
                 mazeGroup.getChildren().add(fieldView);
             }
         }
@@ -86,8 +81,8 @@ public class PacManView extends AbstractObservableView {
     }
 
     /**
-     * 
-     * @return Score and healt bar representation
+     * Draws score, lives and bombs count of player
+     * @return Score and health bar representation
      */
     public Group drawUI() {
         UIBarView UIBar = new UIBarView(controller.maze.getPacMan());
@@ -112,42 +107,35 @@ public class PacManView extends AbstractObservableView {
         // Create Menu
         Menu menuOptions = new Menu("Menu");
         Menu replayOptions = new Menu("Replay");
+        Menu leadersOption = new Menu("Leaderboard");
         Menu helpOption = new Menu("Help");
         MenuItem newGameMenuItem = new MenuItem("New Game");
         MenuItem pauseGameMenuItem = new MenuItem("Pause Game");
         MenuItem replayGameMenuItem = new MenuItem("Replay Game");
         MenuItem reverRelayGameMenuItem = new MenuItem("Replay Game in Reverse Mode");
+        MenuItem leadersMenuItem = new MenuItem("Show Leaderboard");
         // Tooltip button
         MenuItem helpMenuItem = new MenuItem("Help");
 
         DialogPane dialogPane = new DialogPane();
-        dialogPane.setContentText("Controls:\tW, A, S, D keys or Arrow keys\nP\tPause Game\nR\tReplay Game\nB\tBackwards replay");
+        dialogPane.setContentText("Controls:\tW, A, S, D keys or Arrow keys\nP\tPause Game\nR\tReplay Game\nB\tBackwards replay\nE\tPlace bomb");
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Help");
         dialog.setDialogPane(dialogPane);
         Button closeButton = new Button("Close");
         dialogPane.getButtonTypes().add(ButtonType.CLOSE);
-        dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> {
-            dialog.close();
-        });
-        helpMenuItem.setOnAction(event -> {
-            dialog.showAndWait();
-        });
-        replayGameMenuItem.setOnAction(event -> {
-            controller.changeGameState(PacManController.GameState.REPLAY);
-        });
-        reverRelayGameMenuItem.setOnAction(event -> {
-            controller.changeGameState(PacManController.GameState.REPLAY_REVERSE);
-        });
-        newGameMenuItem.setOnAction(e -> {
-            controller.newGame();
-        });
-        pauseGameMenuItem.setOnAction(e -> {
-            controller.changeGameState(PacManController.GameState.PAUSE);
-        });
+        dialogPane.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> dialog.close());
+        helpMenuItem.setOnAction(event -> dialog.showAndWait());
+        replayGameMenuItem.setOnAction(event -> controller.changeGameState(PacManController.GameState.REPLAY));
+        reverRelayGameMenuItem.setOnAction(event -> controller.changeGameState(PacManController.GameState.REPLAY_REVERSE));
+        newGameMenuItem.setOnAction(e -> controller.newGame());
+        pauseGameMenuItem.setOnAction(e -> controller.changeGameState(PacManController.GameState.PAUSE));
+
+        leadersMenuItem.setOnAction(e -> this.drawLeaderBoard());
 
         menuOptions.getItems().addAll(newGameMenuItem, pauseGameMenuItem);
         replayOptions.getItems().addAll(replayGameMenuItem, reverRelayGameMenuItem);
+        leadersOption.getItems().add(leadersMenuItem);
         helpOption.getItems().addAll(helpMenuItem);
         MenuBar menuBar = new MenuBar(menuOptions, replayOptions, helpOption);
 
@@ -155,6 +143,7 @@ public class PacManView extends AbstractObservableView {
         HBox mazeHolder = new HBox(drawMaze());
         mazeHolder.alignmentProperty().set(Pos.CENTER);
         HBox statsHolder = new HBox(drawUI());
+        statsHolder.setMaxHeight(60);
         statsHolder.alignmentProperty().set(Pos.CENTER);
         statsHolder.setStyle("-fx-background-color: #FFFFFF;");
         uiMazeBox.getChildren().addAll(statsHolder, mazeHolder);
@@ -198,18 +187,70 @@ public class PacManView extends AbstractObservableView {
         Text score = new Text("Total score: " + controller.maze.getPacMan().getScore());
         score.setStyle("-fx-font-size: 20px; -fx-fill: #FFFFFF");
         score.setTranslateY(-50);
-        StackPane pane = new StackPane(
-                drawBackgroundImage("file:lib/title.jpg"),
-                drawButton("PLAY AGAIN"), score);
+        StackPane pane = new StackPane();
         // add win text
         Text text = new Text("YOU WON");
         text.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: white;");
-        text.setTranslateY(-150);
-        pane.getChildren().add(text);
+        text.setTranslateY(-250);
+
+        TextField textField = new TextField();
+
+        HBox hb = new HBox();
+        hb.setTranslateY(-150);
+        textField.setPrefSize(120, 40);
+        textField.setPromptText("Your name");
+        textField.setStyle("-fx-font-size: 20px;");
+        Button save = drawButton("SAVE");
+        save.setOnAction(e -> {
+            if (!textField.getText().isEmpty()) {
+                controller.setCurrentUser(textField.getText());
+                controller.writeToLeaderboard();
+                save.setDisable(true);
+            }
+
+        });
+        Button leaderboardButton = drawButton("Open Leaderboard");
+        leaderboardButton.setTranslateY(-100);
+        leaderboardButton.setOnAction(e -> this.drawLeaderBoard());
+        hb.getChildren().addAll(textField, save);
+        textField.getParent().requestFocus();
+        hb.setSpacing(10);
+        hb.setAlignment(Pos.CENTER);
+
+        pane.getChildren().addAll(drawBackgroundImage("file:lib/title.jpg"), text, hb, leaderboardButton,
+                drawButton("PLAY AGAIN"), score);
         // Load button
         pane.setAlignment(Pos.CENTER);
         this.currentScene = pane;
         notifyObservers();
+    }
+
+    /**
+     * Generates leaderboard as a dialog
+     */
+    private void drawLeaderBoard() {
+        VBox vb = new VBox();
+        vb.setAlignment(Pos.CENTER);
+        vb.getChildren().add(new Label("Leaderboard:"));
+        vb.getChildren().add(new Label("Name → Score"));
+        vb.setPrefWidth(200);
+        //write first 3 players
+        int entries = Math.min(3, controller.getLeaders().size());
+        for (Map.Entry<String, Integer> entry : controller.leaders.entrySet()) {
+            if (entries-- == 0)break;
+            vb.getChildren().add(new Label(entry.getKey() + " → " + entry.getValue()));
+        }
+        DialogPane lead = new DialogPane();
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Leaders");
+        dialog.setDialogPane(lead);
+        Button closeButton = new Button("Close");
+        lead.getButtonTypes().add(ButtonType.CLOSE);
+        lead.lookupButton(ButtonType.CLOSE).addEventFilter(ActionEvent.ACTION, event -> dialog.close());
+
+        lead.setContent(vb);
+        dialog.showAndWait();
     }
 
     /**
@@ -246,6 +287,7 @@ public class PacManView extends AbstractObservableView {
             System.out.println(text + " button clicked");
             controller.newGame();
         });
+
         button.requestFocus();
         button.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {

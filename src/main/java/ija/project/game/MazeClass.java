@@ -2,6 +2,7 @@ package ija.project.game;
 
 import java.util.ArrayList;
 import ija.project.common.*;
+import ija.project.view.FieldView;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -106,6 +107,27 @@ public class MazeClass implements Maze {
         }
         return this.fields.get(row).get(col);
     }
+
+    /**
+     * Swaps old field in maze for new.
+     * @param oldF field to replace
+     * @param newF new field
+     */
+    public void swapFields(Field oldF, Field newF){
+        newF.setMaze(this);
+        this.fields.get(oldF.getRow()).set(oldF.getCol(),  newF);
+        for(Observable.Observer ob : oldF.getObservers()){
+            newF.addObserver(ob);
+            ((FieldView) ob).setModel(newF);
+            oldF.removeObserver(ob);
+        }
+        for(Observable.Observer ob : oldF.getLogObservers()){
+            newF.addLogObserver(ob);
+            oldF.removeLogObserver(ob);
+        }
+        newF.notifyLogObservers();
+    }
+
 
     /**
      * Returns ghosts in the maze.
